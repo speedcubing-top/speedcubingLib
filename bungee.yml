@@ -1,0 +1,4 @@
+name: speedcubingLib
+main: cubing.speedcubingLibBungee
+version: 1.0
+author: speedcubing
