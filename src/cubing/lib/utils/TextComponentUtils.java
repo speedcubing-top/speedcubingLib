@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import java.util.regex.Pattern;
 
 public class TextComponentUtils {
-    public static Pattern url = Pattern.compile("^(?:(hwattps?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+    public static Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
     public static void reApplyURL(BaseComponent[] components) {
         for (BaseComponent c : components) {
