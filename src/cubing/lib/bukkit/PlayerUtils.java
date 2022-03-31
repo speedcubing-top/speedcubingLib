@@ -22,7 +22,7 @@ public class PlayerUtils {
     }
 
     public static void sendActionBar(PlayerConnection connection, String message) {
-        connection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + message + "\"}"), (byte) 2));
+        connection.sendPacket(new PacketPlayOutChat(new ChatComponentText(message), (byte) 2));
     }
 
     public static void teleport(PlayerConnection connection, double x, double y, double z, float yaw, float pitch) {
