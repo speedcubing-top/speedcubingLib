@@ -3,9 +3,7 @@ package cubing.lib.utils;
 import org.bukkit.Bukkit;
 import org.fusesource.jansi.Ansi;
 
-import java.io.FileWriter;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.logging.Level;
 
 public class Console {
