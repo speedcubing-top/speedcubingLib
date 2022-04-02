@@ -12,15 +12,12 @@ import java.util.TreeMap;
 public class WorldUtils {
     public static void clearGameRules(World world) {
         GameRules m = new GameRules();
-        TreeMap<?,?> map = (TreeMap<?,?>) Reflections.getField(((CraftWorld) world).getHandle().getGameRules(), "a");
+        TreeMap<String, ?> map = (TreeMap<String, ?>) Reflections.getField(((CraftWorld) world).getHandle().getGameRules(), "a");
         Set<String> remove = new HashSet<>();
-        for (Object s : map.keySet()) {
-            if (!m.contains((String) s))
-                remove.add((String) s);
-        }
-        for (String s : remove) {
-            map.remove(s);
-        }
+        map.forEach((k, v) -> {
+            if (!m.contains(k)) remove.add(k);
+        });
+        remove.forEach(map::remove);
     }
 
     public static void resetGameRules(World world) {
