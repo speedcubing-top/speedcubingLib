@@ -14,8 +14,8 @@ public class WorldUtils {
         GameRules m = new GameRules();
         TreeMap<String, ?> map = (TreeMap<String, ?>) Reflections.getField(((CraftWorld) world).getHandle().getGameRules(), "a");
         Set<String> remove = new HashSet<>();
-        map.forEach((k, v) -> {
-            if (!m.contains(k)) remove.add(k);
+        map.keySet().forEach(a -> {
+            if (!m.contains(a)) remove.add(a);
         });
         remove.forEach(map::remove);
     }
