@@ -3,13 +3,14 @@ package cubing.lib.bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ItemUtils {
 
-    public static ItemStack setLore(ItemStack itemStack, List<String> lore) {
+    public static ItemStack setLore(ItemStack itemStack, String... lore) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setLore(lore);
+        meta.setLore(Arrays.asList(lore));
         itemStack.setItemMeta(meta);
         return itemStack;
     }
