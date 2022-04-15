@@ -1,33 +1,36 @@
 package cubing.lib.utils.sockets;
 
-import java.io.DataOutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class UDP {
     public static DatagramSocket socket;
+    public String host;
 
-    public UDP(int port) {
+    public UDP(String host, int port) {
         try {
             socket = new DatagramSocket(port);
+            this.host = host;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void cleanSend(String host, int port, String data) {
+    public void cleanSend(int port, String data) {
         try {
-            unSafeSend(host, port, data);
+            unSafeSend(port, data);
         } catch (Exception e) {
         }
     }
 
-    public void unSafeSend(String host, int port, String data) throws Exception {
+    public void unSafeSend(int port, String data) throws Exception {
         socket.send(new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(host), port));
     }
 
-    public void send(String host, int port, String data) {
+    public void send(int port, String data) {
         try {
-            unSafeSend(host, port, data);
+            unSafeSend(port, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

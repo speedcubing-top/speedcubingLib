@@ -8,32 +8,36 @@ import java.net.Socket;
 public class TCP {
 
     public ServerSocket socket;
+    public String host;
+    public int timeout;
 
-    public TCP(int port) {
+    public TCP(String host, int port, int timeout) {
         try {
             this.socket = new ServerSocket(port);
+            this.host = host;
+            this.timeout = timeout;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void cleanSend(String host, int port, String data, int timeout) {
+    public void sendClean(int port, String data) {
         try {
-            unSafeSend(host, port, data, timeout);
+            sendUnsafe(port, data);
         } catch (Exception e) {
         }
     }
 
-    public void unSafeSend(String host, int port, String data, int timeout) throws Exception {
+    public void sendUnsafe(int port, String data) throws Exception {
         Socket clientSocket = new Socket();
         clientSocket.connect(new InetSocketAddress(host, port), timeout);
         new DataOutputStream(clientSocket.getOutputStream()).writeBytes(data);
         clientSocket.close();
     }
 
-    public void send(String host, int port, String data, int timeout) {
+    public void send(int port, String data) {
         try {
-            unSafeSend(host, port, data, timeout);
+            sendUnsafe(port, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
