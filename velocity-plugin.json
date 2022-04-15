@@ -1,0 +1,10 @@
+{
+  "id": "speedcubinglib",
+  "name": "speedcubingLib",
+  "version": "1.0-SNAPSHOT",
+  "authors": [
+    "speedcubing"
+  ],
+  "dependencies": [],
+  "main": "cubing.lib.speedcubingLibVelocity"
+}
