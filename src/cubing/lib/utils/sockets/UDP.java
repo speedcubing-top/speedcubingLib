@@ -5,7 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class UDP {
-    public static DatagramSocket socket;
+    public DatagramSocket socket;
     public String host;
 
     public UDP(String host, int port) {
