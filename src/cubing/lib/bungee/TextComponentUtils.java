@@ -1,4 +1,4 @@
-package cubing.lib.utils;
+package cubing.lib.bungee;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;

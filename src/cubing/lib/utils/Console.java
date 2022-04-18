@@ -1,15 +1,13 @@
 package cubing.lib.utils;
 
-import org.bukkit.Bukkit;
 import org.fusesource.jansi.Ansi;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 
 public class Console {
     public static void sendColoredConsole(String message) {
         Ansi reset = Ansi.ansi().a(Ansi.Attribute.RESET);
-        Bukkit.getLogger().log(Level.INFO, message
+        System.out.print(message
                 .replace("§0", reset.fg(Ansi.Color.BLACK).boldOff().toString())
                 .replace("§1", reset.fg(Ansi.Color.BLUE).boldOff().toString())
                 .replace("§2", reset.fg(Ansi.Color.GREEN).boldOff().toString())
