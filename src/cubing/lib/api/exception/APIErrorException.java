@@ -1,7 +1,7 @@
 package cubing.lib.api.exception;
 
 public class APIErrorException extends RuntimeException {
-    public APIErrorException(String response) {
-        super(response);
+    public APIErrorException(int response) {
+        super(Integer.toString(response));
     }
 }

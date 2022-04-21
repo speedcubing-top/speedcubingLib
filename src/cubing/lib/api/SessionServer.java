@@ -18,7 +18,7 @@ public class SessionServer {
             if (connection.getResponseCode() == 200) {
                 JsonObject property = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
                 return new String[]{property.get("value").getAsString(), property.get("signature").getAsString()};
-            } else throw new APIErrorException(String.valueOf(connection.getResponseCode()));
+            } else throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,15 +26,6 @@ public class SessionServer {
     }
 
     public static String[] getSkin(UUID uuid) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").openConnection();
-            if (connection.getResponseCode() == 200) {
-                JsonObject property = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
-                return new String[]{property.get("value").getAsString(), property.get("signature").getAsString()};
-            } else throw new APIErrorException(String.valueOf(connection.getResponseCode()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return getSkin(uuid.toString());
     }
 }
