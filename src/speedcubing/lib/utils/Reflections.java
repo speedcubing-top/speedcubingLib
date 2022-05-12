@@ -1,6 +1,7 @@
 package speedcubing.lib.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class Reflections {
 
@@ -22,6 +23,19 @@ public class Reflections {
         } catch (Exception exception) {
             exception.printStackTrace();
             return null;
+        }
+    }
+
+    public static void copyParentFields(Object o, Object parent) {
+        try {
+            for (Field f : o.getClass().getSuperclass().getDeclaredFields()) {
+                if (!Modifier.isStatic(f.getModifiers())) {
+                    f.setAccessible(true);
+                    f.set(o, parent.getClass().getDeclaredField(f.getName()).get(parent));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
