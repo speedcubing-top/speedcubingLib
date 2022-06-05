@@ -30,12 +30,16 @@ public class SQLConnection {
         return "SELECT " + field + " FROM " + table + " WHERE " + where;
     }
 
+    public static String SQLselectTop(String table, String field, String orderfield, String value, int index, int count, String sort) {
+        return SQLselect(table, field, value + " ORDER BY " + orderfield + " " + sort + " LIMIT " + index + ", " + count);
+    }
+
     public int count(String table, String field, String where) {
         return selectInt(table, "count(" + field + ")", where);
     }
 
     public int selectTop(String table, String field, String orderfield, String value, int index, int count, String sort) {
-        return selectInt(table, field, value + " ORDER BY " + orderfield + " " + sort + " LIMIT " + index + ", " + count);
+        return selectInt(SQLselectTop(table, field, orderfield, value, index, count, sort));
     }
 
     public void delete(String table, String where) {
@@ -84,8 +88,12 @@ public class SQLConnection {
     }
 
     public int selectInt(String table, String field, String where) {
+        return selectInt(SQLselect(table, field, where));
+    }
+
+    public int selectInt(String func) {
         try {
-            ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
+            ResultSet resultSet = connection.createStatement().executeQuery(func);
             resultSet.next();
             return resultSet.getInt(1);
         } catch (Exception e) {
