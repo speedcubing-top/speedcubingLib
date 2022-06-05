@@ -18,15 +18,15 @@ public class SQLConnection {
         }
     }
 
-    public String SQLdelete(String table, String where) {
+    public static String SQLdelete(String table, String where) {
         return "DELETE  FROM " + table + " WHERE " + where;
     }
 
-    public String SQLupdate(String table, String field, String where) {
+    public static String SQLupdate(String table, String field, String where) {
         return "UPDATE " + table + " SET " + field + " WHERE " + where;
     }
 
-    public String SQLselect(String table, String field, String where) {
+    public static String SQLselect(String table, String field, String where) {
         return "SELECT " + field + " FROM " + table + " WHERE " + where;
     }
 
