@@ -10,7 +10,7 @@ public class StringUtils {
     }
 
     public static String decodeUnicode(String unicode) {
-        StringBuilder text = new StringBuilder("§8[§cTerminal§8] §f");
+        StringBuilder text = new StringBuilder();
         String[] hex = unicode.split("\\\\u");
         for (int i = 1; i < hex.length; i++) {
             text.append((char) Integer.parseInt(hex[i], 16));
