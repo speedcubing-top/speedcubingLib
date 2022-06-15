@@ -4,10 +4,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import speedcubing.lib.utils.StringUtils;
 
-import java.util.regex.Pattern;
-
 public class TextComponentUtils {
-
     public static void reApplyURL(BaseComponent[] components) {
         for (BaseComponent c : components) {
             String s = c.toPlainText();
