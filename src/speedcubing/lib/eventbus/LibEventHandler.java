@@ -1,4 +1,4 @@
-package speedcubing.lib.event;
+package speedcubing.lib.eventbus;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

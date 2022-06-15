@@ -1,4 +1,4 @@
-package speedcubing.lib.bukkit;
+package speedcubing.lib.bukkit.inventory;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;

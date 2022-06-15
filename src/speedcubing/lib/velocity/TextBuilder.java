@@ -1,6 +1,6 @@
 package speedcubing.lib.velocity;
 
-import speedcubing.lib.utils.TextUtils;
+import speedcubing.lib.utils.minecraft.TextUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;

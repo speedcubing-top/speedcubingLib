@@ -1,6 +1,9 @@
 package speedcubing.lib.utils;
 
+import java.util.regex.Pattern;
+
 public class StringUtils {
+    public static Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
     public static String encodeUnicode(String s) {
         StringBuilder unicode = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {

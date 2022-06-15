@@ -1,4 +1,4 @@
-package speedcubing.lib.api;
+package speedcubing.lib.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

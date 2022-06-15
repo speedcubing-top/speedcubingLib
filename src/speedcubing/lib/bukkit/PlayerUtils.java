@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class PlayerUtils {
     }
 
     public static List<Packet<?>>[] changeSkin(EntityPlayer entityPlayer, String[] skin) {
-        org.bukkit.entity.Player player = entityPlayer.getBukkitEntity().getPlayer();
+        Player player = entityPlayer.getBukkitEntity().getPlayer();
         World world = entityPlayer.getWorld();
         GameProfile gameProfile = entityPlayer.getProfile();
         gameProfile.getProperties().removeAll("textures");

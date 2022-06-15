@@ -1,4 +1,4 @@
-package speedcubing.lib.bukkit;
+package speedcubing.lib.bukkit.inventory;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

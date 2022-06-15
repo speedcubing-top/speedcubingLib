@@ -1,4 +1,4 @@
-package speedcubing.lib.event;
+package speedcubing.lib.eventbus;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

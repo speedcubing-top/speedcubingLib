@@ -1,4 +1,4 @@
-package speedcubing.lib.utils;
+package speedcubing.lib.utils.minecraft;
 
 public class DefaultText {
     public static final String[] EnchantedDiamondSword = {"§bDiamantschwert", "§bDiamond Sword", "§b鑽石劍", "§b钻石剑"};
