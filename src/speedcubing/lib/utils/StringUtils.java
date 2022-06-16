@@ -20,4 +20,13 @@ public class StringUtils {
         }
         return text.toString();
     }
+    public static int indexOf(String str, String c, int n) {
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            int index = str.indexOf(c) + 1;
+            result += index;
+            str = str.substring(index);
+        }
+        return result - 1;
+    }
 }
