@@ -4,10 +4,11 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Hologram {
-    public Set<PlayerConnection> listener;
+    public Set<PlayerConnection> listener = new HashSet<>();
     public EntityArmorStand armorStand;
 
     public Hologram(String name, double x, double y, double z, float yaw, float pitch) {
