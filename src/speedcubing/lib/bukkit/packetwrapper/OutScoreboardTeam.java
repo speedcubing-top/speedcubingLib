@@ -1,24 +1,59 @@
 package speedcubing.lib.bukkit.packetwrapper;
 
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
 import speedcubing.lib.utils.Reflections;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 
 import java.util.Collection;
 
 public class OutScoreboardTeam {
-    public static PacketPlayOutScoreboardTeam a(String name, int h) {
-        PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
-        Reflections.setField(packet, "a", name);
-        Reflections.setField(packet, "h", h);
-        return packet;
+    public final PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
+
+    public OutScoreboardTeam() {
     }
 
-    public static PacketPlayOutScoreboardTeam a(String name, String prefix, Collection<String> players, int join) {
-        PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+    public OutScoreboardTeam a(String name) {
         Reflections.setField(packet, "a", name);
+        return this;
+    }
+
+    public OutScoreboardTeam b(String displayName) {
+        Reflections.setField(packet, "b", displayName);
+        return this;
+    }
+
+    public OutScoreboardTeam c(String prefix) {
         Reflections.setField(packet, "c", prefix);
+        return this;
+    }
+
+    public OutScoreboardTeam d(String suffix) {
+        Reflections.setField(packet, "d", suffix);
+        return this;
+    }
+
+    public OutScoreboardTeam e(String e) {
+        Reflections.setField(packet, "e", e);
+        return this;
+    }
+
+    public OutScoreboardTeam f(int f) {
+        Reflections.setField(packet, "f", f);
+        return this;
+    }
+
+    public OutScoreboardTeam g(Collection<String> players) {
         Reflections.setField(packet, "g", players);
-        Reflections.setField(packet, "h", join);
-        return packet;
+        return this;
+    }
+
+    public OutScoreboardTeam h(int h) {
+        Reflections.setField(packet, "h", h);
+        return this;
+    }
+
+    public OutScoreboardTeam i(int i) {
+        Reflections.setField(packet, "i", i);
+        return this;
     }
 }
