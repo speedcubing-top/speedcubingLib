@@ -30,6 +30,12 @@ public class SideBarAPI {
         return scoreboard;
     }
 
+    public static void setString(Team team, String string) {
+        String[] converted = prefixSuffixSplit(string);
+        team.setPrefix(converted[0]);
+        team.setSuffix(converted[1]);
+    }
+
     public static String[] prefixSuffixSplit(String str) {
         String prefix;
         String suffix = "";
