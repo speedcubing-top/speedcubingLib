@@ -62,11 +62,9 @@ public class SideBar {
 
     public SideBar setLine(Player player, String str, int line) {
         Team t = player.getScoreboard().getTeam(lines.get(line));
-        if (t != null) {
-            String[] result = split(str);
-            t.setPrefix(result[0]);
-            t.setSuffix(result[1]);
-        }
+        String[] result = split(str);
+        t.setPrefix(result[0]);
+        t.setSuffix(result[1]);
         return this;
     }
 
