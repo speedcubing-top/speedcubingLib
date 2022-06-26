@@ -2,26 +2,34 @@ package speedcubing.lib.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SideBar {
-    public static Map<Player, SideBar> perPlayerSidebar = new HashMap<>();
+public class SideBar implements Listener {
+    public static final Map<Player, SideBar> perPlayerSidebar = new HashMap<>();
 
     public static SideBar getSidebar(Player player) {
         return perPlayerSidebar.get(player);
+    }
+
+    public static Collection<SideBar> getSidebars() {
+        return perPlayerSidebar.values();
     }
 
     public final Scoreboard scoreboard;
     public final Objective objective;
     private int changer = -1;
     private int line = 1;
-    private final Player player;
+    public final Player player;
     public Map<Integer, String> lines = new HashMap<>();
 
     public SideBar(Player player, String displayName) {
