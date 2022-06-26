@@ -60,8 +60,8 @@ public class SideBar {
         return changeableLine(result[0], result[1], score);
     }
 
-    public SideBar setLine(Player player, String str, int line) {
-        Team t = player.getScoreboard().getTeam(lines.get(line));
+    public SideBar setLine(String str, int line) {
+        Team t = scoreboard.getTeam(lines.get(line));
         String[] result = split(str);
         t.setPrefix(result[0]);
         t.setSuffix(result[1]);
