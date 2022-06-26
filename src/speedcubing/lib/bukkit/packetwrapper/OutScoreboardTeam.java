@@ -7,7 +7,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import java.util.Collection;
 
 public class OutScoreboardTeam {
-    public final PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
+    public final PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
 
     public OutScoreboardTeam() {
     }
