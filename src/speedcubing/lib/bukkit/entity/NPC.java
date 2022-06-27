@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -48,11 +49,10 @@ public class NPC {
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
-
-    public NPC spawn(float yaw) {
+    public NPC spawn() {
         PacketPlayOutPlayerInfo p1 = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
         PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
-        PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (yaw * 256 / 360)));
+        PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
         listener.forEach(a -> {
                     a.sendPacket(p1);
                     a.sendPacket(p2);
@@ -68,7 +68,7 @@ public class NPC {
         gameProfile.getProperties().put("textures", new Property("textures", value, signature));
         if (update) {
             despawn();
-            spawn(entityPlayer.yaw);
+            spawn();
             updateNpcLocation();
         }
         return this;
@@ -84,6 +84,11 @@ public class NPC {
         entityPlayer.setLocation(x, y, z, yaw, pitch);
         return this;
     }
+
+    public NPC setLocation(Location location) {
+        return setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    }
+
     public NPC updateNpcLocation() {
         PacketPlayOutEntityTeleport p1 = new PacketPlayOutEntityTeleport(id, MathHelper.floor(entityPlayer.locX * 32), MathHelper.floor(entityPlayer.locY * 32), MathHelper.floor(entityPlayer.locZ * 32), (byte) ((int) (entityPlayer.yaw * 256 / 360)), (byte) ((int) (entityPlayer.pitch * 256 / 360)), true);
         PacketPlayOutEntity.PacketPlayOutEntityLook p2 = new PacketPlayOutEntity.PacketPlayOutEntityLook(id, (byte) ((int) (entityPlayer.yaw * 256F / 360F)), (byte) ((int) (entityPlayer.pitch * 256F / 360F)), true);
