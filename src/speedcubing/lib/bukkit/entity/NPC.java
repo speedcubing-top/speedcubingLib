@@ -38,7 +38,6 @@ public class NPC {
         this.entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
         if (outerLayer)
             entityPlayer.getDataWatcher().watch(10, (byte) 127);
-        this.world.add("world");
         all.add(this);
     }
 
