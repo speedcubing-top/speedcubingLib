@@ -30,7 +30,6 @@ public class Hologram {
         armorStand.n(true);
         armorStand.setCustomName(name);
         armorStand.setLocation(x, y, z, yaw, pitch);
-        world.add("world");
         all.add(this);
     }
 
