@@ -53,6 +53,7 @@ public class Hologram {
     }
 
     public Hologram setLocation(Location location) {
+        world.add(location.getWorld().getName());
         return setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
