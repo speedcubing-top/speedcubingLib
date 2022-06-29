@@ -32,6 +32,7 @@ public class NPC {
     public final Set<String> world = new HashSet<>();
     public ClickEvent event;
     public boolean autoSpawn;
+    private boolean nameTagHidden;
 
     public NPC(String name, UUID uuid, boolean outerLayer) {
         WorldServer world = ((CraftWorld) Bukkit.getWorld("world")).getHandle();
@@ -87,6 +88,8 @@ public class NPC {
                     a.sendPacket(p3);
                 }
         );
+        if (nameTagHidden)
+            hideNametag();
         return this;
     }
 
@@ -96,7 +99,7 @@ public class NPC {
     }
 
     public NPC setSkin(String name) {
-        return setSkin(MojangAPI.getUUID(name));
+        return setSkin(UUID.fromString(MojangAPI.getUUID(name)));
     }
 
     public NPC setSkin(String value, String signature) {
@@ -128,6 +131,7 @@ public class NPC {
     }
 
     public NPC hideNametag() {
+        this.nameTagHidden = true;
         PacketPlayOutScoreboardTeam p1 = new OutScoreboardTeam().a("").e("never").h(1).packet;
         PacketPlayOutScoreboardTeam p2 = new OutScoreboardTeam().a("").e("never").packet;
         PacketPlayOutScoreboardTeam p3 = new OutScoreboardTeam().a("").g(Collections.singletonList(entityPlayer.getName())).h(3).packet;
