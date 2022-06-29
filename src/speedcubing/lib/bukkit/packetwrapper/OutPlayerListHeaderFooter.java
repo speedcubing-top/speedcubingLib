@@ -22,12 +22,10 @@ public class OutPlayerListHeaderFooter {
     }
 
     public OutPlayerListHeaderFooter a(String header) {
-        Reflections.setField(packet, "a", new ChatComponentText(header));
-        return this;
+        return a(new ChatComponentText(header));
     }
 
     public OutPlayerListHeaderFooter b(String footer) {
-        Reflections.setField(packet, "b", new ChatComponentText(footer));
-        return this;
+        return b(new ChatComponentText(footer));
     }
 }

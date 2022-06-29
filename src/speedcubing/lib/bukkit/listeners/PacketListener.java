@@ -5,14 +5,17 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import speedcubing.lib.bukkit.entity.NPC;
 import speedcubing.lib.bukkit.event.PlayInEvent;
 import speedcubing.lib.bukkit.event.PlayOutEvent;
 import speedcubing.lib.eventbus.LibEventManager;
+import speedcubing.lib.utils.Reflections;
 
 import java.util.List;
 
@@ -28,8 +31,18 @@ public class PacketListener implements Listener {
             protected void decode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
                 PlayInEvent event = new PlayInEvent(player, packet);
                 LibEventManager.callEvent(event);
-                if (!event.isCancelled)
+                if (!event.isCancelled) {
                     arg.add(packet);
+                    if (packet instanceof PacketPlayInUseEntity) {
+                        int id = (int) Reflections.getField(packet, "a");
+                        for (NPC npc : NPC.all) {
+                            if (npc.entityPlayer.getId() == id) {
+                                npc.event.run(player, ((PacketPlayInUseEntity) packet).a());
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }).addAfter("encoder", "speedcubingLib-encoder", new MessageToMessageEncoder<Packet<?>>() {
             @Override

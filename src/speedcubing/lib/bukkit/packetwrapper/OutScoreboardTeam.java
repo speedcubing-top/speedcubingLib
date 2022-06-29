@@ -1,8 +1,7 @@
 package speedcubing.lib.bukkit.packetwrapper;
 
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
-import speedcubing.lib.utils.Reflections;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+import speedcubing.lib.utils.Reflections;
 
 import java.util.Collection;
 
