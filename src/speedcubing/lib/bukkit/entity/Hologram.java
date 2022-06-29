@@ -21,6 +21,8 @@ public class Hologram {
     public final Set<String> world = new HashSet<>();
     public ClickEvent event;
     public boolean autoSpawn;
+    public boolean autoListen = true;
+
 
     public Hologram(String name, double x, double y, double z, float yaw, float pitch) {
         armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorld("world")).getHandle());
@@ -44,6 +46,12 @@ public class Hologram {
 
     public Hologram setAutoSpawn(boolean autoSpawn) {
         this.autoSpawn = autoSpawn;
+        return this;
+    }
+
+    public Hologram setAutoListen(boolean autoListen) {
+        this.autoListen = autoListen;
+        listener.clear();
         return this;
     }
 

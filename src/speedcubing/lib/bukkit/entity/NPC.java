@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
@@ -27,17 +28,22 @@ public class NPC {
     }
 
     public static final Set<NPC> all = new HashSet<>();
-    public final EntityPlayer entityPlayer;
     public final Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
+    public EntityPlayer entityPlayer;
     public ClickEvent event;
-    public boolean autoSpawn;
-    private boolean nameTagHidden;
 
-    public NPC(String name, UUID uuid, boolean outerLayer) {
+    public boolean autoSpawn;
+    public boolean autoListen = true;
+
+    private boolean nameTagHidden;
+    private float spawnBodyYaw;
+    private ItemStack itemInHand;
+
+    public NPC(String name, UUID uuid, boolean enableOuterLayerSkin) {
         WorldServer world = ((CraftWorld) Bukkit.getWorld("world")).getHandle();
-        this.entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
-        if (outerLayer)
+        entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
+        if (enableOuterLayerSkin)
             entityPlayer.getDataWatcher().watch(10, (byte) 127);
         all.add(this);
     }
@@ -53,6 +59,17 @@ public class NPC {
 
     public NPC setAutoSpawn(boolean autoSpawn) {
         this.autoSpawn = autoSpawn;
+        return this;
+    }
+
+    public NPC setAutoListen(boolean autoListen) {
+        this.autoListen = autoListen;
+        listener.clear();
+        return this;
+    }
+
+    public NPC setSpawnBodyYaw(float spawnBodyYaw) {
+        this.spawnBodyYaw = spawnBodyYaw;
         return this;
     }
 
@@ -72,13 +89,16 @@ public class NPC {
         return this;
     }
 
-    public NPC items(ItemStack stack) {
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(stack));
+    public NPC setItemInHand(ItemStack itemInHand) {
+        this.itemInHand = itemInHand == null || itemInHand.getType().equals(Material.AIR) ? null : itemInHand;
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(itemInHand));
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
     public NPC spawn() {
+        float yaw = entityPlayer.yaw;
+        entityPlayer.yaw = spawnBodyYaw;
         PacketPlayOutPlayerInfo p1 = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
         PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
         PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
@@ -90,6 +110,9 @@ public class NPC {
         );
         if (nameTagHidden)
             hideNametag();
+        if (itemInHand != null)
+            setItemInHand(itemInHand);
+        entityPlayer.yaw = yaw;
         return this;
     }
 
@@ -120,8 +143,8 @@ public class NPC {
         return this;
     }
 
-    public NPC setLocation(double x, double y, double z, float yaw, float pitch) {
-        entityPlayer.setLocation(x, y, z, yaw, pitch);
+    public NPC setLocation(double x, double y, double z, float headRotation, float pitch) {
+        entityPlayer.setLocation(x, y, z, headRotation, pitch);
         return this;
     }
 

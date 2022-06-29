@@ -57,13 +57,15 @@ public class PlayerListener implements Listener {
     }
 
     private void addHologram(PlayerConnection connection, Hologram hologram) {
-        hologram.listener.add(connection);
+        if (hologram.autoListen)
+            hologram.listener.add(connection);
         if (hologram.autoSpawn)
             hologram.setListenerValues(connection).spawn().rollBackListenerValues();
     }
 
     private void addNPC(PlayerConnection connection, NPC npc) {
-        npc.listener.add(connection);
+        if (npc.autoListen)
+            npc.listener.add(connection);
         if (npc.autoSpawn)
             npc.setListenerValues(connection).spawn().rollBackListenerValues();
     }
