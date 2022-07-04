@@ -76,26 +76,24 @@ public class SQLConnection {
         return false;
     }
 
-    public double selectDouble(String table, String field, String where) {
+    public Double selectDouble(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            return resultSet.getDouble(1);
+            return resultSet.next() ? resultSet.getDouble(1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return -1D;
     }
 
-    public int selectInt(String table, String field, String where) {
+    public Integer selectInt(String table, String field, String where) {
         return selectInt(SQLselect(table, field, where));
     }
 
-    public int selectInt(String func) {
+    public Integer selectInt(String func) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(func);
-            resultSet.next();
-            return resultSet.getInt(1);
+            return resultSet.next() ? resultSet.getInt(1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,24 +103,24 @@ public class SQLConnection {
     public int[] selectInts(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            int size = resultSet.getMetaData().getColumnCount();
-            int[] ints = new int[size];
-            for (int i = 0; i < size; i++) {
-                ints[i] = resultSet.getInt(i + 1);
-            }
-            return ints;
+            if (resultSet.next()) {
+                int size = resultSet.getMetaData().getColumnCount();
+                int[] ints = new int[size];
+                for (int i = 0; i < size; i++) {
+                    ints[i] = resultSet.getInt(i + 1);
+                }
+                return ints;
+            } else return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public boolean selectBoolean(String table, String field, String where) {
+    public Boolean selectBoolean(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            return resultSet.getBoolean(1);
+            return resultSet.next() ? resultSet.getBoolean(1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,13 +130,14 @@ public class SQLConnection {
     public boolean[] selectBooleans(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            int size = resultSet.getMetaData().getColumnCount();
-            boolean[] bs = new boolean[size];
-            for (int i = 0; i < size; i++) {
-                bs[i] = resultSet.getBoolean(i + 1);
-            }
-            return bs;
+            if (resultSet.next()) {
+                int size = resultSet.getMetaData().getColumnCount();
+                boolean[] bs = new boolean[size];
+                for (int i = 0; i < size; i++) {
+                    bs[i] = resultSet.getBoolean(i + 1);
+                }
+                return bs;
+            } else return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -148,8 +147,7 @@ public class SQLConnection {
     public String selectString(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            return resultSet.getString(1);
+            return resultSet.next() ? resultSet.getString(1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,13 +157,14 @@ public class SQLConnection {
     public String[] selectStrings(String table, String field, String where) {
         try {
             ResultSet resultSet = connection.createStatement().executeQuery(SQLselect(table, field, where));
-            resultSet.next();
-            int size = resultSet.getMetaData().getColumnCount();
-            String[] str = new String[size];
-            for (int i = 0; i < size; i++) {
-                str[i] = resultSet.getString(i + 1);
-            }
-            return str;
+            if (resultSet.next()) {
+                int size = resultSet.getMetaData().getColumnCount();
+                String[] str = new String[size];
+                for (int i = 0; i < size; i++) {
+                    str[i] = resultSet.getString(i + 1);
+                }
+                return str;
+            } else return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
