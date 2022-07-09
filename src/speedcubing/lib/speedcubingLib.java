@@ -14,6 +14,8 @@ public class speedcubingLib extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        String ver = Bukkit.getVersion();
+        System.out.println(ver);
         try {
             Field field = Enchantment.class.getDeclaredField("acceptingNew");
             field.setAccessible(true);
