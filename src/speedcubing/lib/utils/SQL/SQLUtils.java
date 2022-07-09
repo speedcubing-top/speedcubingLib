@@ -1,8 +1,5 @@
 package speedcubing.lib.utils.SQL;
 
-import com.google.common.primitives.Booleans;
-import com.google.common.primitives.Ints;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,7 @@ public class SQLUtils {
         return null;
     }
 
-    public static int[] getIntArray(ResultSet resultSet) {
+    public static Integer[] getIntArray(ResultSet resultSet) {
         try {
             List<Integer> list = new ArrayList<>();
             while (resultSet.next()) {
@@ -34,14 +31,14 @@ public class SQLUtils {
                     list.add(resultSet.getInt(i + 1));
                 }
             }
-            return Ints.toArray(list);
+            return list.toArray(new Integer[]{});
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static boolean[] getBooleanArray(ResultSet resultSet) {
+    public static Boolean[] getBooleanArray(ResultSet resultSet) {
         try {
             List<Boolean> list = new ArrayList<>();
             while (resultSet.next()) {
@@ -50,7 +47,7 @@ public class SQLUtils {
                     list.add(resultSet.getBoolean(i + 1));
                 }
             }
-            return Booleans.toArray(list);
+            return list.toArray(new Boolean[]{});
         } catch (Exception e) {
             e.printStackTrace();
         }
