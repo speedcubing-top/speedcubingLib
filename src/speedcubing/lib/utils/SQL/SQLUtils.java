@@ -1,5 +1,8 @@
 package speedcubing.lib.utils.SQL;
 
+import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Ints;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,32 +25,32 @@ public class SQLUtils {
         return null;
     }
 
-    public static Integer[] getIntArray(ResultSet resultSet) {
+    public static int[] getIntArray(ResultSet resultSet) {
         try {
-            List<Integer> a = new ArrayList<>();
+            List<Integer> list = new ArrayList<>();
             while (resultSet.next()) {
                 int size = resultSet.getMetaData().getColumnCount();
                 for (int i = 0; i < size; i++) {
-                    a.add(resultSet.getInt(i + 1));
+                    list.add(resultSet.getInt(i + 1));
                 }
             }
-            return a.toArray(new Integer[]{});
+            return Ints.toArray(list);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static Boolean[] getBooleanArray(ResultSet resultSet) {
+    public static boolean[] getBooleanArray(ResultSet resultSet) {
         try {
-            List<Boolean> a = new ArrayList<>();
+            List<Boolean> list = new ArrayList<>();
             while (resultSet.next()) {
                 int size = resultSet.getMetaData().getColumnCount();
                 for (int i = 0; i < size; i++) {
-                    a.add(resultSet.getBoolean(i + 1));
+                    list.add(resultSet.getBoolean(i + 1));
                 }
             }
-            return a.toArray(new Boolean[]{});
+            return Booleans.toArray(list);
         } catch (Exception e) {
             e.printStackTrace();
         }
