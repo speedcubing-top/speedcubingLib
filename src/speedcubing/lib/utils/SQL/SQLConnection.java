@@ -33,8 +33,8 @@ public class SQLConnection {
         return select(table, "count(" + field + ")", where);
     }
 
-    public ResultSet selectJoin(String table, String table2, String cl1, String cl2, String orderfield, String sort) {
-        return executeQuery("SELECT name FROM `" + table + "` INNER JOIN `" + table2 + "` ON `" + table + "`.`" + cl1 + "` = `" + table2 + "`.`" + cl2 + "` ORDER BY " + orderfield + " " + sort);
+    public ResultSet selectJoin(String table, String table2, String field, String cl1, String cl2, String orderfield, String sort) {
+        return executeQuery("SELECT " + field + " FROM `" + table + "` INNER JOIN `" + table2 + "` ON `" + table + "`.`" + cl1 + "` = `" + table2 + "`.`" + cl2 + "` ORDER BY " + orderfield + " " + sort);
     }
 
     public void delete(String table, String where) {
