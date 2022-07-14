@@ -39,23 +39,6 @@ public class MojangAPI {
         return null;
     }
 
-    public static String getLatestName(String uuid) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/user/profiles/" + uuid + "/names").openConnection();
-            if (connection.getResponseCode() == 200) {
-                JsonArray array = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonArray();
-                return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
-            } else throw new APIErrorException(connection.getResponseCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String getLatestName(UUID uuid) {
-        return getLatestName(uuid.toString());
-    }
-
     public static JsonElement getNameHistory(UUID uuid) {
         return getNameHistory(uuid.toString());
     }
