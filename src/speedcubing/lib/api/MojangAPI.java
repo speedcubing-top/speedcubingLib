@@ -18,7 +18,7 @@ public class MojangAPI {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
             if (connection.getResponseCode() == 200)
-                return new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("id").getAsString();
+                return JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("id").getAsString();
             else throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,7 +30,7 @@ public class MojangAPI {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
             if (connection.getResponseCode() == 200) {
-                JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+                JsonObject object = JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                 return new String[]{object.get("id").getAsString(), object.get("name").getAsString()};
             } else throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class MojangAPI {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/user/profiles/" + uuid + "/names").openConnection();
             if (connection.getResponseCode() == 200)
-                return new JsonParser().parse(new InputStreamReader(connection.getInputStream()));
+                return JsonParser.parseReader(new InputStreamReader(connection.getInputStream()));
             else throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
             e.printStackTrace();
