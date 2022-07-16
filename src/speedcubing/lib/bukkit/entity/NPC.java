@@ -122,7 +122,7 @@ public class NPC {
     }
 
     public NPC setSkin(String name) {
-        return setSkin(UUID.fromString(MojangAPI.getUUID(name)));
+        return setSkin(MojangAPI.getUUID(name));
     }
 
     public NPC setSkin(String value, String signature) {
