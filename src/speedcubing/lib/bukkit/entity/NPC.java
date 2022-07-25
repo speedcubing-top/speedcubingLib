@@ -101,6 +101,7 @@ public class NPC {
         entityPlayer.yaw = spawnBodyYaw;
         PacketPlayOutPlayerInfo p1 = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
         PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
+        entityPlayer.yaw = yaw;
         PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
         listener.forEach(a -> {
                     a.sendPacket(p1);
@@ -112,7 +113,6 @@ public class NPC {
             hideNametag();
         if (itemInHand != null)
             setItemInHand(itemInHand);
-        entityPlayer.yaw = yaw;
         return this;
     }
 
