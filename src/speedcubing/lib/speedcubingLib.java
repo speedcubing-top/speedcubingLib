@@ -10,19 +10,23 @@ import speedcubing.lib.bukkit.listeners.PlayerListener;
 import java.lang.reflect.Field;
 
 public class speedcubingLib extends JavaPlugin {
+    public static boolean is1_8_8;
+
     public void onEnable() {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        String ver = Bukkit.getVersion();
-        System.out.println(ver);
-        try {
-            Field field = Enchantment.class.getDeclaredField("acceptingNew");
-            field.setAccessible(true);
-            field.set(field, true);
-            Glow.glow = new Glow(100);
-            Enchantment.registerEnchantment(Glow.glow);
-        } catch (Exception ignored) {
+        is1_8_8 = Bukkit.getVersion().contains("(MC: 1.8.8)");
+        if (is1_8_8) {
+            Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
+            Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+            try {
+                Field field = Enchantment.class.getDeclaredField("acceptingNew");
+                field.setAccessible(true);
+                field.set(field, true);
+                Glow.glow = new Glow(100);
+                Enchantment.registerEnchantment(Glow.glow);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 }
