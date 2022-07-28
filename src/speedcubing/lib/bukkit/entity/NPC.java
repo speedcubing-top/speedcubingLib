@@ -52,6 +52,11 @@ public class NPC {
         all.remove(this);
     }
 
+    public NPC world(String... world) {
+        this.world.addAll(Sets.newHashSet(world));
+        return this;
+    }
+
     public NPC setClickEvent(ClickEvent e) {
         this.event = e;
         return this;

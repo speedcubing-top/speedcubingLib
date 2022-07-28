@@ -39,6 +39,11 @@ public class Hologram {
         all.remove(this);
     }
 
+    public Hologram world(String... world) {
+        this.world.addAll(Sets.newHashSet(world));
+        return this;
+    }
+
     public Hologram setClickEvent(ClickEvent e) {
         this.event = e;
         return this;

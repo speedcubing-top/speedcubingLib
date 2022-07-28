@@ -2,9 +2,7 @@ package speedcubing.lib.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -82,33 +80,22 @@ public class SideBar implements Listener {
         if (str.length() <= 16)
             prefix = str;
         else {
+            boolean splitted = false;
             if (str.charAt(15) == '§') {
-                if ((int) str.charAt(16) < 107) {
-                    prefix = str.substring(0, 15);
+                prefix = str.substring(0, 15);
+                if ((int) str.charAt(16) < 107)
                     suffix = str.substring(15);
-                } else {
-                    prefix = str.substring(0, 15);
-                    boolean b = true;
-                    for (int j = 13; j >= 0; j--) {
-                        if (str.charAt(j) == '§' && (int) str.charAt(j + 1) < 107) {
-                            b = false;
-                            suffix = "§" + str.charAt(j + 1) + str.substring(15);
-                        }
-                    }
-                    if (b) suffix = str.substring(15);
-                }
             } else {
+                splitted = true;
                 prefix = str.substring(0, 16);
-                boolean b = true;
-                for (int j = 14; j >= 0; j--) {
-                    if (str.charAt(j) == '§' && (int) str.charAt(j + 1) < 107) {
-                        suffix = "§" + str.charAt(j + 1) + str.substring(16);
-                        b = false;
-                        break;
-                    }
-                }
-                if (b) suffix = str.substring(16);
             }
+            for (int j = splitted ? 14 : 13; j >= 0; j--) {
+                if (str.charAt(j) == '§' && (int) str.charAt(j + 1) < 107) {
+                    suffix = "§" + str.charAt(j + 1) + str.substring(splitted ? 16 : 15);
+                    break;
+                }
+            }
+            suffix = suffix.equals("") ? str.substring(splitted ? 16 : 15) : suffix;
         }
         return new String[]{prefix, suffix};
     }
