@@ -1,10 +1,7 @@
 package speedcubing.lib.bukkit.listeners;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
+import io.netty.channel.*;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -30,8 +27,8 @@ public class PacketListener implements Listener {
     public void PlayerJoinEvent(PlayerJoinEvent e) {
         if (speedcubingLib.is1_8_8) {
             Player player = e.getPlayer();
-            Channel channel = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel;
-            channel.pipeline().addAfter("decompress", "speedcubingLib-ByteDecode", new ByteToMessageDecoder() {
+            ChannelPipeline pipeline = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel.pipeline();
+            ByteToMessageDecoder byteToMessageDecoder = new ByteToMessageDecoder() {
                 @Override // In Byte
                 protected void decode(ChannelHandlerContext channel, ByteBuf byteBuf, List<Object> arg) {
                     PlayInByteEvent event = new PlayInByteEvent(player, byteBuf);
@@ -39,41 +36,50 @@ public class PacketListener implements Listener {
                     if (!event.isCancelled)
                         arg.add(byteBuf.readBytes(byteBuf.readableBytes()));
                 }
-            }).addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
-                @Override // Out Byte
-                public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) throws Exception {
-                    PlayOutByteEvent event = new PlayOutByteEvent(player, (ByteBuf) byteBuf);
-                    LibEventManager.callEvent(event);
-                    if (!event.isCancelled)
-                        super.write(channel, byteBuf, promise);
-                }
+            };
+            if (pipeline.get("decompress") != null)
+                pipeline.addAfter("decompress", "speedcubingLib-ByteDecode", byteToMessageDecoder);
+            else if (pipeline.get("splitter") != null)
+                pipeline.addAfter("splitter", "speedcubingLib-ByteDecode", byteToMessageDecoder);
+            if (pipeline.get("decoder") != null)
+                pipeline.addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
+                    @Override // Out Byte
+                    public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) throws Exception {
+                        PlayOutByteEvent event = new PlayOutByteEvent(player, (ByteBuf) byteBuf);
+                        LibEventManager.callEvent(event);
+                        if (!event.isCancelled)
+                            super.write(channel, byteBuf, promise);
+                    }
 
-                @Override // In Packet
-                public void channelRead(ChannelHandlerContext channel, Object packet) throws Exception {
-                    PlayInEvent event = new PlayInEvent(player, (Packet<?>) packet);
-                    LibEventManager.callEvent(event);
-                    if (!event.isCancelled) {
-                        super.channelRead(channel, packet);
-                        if (packet instanceof PacketPlayInUseEntity) {
-                            int id = (int) Reflections.getField(packet, "a");
-                            for (NPC npc : NPC.all) {
-                                if (npc.entityPlayer.getId() == id) {
-                                    npc.event.run(player, ((PacketPlayInUseEntity) packet).a());
-                                    break;
+                    @Override // In Packet
+                    public void channelRead(ChannelHandlerContext channel, Object packet) throws Exception {
+                        PlayInEvent event = new PlayInEvent(player, (Packet<?>) packet);
+                        LibEventManager.callEvent(event);
+                        if (!event.isCancelled) {
+                            super.channelRead(channel, packet);
+                            if (packet instanceof PacketPlayInUseEntity) {
+                                int id = (int) Reflections.getField(packet, "a");
+                                for (NPC npc : NPC.all) {
+                                    if (npc.entityPlayer.getId() == id) {
+                                        npc.event.run(player, ((PacketPlayInUseEntity) packet).a());
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }).addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
-                @Override // Out Packet
-                protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
-                    PlayOutEvent event = new PlayOutEvent(player, packet);
-                    LibEventManager.callEvent(event);
-                    if (!event.isCancelled)
-                        arg.add(packet);
-                }
-            });
+                });
+
+            if (pipeline.get("encoder") != null)
+                pipeline.addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
+                    @Override // Out Packet
+                    protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
+                        PlayOutEvent event = new PlayOutEvent(player, packet);
+                        LibEventManager.callEvent(event);
+                        if (!event.isCancelled)
+                            arg.add(packet);
+                    }
+                });
         }
     }
 }
