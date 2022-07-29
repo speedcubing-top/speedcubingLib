@@ -31,8 +31,8 @@ public class OutScoreboardTeam {
         return this;
     }
 
-    public OutScoreboardTeam e(String e) {
-        Reflections.setField(packet, "e", e);
+    public OutScoreboardTeam e(String nametag) {
+        Reflections.setField(packet, "e", nametag);
         return this;
     }
 
