@@ -17,15 +17,14 @@ public class speedcubingLib extends JavaPlugin {
         is1_8_8 = Bukkit.getVersion().contains("(MC: 1.8.8)");
         Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        if(is1_8_8)
-        try {
-            Field field = Enchantment.class.getDeclaredField("acceptingNew");
-            field.setAccessible(true);
-            field.set(field, true);
-            Glow.glow = new Glow(100);
-            Enchantment.registerEnchantment(Glow.glow);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        if (is1_8_8)
+            try {
+                Field field = Enchantment.class.getDeclaredField("acceptingNew");
+                field.setAccessible(true);
+                field.set(field, true);
+                Glow.glow = new Glow(100);
+                Enchantment.registerEnchantment(Glow.glow);
+            } catch (Exception exception) {
+            }
     }
 }
