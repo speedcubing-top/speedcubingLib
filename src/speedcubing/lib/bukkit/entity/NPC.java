@@ -94,6 +94,13 @@ public class NPC {
         return this;
     }
 
+    public NPC setSneaking(boolean sneaking){
+        entityPlayer.setSneaking(sneaking);
+        PacketPlayOutEntityMetadata metadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(),entityPlayer.getDataWatcher(),true);
+        listener.forEach(a -> a.sendPacket(metadata));
+        return this;
+    }
+
     public NPC setItemInHand(ItemStack itemInHand) {
         this.itemInHand = itemInHand == null || itemInHand.getType().equals(Material.AIR) ? null : itemInHand;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(itemInHand));

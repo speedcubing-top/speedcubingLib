@@ -60,7 +60,7 @@ public class PacketListener implements Listener {
                             if (packet instanceof PacketPlayInUseEntity) {
                                 int id = (int) Reflections.getField(packet, "a");
                                 for (NPC npc : NPC.all) {
-                                    if (npc.entityPlayer.getId() == id) {
+                                    if (npc.entityPlayer.getId() == id && npc.event != null) {
                                         npc.event.run(player, ((PacketPlayInUseEntity) packet).a());
                                         break;
                                     }
