@@ -1,5 +1,6 @@
 package speedcubing.lib.utils.SQL;
 
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,15 @@ public class SQLUtils {
                 }
             }
             return list.toArray(new Boolean[]{});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Blob getBlob(ResultSet resultSet) {
+        try {
+            return resultSet.next() ? resultSet.getBlob(1) : null;
         } catch (Exception e) {
             e.printStackTrace();
         }
