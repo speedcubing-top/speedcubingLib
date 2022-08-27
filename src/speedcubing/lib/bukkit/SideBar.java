@@ -54,11 +54,12 @@ public class SideBar implements Listener {
 
     public SideBar changeableLine(String prefix, String suffix, int score) {
         changer += 1;
-        Team x = scoreboard.registerNewTeam("§" + changer + "§f");
-        x.addEntry("§" + changer + "§f");
+        String c = "§" + "!0123456789abcdef".charAt(changer) + "§f";
+        Team x = scoreboard.registerNewTeam(c);
+        x.addEntry(c);
         x.setPrefix(prefix);
         x.setSuffix(suffix);
-        return staticLine("§" + changer + "§f", score);
+        return staticLine(c, score);
     }
 
     public SideBar changeableLine(String str, int score) {
@@ -69,8 +70,10 @@ public class SideBar implements Listener {
     public SideBar setLine(String str, int line) {
         Team t = scoreboard.getTeam(lines.get(line));
         String[] result = split(str);
-        t.setPrefix(result[0]);
-        t.setSuffix(result[1]);
+        if (!result[0].equals(t.getPrefix()))
+            t.setPrefix(result[0]);
+        if (!result[1].equals(t.getSuffix()))
+            t.setSuffix(result[1]);
         return this;
     }
 
