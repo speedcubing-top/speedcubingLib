@@ -6,5 +6,5 @@
     "speedcubing"
   ],
   "dependencies": [],
-  "main": "speedcubing.lib.speedcubingLibVelocity"
+  "main": "top.speedcubing.lib.speedcubingLibVelocity"
 }
