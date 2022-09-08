@@ -1,6 +1,5 @@
 package top.speedcubing.lib.api;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import top.speedcubing.lib.api.exception.APIErrorException;
@@ -33,22 +32,6 @@ public class MojangAPI {
                 JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                 return new String[]{UUIDUtils.addDash(object.get("id").getAsString()), object.get("name").getAsString()};
             } else throw new APIErrorException(connection.getResponseCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static JsonElement getNameHistory(UUID uuid) {
-        return getNameHistory(uuid.toString());
-    }
-
-    public static JsonElement getNameHistory(String uuid) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/user/profiles/" + uuid + "/names").openConnection();
-            if (connection.getResponseCode() == 200)
-                return new JsonParser().parse(new InputStreamReader(connection.getInputStream()));
-            else throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
