@@ -7,45 +7,72 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class TimeFormatter {
-    String d;
-    String iH;
-    String h;
-    String m;
-    String s;
-    String ms;
-    long t;
-    int i;
+    public final long w;
+    public final long D;
+    public final long d;
+    public final long H;
+    public final long h;
+    public final long m;
+    public final long s;
+    public final long ms;
+    String format = "";
 
     public TimeFormatter(long t, TimeUnit timeUnit) {
         switch (timeUnit) {
             case SECONDS:
-                i = 1;
+                ms = 0;
                 break;
             case MILLISECONDS:
-                i = 1000;
-                ms = Long.toString(t % 1000);
+                ms = t % 1000;
+                t = t / 1000;
+                break;
+            default:
+                ms = 0;
                 break;
         }
-        this.t = t;
-        long a = (t / i);
-        s = String.format("%02d", a % 60);
-        a = a / 60;
-        m = String.format("%02d", a % 60);
-        a = a / 60;
-        h = String.format("%02d", a % 24);
-        iH = Long.toString(a);
-        a = a / 24;
-        d = Long.toString(a);
+        s = t % 60;
+        t = t / 60;
+        m = t % 60;
+        t = t / 60;
+        h = t % 24;
+        H = t;
+        t = t / 24;
+        d = t % 7;
+        D = t;
+        t = t / 7;
+        w = t;
     }
 
-    public String format(String format) {
-        return format
-                .replace("%d%", d)
-                .replace("%H%", iH)
-                .replace("%h%", h)
-                .replace("%m%", m)
-                .replace("%s%", s)
-                .replace("%ms%", ms);
+    public TimeFormatter format(String format, boolean deleteIfEmpty) {
+        if (deleteIfEmpty && this.format.equals("")) {
+            if (w == 0 && (format.contains("%w%") || format.contains("%?w%")))
+                return this;
+            if (d == 0 && format.contains("%d%"))
+                return this;
+            if (H == 0 && format.contains("%H%"))
+                return this;
+            if (h == 0 && format.contains("%h%") || format.contains("%?h%"))
+                return this;
+            if (m == 0 && (format.contains("%m%") || format.contains("%?m%")))
+                return this;
+            if (s == 0 && (format.contains("%s%") || format.contains("%?s%")))
+                return this;
+            if (ms == 0 && (format.contains("%ms%") || format.contains("%?ms%")))
+                return this;
+        }
+        format = format
+                .replace("%w%", Long.toString(w))
+                .replace("%d%", String.format("%03d", d)).replace("%?d%", Long.toString(d)).replace("%D%", Long.toString(D))
+                .replace("%h%", String.format("%02d", h)).replace("%?h%", Long.toString(h)).replace("%H%", Long.toString(H))
+                .replace("%m%", String.format("%02d", m)).replace("%?m%", Long.toString(m))
+                .replace("%s%", String.format("%02d", s)).replace("%?s%", Long.toString(s))
+                .replace("%ms%", String.format("%03d", ms)).replace("%?ms%", Long.toString(ms));
+        this.format += format;
+        return this;
+    }
+
+    public String toString() {
+        return format;
     }
 
     public static String unixToRealTime(long t, String format, TimeUnit timeUnit) {
