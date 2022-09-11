@@ -38,7 +38,7 @@ public class MojangAPI {
         return null;
     }
 
-    public static String getName(UUID uuid) {
+    public static String getName(String uuid) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid).openConnection();
             if (connection.getResponseCode() == 200)
@@ -48,6 +48,10 @@ public class MojangAPI {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getName(UUID uuid) {
+        return getName(uuid.toString());
     }
 
     public static String[] getSkin(String uuid) {
