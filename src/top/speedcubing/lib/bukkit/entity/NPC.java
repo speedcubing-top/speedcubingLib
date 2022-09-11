@@ -13,7 +13,6 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
-import top.speedcubing.lib.api.SessionServer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
 
@@ -94,9 +93,9 @@ public class NPC {
         return this;
     }
 
-    public NPC setSneaking(boolean sneaking){
+    public NPC setSneaking(boolean sneaking) {
         entityPlayer.setSneaking(sneaking);
-        PacketPlayOutEntityMetadata metadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(),entityPlayer.getDataWatcher(),true);
+        PacketPlayOutEntityMetadata metadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(), entityPlayer.getDataWatcher(), true);
         listener.forEach(a -> a.sendPacket(metadata));
         return this;
     }
@@ -129,7 +128,7 @@ public class NPC {
     }
 
     public NPC setSkin(UUID uuid) {
-        String[] skin = SessionServer.getSkin(uuid);
+        String[] skin = MojangAPI.getSkin(uuid);
         return setSkin(skin[0], skin[1]);
     }
 
