@@ -47,7 +47,9 @@ public class TimeFormatter {
         if (deleteIfEmpty && this.format.equals("")) {
             if (w == 0 && (format.contains("%w%") || format.contains("%?w%")))
                 return this;
-            if (d == 0 && format.contains("%d%"))
+            if (D == 0 && format.contains("%D%"))
+                return this;
+            if (d == 0 && format.contains("%d%") || format.contains("%?d%"))
                 return this;
             if (H == 0 && format.contains("%H%"))
                 return this;
