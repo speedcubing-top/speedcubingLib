@@ -43,7 +43,7 @@ public class MojangAPI {
 
         public Skin(String uuid) {
             try {
-                HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid).openConnection();
+                HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid+"?unsigned=false").openConnection();
                 if (connection.getResponseCode() == 200) {
                     JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                     this.name = object.get("name").getAsString();
