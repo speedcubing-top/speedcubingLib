@@ -81,6 +81,8 @@ public class TimeFormatter {
         switch (timeUnit) {
             case SECONDS:
                 return DateTimeFormatter.ofPattern(format).format(LocalDateTime.ofInstant(Instant.ofEpochSecond(t), ZoneId.systemDefault()));
+            case MILLISECONDS:
+                return DateTimeFormatter.ofPattern(format).format(LocalDateTime.ofInstant(Instant.ofEpochMilli(t), ZoneId.systemDefault()));
         }
         return null;
     }
