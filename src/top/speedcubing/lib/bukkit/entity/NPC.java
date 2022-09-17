@@ -128,12 +128,20 @@ public class NPC {
     }
 
     public NPC setSkin(UUID uuid) {
-        String[] skin = MojangAPI.getSkin(uuid);
-        return setSkin(skin[0], skin[1]);
+        try {
+            String[] skin = MojangAPI.getSkin(uuid);
+            return setSkin(skin[0], skin[1]);
+        } catch (Exception e) {
+            return this;
+        }
     }
 
     public NPC setSkin(String name) {
-        return setSkin(MojangAPI.getUUID(name));
+        try {
+            return setSkin(MojangAPI.getUUID(name));
+        } catch (Exception e) {
+            return this;
+        }
     }
 
     public NPC setSkin(String value, String signature) {
