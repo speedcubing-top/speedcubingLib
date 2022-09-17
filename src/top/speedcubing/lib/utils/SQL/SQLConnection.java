@@ -3,6 +3,7 @@ package top.speedcubing.lib.utils.SQL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class SQLConnection {
 
@@ -78,6 +79,18 @@ public class SQLConnection {
     public void execute(String sql) {
         try {
             connection.prepareStatement(sql).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute(String... sqls) {
+        try {
+            Statement s = connection.createStatement();
+            for (String sql : sqls) {
+                s.addBatch(sql);
+            }
+            s.executeBatch();
         } catch (Exception e) {
             e.printStackTrace();
         }
