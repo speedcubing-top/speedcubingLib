@@ -8,6 +8,7 @@ import top.speedcubing.lib.api.exception.APIErrorException;
 import top.speedcubing.lib.eventbus.LibEventManager;
 import top.speedcubing.lib.utils.UUIDUtils;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,8 +31,7 @@ public class MojangAPI {
                     LibEventManager.callEvent(new ProfileRespondEvent(name, uuid));
                 } else
                     throw new APIErrorException(connection.getResponseCode());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
             }
         }
     }
@@ -43,7 +43,7 @@ public class MojangAPI {
 
         public Skin(String uuid) {
             try {
-                HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid+"?unsigned=false").openConnection();
+                HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").openConnection();
                 if (connection.getResponseCode() == 200) {
                     JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                     this.name = object.get("name").getAsString();
@@ -56,8 +56,7 @@ public class MojangAPI {
                     LibEventManager.callEvent(new SkinRespondEvent(name, id, value, signature));
                 } else
                     throw new APIErrorException(connection.getResponseCode());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
             }
         }
     }
@@ -68,7 +67,7 @@ public class MojangAPI {
 
     public static String[] getUUIDAndName(String name) {
         Profile profile = new Profile(name);
-        return new String[]{profile.uuid.toString(), profile.name};
+        return profile.uuid == null ? null : new String[]{profile.uuid.toString(), profile.name};
     }
 
     public static String getName(String uuid) {
@@ -81,7 +80,7 @@ public class MojangAPI {
 
     public static String[] getSkin(String uuid) {
         Skin skin = new Skin(uuid);
-        return new String[]{skin.value, skin.signature};
+        return skin.name == null ? null : new String[]{skin.value, skin.signature};
     }
 
     public static String[] getSkin(UUID uuid) {
