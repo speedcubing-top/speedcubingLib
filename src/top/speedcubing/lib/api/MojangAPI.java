@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.UUID;
 
 public class MojangAPI {
-    public static boolean SKIN_AS_PROFILE = true;
 
     public static class Profile {
         private UUID uuid;
@@ -51,8 +50,7 @@ public class MojangAPI {
                     this.value = object.get("value").getAsString();
                     this.signature = object.get("signature").getAsString();
                     UUID id = UUID.fromString(uuid);
-                    if (SKIN_AS_PROFILE)
-                        LibEventManager.callEvent(new ProfileRespondEvent(name, id));
+                    LibEventManager.callEvent(new ProfileRespondEvent(name, id));
                     LibEventManager.callEvent(new SkinRespondEvent(name, id, value, signature));
                 } else
                     throw new APIErrorException(connection.getResponseCode());
