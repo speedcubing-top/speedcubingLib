@@ -10,6 +10,14 @@ public class TextUtils {
         return 'f';
     }
 
+    public static char getLastColorExact(String str) {
+        for (int i = str.length() - 1; i >= 0; i--) {
+            if (str.charAt(i) == '§')
+                return str.charAt(i + 1);
+        }
+        return ' ';
+    }
+
     public static String toHexColorCode(String c) {
         switch (c) {
             case "0":

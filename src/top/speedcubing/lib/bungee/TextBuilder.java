@@ -4,10 +4,9 @@ package top.speedcubing.lib.bungee;
 import net.md_5.bungee.api.chat.*;
 
 public class TextBuilder {
-    private final ComponentBuilder builder;
+    private final ComponentBuilder builder = new ComponentBuilder();
 
     public TextBuilder() {
-        this.builder = new ComponentBuilder();
     }
 
     public TextBuilder str(String s) {

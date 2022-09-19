@@ -1,12 +1,12 @@
 package top.speedcubing.lib.velocity;
 
-import top.speedcubing.lib.utils.minecraft.TextUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import top.speedcubing.lib.utils.minecraft.TextUtils;
 
 public class TextBuilder {
     static TextComponent legacy(String s) {
@@ -21,31 +21,34 @@ public class TextBuilder {
     }
 
     public TextBuilder str(String s) {
-        last += s;
-        this.builder = this.builder.append(legacy("§" + lastcolor + s));
-        lastcolor = TextUtils.getLastColor(last);
-        return this;
+        builder = builder.append(legacy("§" + lastcolor + s));
+        return add(s);
     }
 
     public TextBuilder click(String s, ClickEvent c) {
-        last += s;
-        this.builder = this.builder.append(legacy("§" + lastcolor + s).clickEvent(c));
-        return this;
+        builder = builder.append(legacy("§" + lastcolor + s).clickEvent(c));
+        return add(s);
     }
 
     public TextBuilder hover(String s, HoverEvent<?> h) {
-        last += s;
-        this.builder = this.builder.append(legacy("§" + lastcolor + s).hoverEvent(h));
-        return this;
+        builder = builder.append(legacy("§" + lastcolor + s).hoverEvent(h));
+        return add(s);
     }
 
     public TextBuilder both(String s, ClickEvent c, HoverEvent<?> h) {
+        builder = builder.append(legacy("§" + lastcolor + s).clickEvent(c).hoverEvent(h));
+        return add(s);
+    }
+
+    TextBuilder add(String s) {
         last += s;
-        this.builder = this.builder.append(legacy("§" + lastcolor + s).clickEvent(c).hoverEvent(h));
+        char ch = TextUtils.getLastColorExact(last);
+        if (ch != ' ')
+            lastcolor = ch;
         return this;
     }
 
     public TextComponent build() {
-        return this.builder;
+        return builder;
     }
 }
