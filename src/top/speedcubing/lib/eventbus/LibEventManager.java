@@ -28,11 +28,14 @@ public class LibEventManager {
                         Class<?> c = m.getParameterTypes()[0];
                         createNewEvents(c);
                         int priority = handler.priority();
-                        Priorities.get(c).add(priority);
-                        Collections.sort(Priorities.get(c));
-                        int index = Priorities.get(c).indexOf(priority);
-                        Methods.get(c).add(index, m);
-                        Instances.get(c).add(index, o);
+                        List<Integer> i = Priorities.get(c);
+                        if (!i.contains(priority)) {
+                            i.add(priority);
+                            Collections.sort(i);
+                            int index = i.indexOf(priority);
+                            Methods.get(c).add(index, m);
+                            Instances.get(c).add(index, o);
+                        } else System.out.println("[speedcubingLib] Duplicated priority " + m + " " + o);
                     }
                 }
             }
