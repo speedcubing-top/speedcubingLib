@@ -17,20 +17,20 @@ public class UDP {
         }
     }
 
-    public void cleanSend(int port, String data) {
+    public void sendClean(int port, String data) {
         try {
-            unSafeSend(port, data);
+            sendUnsafe(port, data);
         } catch (Exception e) {
         }
     }
 
-    public void unSafeSend(int port, String data) throws Exception {
+    public void sendUnsafe(int port, String data) throws Exception {
         socket.send(new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName(host), port));
     }
 
     public void send(int port, String data) {
         try {
-            unSafeSend(port, data);
+            sendUnsafe(port, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
