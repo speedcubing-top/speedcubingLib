@@ -29,7 +29,7 @@ public class LibEventManager {
                         createNewEvents(c);
                         int priority = handler.priority();
                         List<Integer> i = Priorities.get(c);
-                        if (!i.contains(priority)) {
+                        if (priority == 0 || !i.contains(priority)) {
                             i.add(priority);
                             Collections.sort(i);
                             int index = i.indexOf(priority);
