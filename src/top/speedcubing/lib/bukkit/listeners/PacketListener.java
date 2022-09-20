@@ -1,7 +1,10 @@
 package top.speedcubing.lib.bukkit.listeners;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.*;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -16,7 +19,6 @@ import top.speedcubing.lib.bukkit.event.PlayInByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayInEvent;
 import top.speedcubing.lib.bukkit.event.PlayOutByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayOutEvent;
-import top.speedcubing.lib.eventbus.LibEventManager;
 import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.Reflections;
 
@@ -31,9 +33,7 @@ public class PacketListener implements Listener {
             ByteToMessageDecoder byteToMessageDecoder = new ByteToMessageDecoder() {
                 @Override // In Byte
                 protected void decode(ChannelHandlerContext channel, ByteBuf byteBuf, List<Object> arg) {
-                    PlayInByteEvent event = new PlayInByteEvent(player, byteBuf);
-                    LibEventManager.callEvent(event);
-                    if (!event.isCancelled)
+                    if (!((PlayInByteEvent) new PlayInByteEvent(player, byteBuf).call()).isCancelled)
                         arg.add(byteBuf.readBytes(byteBuf.readableBytes()));
                     else
                         byteBuf.skipBytes(byteBuf.readableBytes());
@@ -47,17 +47,13 @@ public class PacketListener implements Listener {
                 pipeline.addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
                     @Override // Out Byte
                     public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) throws Exception {
-                        PlayOutByteEvent event = new PlayOutByteEvent(player, (ByteBuf) byteBuf);
-                        LibEventManager.callEvent(event);
-                        if (!event.isCancelled)
+                        if (!((PlayOutByteEvent) new PlayOutByteEvent(player, (ByteBuf) byteBuf).call()).isCancelled)
                             super.write(channel, byteBuf, promise);
                     }
 
                     @Override // In Packet
                     public void channelRead(ChannelHandlerContext channel, Object packet) throws Exception {
-                        PlayInEvent event = new PlayInEvent(player, (Packet<?>) packet);
-                        LibEventManager.callEvent(event);
-                        if (!event.isCancelled) {
+                        if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
                             super.channelRead(channel, packet);
                             if (packet instanceof PacketPlayInUseEntity) {
                                 int id = (int) Reflections.getField(packet, "a");
@@ -76,9 +72,7 @@ public class PacketListener implements Listener {
                 pipeline.addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
                     @Override // Out Packet
                     protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
-                        PlayOutEvent event = new PlayOutEvent(player, packet);
-                        LibEventManager.callEvent(event);
-                        if (!event.isCancelled)
+                        if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled)
                             arg.add(packet);
                     }
                 });

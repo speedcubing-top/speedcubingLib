@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import top.speedcubing.lib.api.event.ProfileRespondEvent;
 import top.speedcubing.lib.api.event.SkinRespondEvent;
 import top.speedcubing.lib.api.exception.APIErrorException;
-import top.speedcubing.lib.eventbus.LibEventManager;
 import top.speedcubing.lib.utils.UUIDUtils;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class MojangAPI {
                     JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                     this.uuid = UUID.fromString(UUIDUtils.addDash(object.get("id").getAsString()));
                     this.name = object.get("name").getAsString();
-                    LibEventManager.callEvent(new ProfileRespondEvent(name, uuid));
+                    new ProfileRespondEvent(name, uuid).call();
                 } else
                     throw new APIErrorException(connection.getResponseCode());
             } catch (IOException e) {
@@ -50,8 +49,8 @@ public class MojangAPI {
                     this.value = object.get("value").getAsString();
                     this.signature = object.get("signature").getAsString();
                     UUID id = UUID.fromString(uuid);
-                    LibEventManager.callEvent(new ProfileRespondEvent(name, id));
-                    LibEventManager.callEvent(new SkinRespondEvent(name, id, value, signature));
+                    new ProfileRespondEvent(name, id).call();
+                    new SkinRespondEvent(name, id, value, signature).call();
                 } else
                     throw new APIErrorException(connection.getResponseCode());
             } catch (IOException e) {

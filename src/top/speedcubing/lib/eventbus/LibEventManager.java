@@ -19,24 +19,6 @@ public class LibEventManager {
         }
     }
 
-    public static Object callEvent(Object event) {
-        try {
-            Class<?> c = event.getClass();
-            if (Instances.containsKey(c)) {
-                List<Object> instances = Instances.get(c);
-                List<Method> methods = Methods.get(c);
-                int size = instances.size();
-                for (int i = 0; i < size; i++) {
-                    methods.get(i).invoke(instances.get(i), event);
-                }
-            }
-            return event;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return null;
-    }
-
     public static void registerListeners(Object... objects) {
         for (Object o : objects) {
             for (Method m : o.getClass().getDeclaredMethods()) {
@@ -55,5 +37,23 @@ public class LibEventManager {
                 }
             }
         }
+    }
+
+    public LibEventManager call() {
+        try {
+            Class<?> c = getClass();
+            if (Instances.containsKey(c)) {
+                List<Object> instances = Instances.get(c);
+                List<Method> methods = Methods.get(c);
+                int size = instances.size();
+                for (int i = 0; i < size; i++) {
+                    methods.get(i).invoke(instances.get(i), this);
+                }
+            }
+            return this;
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 }

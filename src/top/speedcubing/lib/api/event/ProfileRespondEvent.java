@@ -1,8 +1,10 @@
 package top.speedcubing.lib.api.event;
 
+import top.speedcubing.lib.eventbus.LibEventManager;
+
 import java.util.UUID;
 
-public class ProfileRespondEvent {
+public class ProfileRespondEvent extends LibEventManager {
     public final String name;
     public final UUID uuid;
 
