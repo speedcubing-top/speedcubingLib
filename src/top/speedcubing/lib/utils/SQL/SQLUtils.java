@@ -104,7 +104,6 @@ public class SQLUtils {
 
     public static void closeStatement(ResultSet resultSet) {
         try {
-            resultSet.close();
             resultSet.getStatement().close();
         } catch (Exception e) {
             e.printStackTrace();
