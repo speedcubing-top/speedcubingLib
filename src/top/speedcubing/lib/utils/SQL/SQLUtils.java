@@ -16,6 +16,7 @@ public class SQLUtils {
                     a.add(resultSet.getString(i + 1));
                 }
             }
+            closeStatement(resultSet);
             return a.toArray(new String[]{});
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,6 +33,7 @@ public class SQLUtils {
                     list.add(resultSet.getInt(i + 1));
                 }
             }
+            closeStatement(resultSet);
             return list.toArray(new Integer[]{});
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +50,7 @@ public class SQLUtils {
                     list.add(resultSet.getBoolean(i + 1));
                 }
             }
+            closeStatement(resultSet);
             return list.toArray(new Boolean[]{});
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +60,9 @@ public class SQLUtils {
 
     public static Blob getBlob(ResultSet resultSet) {
         try {
-            return resultSet.next() ? resultSet.getBlob(1) : null;
+            Blob b = resultSet.next() ? resultSet.getBlob(1) : null;
+            closeStatement(resultSet);
+            return b;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,16 +71,9 @@ public class SQLUtils {
 
     public static String getString(ResultSet resultSet) {
         try {
-            return resultSet.next() ? resultSet.getString(1) : null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String getDouble(ResultSet resultSet) {
-        try {
-            return resultSet.next() ? resultSet.getString(1) : null;
+            String s = resultSet.next() ? resultSet.getString(1) : null;
+            closeStatement(resultSet);
+            return s;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +82,9 @@ public class SQLUtils {
 
     public static Integer getInt(ResultSet resultSet) {
         try {
-            return resultSet.next() ? resultSet.getInt(1) : null;
+            Integer i = resultSet.next() ? resultSet.getInt(1) : null;
+            closeStatement(resultSet);
+            return i;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,10 +93,21 @@ public class SQLUtils {
 
     public static Boolean getBoolean(ResultSet resultSet) {
         try {
-            return resultSet.next() ? resultSet.getBoolean(1) : null;
+            Boolean b = resultSet.next() ? resultSet.getBoolean(1) : null;
+            closeStatement(resultSet);
+            return b;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void closeStatement(ResultSet resultSet) {
+        try {
+            resultSet.close();
+            resultSet.getStatement().close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
