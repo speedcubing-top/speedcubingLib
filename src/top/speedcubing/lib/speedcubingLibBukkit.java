@@ -6,9 +6,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import top.speedcubing.lib.bukkit.inventory.Glow;
 import top.speedcubing.lib.bukkit.listeners.PacketListener;
 import top.speedcubing.lib.bukkit.listeners.PlayerListener;
+import top.speedcubing.lib.utils.Reflections;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 public class speedcubingLibBukkit extends JavaPlugin {
     public static boolean deletePlayerFile = false;
@@ -18,15 +18,14 @@ public class speedcubingLibBukkit extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        if (is1_8_8)
+        if (is1_8_8) {
+            Reflections.setClassField(Enchantment.class, "acceptingNew", true);
             try {
-                Field field = Enchantment.class.getDeclaredField("acceptingNew");
-                field.setAccessible(true);
-                field.set(field, true);
                 Glow.glow = new Glow(100);
                 Enchantment.registerEnchantment(Glow.glow);
             } catch (Exception exception) {
             }
+        }
     }
 
     public void onDisable() {

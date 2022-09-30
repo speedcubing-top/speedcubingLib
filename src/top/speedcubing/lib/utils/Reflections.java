@@ -4,6 +4,16 @@ import java.lang.reflect.Field;
 
 public class Reflections {
 
+    public static void setClassField(Class<?> c, String name, Object value) {
+        try {
+            Field field = c.getDeclaredField(name);
+            field.setAccessible(true);
+            field.set(field, value);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public static void setField(Object obj, String name, Object value) {
         try {
             Field field = obj.getClass().getDeclaredField(name);
