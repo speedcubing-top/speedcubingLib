@@ -16,7 +16,18 @@ public class Reflections {
 
     public static Object getField(Object obj, String name) {
         try {
-            Field field = (obj instanceof Class ? (Class<?>) obj : obj.getClass()).getDeclaredField(name);
+            Field field = obj.getClass().getDeclaredField(name);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Object getSuperField(Object obj, String name) {
+        try {
+            Field field = obj.getClass().getSuperclass().getDeclaredField(name);
             field.setAccessible(true);
             return field.get(obj);
         } catch (Exception exception) {
