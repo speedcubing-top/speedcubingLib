@@ -30,8 +30,8 @@ public class speedcubingLibBukkit extends JavaPlugin {
 
     public void onDisable() {
         if (deletePlayerFile) {
-            File index = new File(Bukkit.getWorld("world").getWorldFolder() + "/playerdata");
-            File index2 = new File(Bukkit.getWorld("world").getWorldFolder() + "/stats");
+            File index = new File(Bukkit.getWorlds().get(0).getWorldFolder() + "/playerdata");
+            File index2 = new File(Bukkit.getWorlds().get(0).getWorldFolder() + "/stats");
             if (index.list() != null)
                 for (String s : index.list())
                     new File(index.getPath(), s).delete();

@@ -40,7 +40,7 @@ public class NPC {
     private ItemStack itemInHand;
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin) {
-        WorldServer world = ((CraftWorld) Bukkit.getWorld("world")).getHandle();
+        WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
         entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
         if (enableOuterLayerSkin)
             entityPlayer.getDataWatcher().watch(10, (byte) 127);
