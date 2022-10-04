@@ -5,23 +5,19 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Hologram {
-    public interface ClickEvent {
-        void run(Player player);
-    }
-
     public static final Set<Hologram> all = new HashSet<>();
-    public Set<PlayerConnection> listener = new HashSet<>();
-    public EntityArmorStand armorStand;
+    public final Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
-    public ClickEvent event;
-    public boolean autoSpawn;
-    public boolean autoListen = true;
+
+    boolean autoSpawn;
+    boolean autoListen = true;
+    public final EntityArmorStand armorStand;
 
 
     public Hologram(String name, double x, double y, double z, float yaw, float pitch) {
@@ -44,20 +40,25 @@ public class Hologram {
         return this;
     }
 
-    public Hologram setClickEvent(ClickEvent e) {
-        this.event = e;
-        return this;
-    }
-
     public Hologram setAutoSpawn(boolean autoSpawn) {
         this.autoSpawn = autoSpawn;
         return this;
     }
 
+    public boolean getAutoSpawn() {
+        return autoSpawn;
+    }
+
     public Hologram setAutoListen(boolean autoListen) {
         this.autoListen = autoListen;
         listener.clear();
+        if (autoListen)
+            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         return this;
+    }
+
+    public boolean getAutoListen() {
+        return autoSpawn;
     }
 
     public Hologram setLocation(double x, double y, double z, float yaw, float pitch) {
@@ -90,7 +91,7 @@ public class Hologram {
         return this;
     }
 
-    private Set<PlayerConnection> temp = new HashSet<>();
+    private final Set<PlayerConnection> temp = new HashSet<>();
 
     public Hologram setListenerValues(PlayerConnection... connections) {
         temp.addAll(listener);

@@ -9,35 +9,43 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
+import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class NPC {
-    public interface ClickEvent {
-        void run(Player player, PacketPlayInUseEntity.EnumEntityUseAction action);
-    }
 
     public static final Set<NPC> all = new HashSet<>();
     public final Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
-    public EntityPlayer entityPlayer;
-    public ClickEvent event;
 
-    public boolean autoSpawn;
-    public boolean autoListen = true;
+    boolean autoSpawn;
+    boolean autoListen = true;
+    public final EntityPlayer entityPlayer;
+    boolean nameTagHidden;
+    float spawnBodyYaw;
+    ItemStack itemInHand;
+    ClickEvent event;
 
-    private boolean nameTagHidden;
-    private float spawnBodyYaw;
-    private ItemStack itemInHand;
+    public interface ClickEvent {
+        void run(Player player, PacketPlayInUseEntity.EnumEntityUseAction action);
+    }
+
+    public NPC setClickEvent(ClickEvent e) {
+        this.event = e;
+        return this;
+    }
+
+    public ClickEvent getClickEvent() {
+        return event;
+    }
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin) {
         WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
@@ -48,6 +56,9 @@ public class NPC {
     }
 
     public void delete() {
+        for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
+            p.outRange.remove(this);
+        }
         all.remove(this);
     }
 
@@ -56,20 +67,25 @@ public class NPC {
         return this;
     }
 
-    public NPC setClickEvent(ClickEvent e) {
-        this.event = e;
-        return this;
-    }
-
     public NPC setAutoSpawn(boolean autoSpawn) {
         this.autoSpawn = autoSpawn;
         return this;
     }
 
+    public boolean getAutoSpawn() {
+        return autoSpawn;
+    }
+
     public NPC setAutoListen(boolean autoListen) {
         this.autoListen = autoListen;
         listener.clear();
+        if (autoListen)
+            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         return this;
+    }
+
+    public boolean getAutoListen() {
+        return autoSpawn;
     }
 
     public NPC setSpawnBodyYaw(float spawnBodyYaw) {
@@ -184,6 +200,28 @@ public class NPC {
         });
         return this;
     }
+
+    public NPC hideFromTab() {
+        return hideFromTab(4000);
+    }
+
+    public NPC hideFromTab(int delay) {
+        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        if (delay < 1) {
+            listener.forEach(a -> a.sendPacket(packet));
+            return this;
+        }
+        Set<PlayerConnection> copy = new HashSet<>(listener);
+        new Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        copy.forEach(a -> a.sendPacket(packet));
+                    }
+                }, delay);
+        return this;
+    }
+
 
     public NPC updateNpcLocation() {
         PacketPlayOutEntityTeleport p1 = new PacketPlayOutEntityTeleport(entityPlayer.getId(), MathHelper.floor(entityPlayer.locX * 32), MathHelper.floor(entityPlayer.locY * 32), MathHelper.floor(entityPlayer.locZ * 32), (byte) ((int) (entityPlayer.yaw * 256 / 360)), (byte) ((int) (entityPlayer.pitch * 256 / 360)), true);

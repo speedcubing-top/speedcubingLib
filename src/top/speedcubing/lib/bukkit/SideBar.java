@@ -9,20 +9,20 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SideBar implements Listener {
-    public static final Map<Player, SideBar> perPlayerSidebar = new HashMap<>();
 
     public static SideBar getSidebar(Player player) {
-        return perPlayerSidebar.get(player);
+        return CubingLibPlayer.get(player).getSideBar();
     }
 
     public static Collection<SideBar> getSidebars() {
-        return perPlayerSidebar.values();
+        Set<SideBar> s = new HashSet<>();
+        for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
+            s.add(p.getSideBar());
+        }
+        return s;
     }
 
     public final Scoreboard scoreboard;
@@ -39,7 +39,7 @@ public class SideBar implements Listener {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(displayName);
         this.player = player;
-        perPlayerSidebar.put(player, this);
+        CubingLibPlayer.get(player).setSideBar(this);
     }
 
     public void create() {

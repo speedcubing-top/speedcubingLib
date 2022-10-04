@@ -1,14 +1,17 @@
 package top.speedcubing.lib.bukkit.listeners;
 
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import top.speedcubing.lib.bukkit.SideBar;
+import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.speedcubingLibBukkit;
@@ -39,7 +42,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent e) {
         if (speedcubingLibBukkit.is1_8_8) {
-            SideBar.perPlayerSidebar.remove(e.getPlayer());
+            CubingLibPlayer.user.remove(e.getPlayer());
             PlayerConnection connection = ((CraftPlayer) e.getPlayer()).getHandle().playerConnection;
             NPC.all.forEach(a -> a.listener.remove(connection));
             Hologram.all.forEach(a -> a.listener.remove(connection));
@@ -50,6 +53,7 @@ public class PlayerListener implements Listener {
     public void PlayerJoinEvent(PlayerJoinEvent e) {
         if (speedcubingLibBukkit.is1_8_8) {
             Player player = e.getPlayer();
+            new CubingLibPlayer(player);
             String world = player.getWorld().getName();
             PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
             for (NPC npc : NPC.all) {
@@ -63,17 +67,43 @@ public class PlayerListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void PlayerMoveEvent(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        Location to = e.getTo();
+        String world = to.getWorld().getName();
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+        CubingLibPlayer cubingPlayer = CubingLibPlayer.get(player);
+        double xDiff;
+        double zDiff;
+        for (NPC npc : NPC.all) {
+            if (npc.world.contains(world)) {
+                if (npc.getAutoListen() || npc.listener.contains(connection)) {
+                    xDiff = npc.entityPlayer.locX - to.getX();
+                    zDiff = npc.entityPlayer.locZ - to.getZ();
+                    if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
+                        cubingPlayer.outRange.add(npc);
+                    } else if (cubingPlayer.outRange.contains(npc)) {
+                        cubingPlayer.outRange.remove(npc);
+                        connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER,npc.entityPlayer));
+//                        npc.setListenerValues(connection).spawn().hideFromTab(0).rollBackListenerValues();
+                    }
+                }
+            }
+        }
+    }
+
     private void addHologram(PlayerConnection connection, Hologram hologram) {
-        if (hologram.autoListen)
+        if (hologram.getAutoListen())
             hologram.listener.add(connection);
-        if (hologram.autoSpawn)
+        if (hologram.getAutoSpawn())
             hologram.setListenerValues(connection).spawn().rollBackListenerValues();
     }
 
     private void addNPC(PlayerConnection connection, NPC npc) {
-        if (npc.autoListen)
+        if (npc.getAutoListen())
             npc.listener.add(connection);
-        if (npc.autoSpawn)
+        if (npc.getAutoSpawn())
             npc.setListenerValues(connection).spawn().rollBackListenerValues();
     }
 }
