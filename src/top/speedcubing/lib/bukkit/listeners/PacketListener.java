@@ -9,11 +9,14 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
+import net.minecraft.server.v1_8_R3.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_8_R3.PacketPlayOutMapChunkBulk;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.util.NumberConversions;
 import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.event.PlayInByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayInEvent;
@@ -72,8 +75,23 @@ public class PacketListener implements Listener {
                 pipeline.addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
                     @Override // Out Packet
                     protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
-                        if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled)
+                        if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled) {
                             arg.add(packet);
+                            if (packet instanceof PacketPlayOutMapChunk) {
+                                PacketPlayOutMapChunk chunk = (PacketPlayOutMapChunk) packet;
+                                for (NPC npc : NPC.all) {
+                                    if ((int) Reflections.getField(chunk, "a") == NumberConversions.floor(npc.entityPlayer.locX)>>4 ||
+                                            (int) Reflections.getField(chunk, "b") == NumberConversions.floor(npc.entityPlayer.locZ)>>4) {
+                                        System.out.println("B");
+                                        if (npc.autoSpawn || npc.autoListen || npc.listener.contains(((CraftPlayer) player).getHandle().playerConnection)) {
+                                            System.out.println("C");
+                                            npc.setListenerValues(((CraftPlayer) player).getHandle().playerConnection).spawn().rollBackListenerValues();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 });
         }

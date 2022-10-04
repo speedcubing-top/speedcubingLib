@@ -1,5 +1,6 @@
 package top.speedcubing.lib.bukkit;
 
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -11,6 +12,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class SideBar implements Listener {
     public static final Map<Player, SideBar> perPlayerSidebar = new HashMap<>();
@@ -25,10 +27,11 @@ public class SideBar implements Listener {
 
     public final Scoreboard scoreboard;
     public final Objective objective;
-    private int changer = -1;
-    private int line = 1;
     public final Player player;
-    public Map<Integer, String> lines = new HashMap<>();
+    int changer = -1;
+    int line = 1;
+    Map<Integer, String> lines = new HashMap<>();
+    Map<Integer, Set<String>> scores = new HashMap<>();
 
     public SideBar(Player player, String displayName) {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -40,26 +43,46 @@ public class SideBar implements Listener {
     }
 
     public void create() {
-        this.player.setScoreboard(this.scoreboard);
+        player.setScoreboard(scoreboard);
+    }
+
+    SideBar setPrefixSuffix(String str, String team) {
+        Team t = scoreboard.getTeam(team);
+        String[] result = split(str);
+        if (!result[0].equals(t.getPrefix()))
+            t.setPrefix(result[0]);
+        if (!result[1].equals(t.getSuffix()))
+            t.setSuffix(result[1]);
+        return this;
     }
 
     public SideBar staticLine(String str, int score) {
         if (str.matches("^\\w{1,16}$"))
             throw new IllegalArgumentException();
+        return add(str, score, true);
+    }
+
+    SideBar add(String str, int score, boolean isStaticLine) {
         objective.getScore(str).setScore(score);
-        lines.put(line, str);
+        if (!isStaticLine) {
+            lines.put(line, str);
+            Set<String> s = scores.get(score);
+            if (s != null)
+                s.add(str);
+            else scores.put(score, Sets.newHashSet(str));
+        }
         line += 1;
         return this;
     }
 
     public SideBar changeableLine(String prefix, String suffix, int score) {
         changer += 1;
-        String c = "§" + "!0123456789abcdef".charAt(changer) + "§f";
-        Team x = scoreboard.registerNewTeam(c);
-        x.addEntry(c);
+        String str = "§" + "!0123456789abcdef".charAt(changer) + "§f";
+        Team x = scoreboard.registerNewTeam(str);
+        x.addEntry(str);
         x.setPrefix(prefix);
         x.setSuffix(suffix);
-        return staticLine(c, score);
+        return add(str, score, false);
     }
 
     public SideBar changeableLine(String str, int score) {
@@ -68,12 +91,13 @@ public class SideBar implements Listener {
     }
 
     public SideBar setLine(String str, int line) {
-        Team t = scoreboard.getTeam(lines.get(line));
-        String[] result = split(str);
-        if (!result[0].equals(t.getPrefix()))
-            t.setPrefix(result[0]);
-        if (!result[1].equals(t.getSuffix()))
-            t.setSuffix(result[1]);
+        return setPrefixSuffix(str, lines.get(line));
+    }
+
+    public SideBar setLineByScore(String str, int score) {
+        for (String s : scores.get(score)) {
+            setPrefixSuffix(str, s);
+        }
         return this;
     }
 
