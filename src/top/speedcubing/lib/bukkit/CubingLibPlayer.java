@@ -1,6 +1,7 @@
 package top.speedcubing.lib.bukkit;
 
 import org.bukkit.entity.Player;
+import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
 
 import java.util.HashMap;
@@ -16,7 +17,8 @@ public class CubingLibPlayer {
         return user.get(player);
     }
 
-    public final Set<NPC> outRange = new HashSet<>();
+    public final Set<NPC> outRangeNPC = new HashSet<>();
+    public final Set<Hologram> outRangeHologram = new HashSet<>();
 
     SideBar sideBar;
 

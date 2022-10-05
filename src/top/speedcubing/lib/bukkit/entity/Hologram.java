@@ -5,7 +5,7 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import top.speedcubing.lib.bukkit.CubingLibPlayer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +32,9 @@ public class Hologram {
     }
 
     public void delete() {
+        for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
+            p.outRangeHologram.remove(this);
+        }
         all.remove(this);
     }
 
@@ -51,9 +54,6 @@ public class Hologram {
 
     public Hologram setAutoListen(boolean autoListen) {
         this.autoListen = autoListen;
-        listener.clear();
-        if (autoListen)
-            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         return this;
     }
 

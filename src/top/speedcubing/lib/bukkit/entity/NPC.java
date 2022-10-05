@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,9 +22,8 @@ import java.util.*;
 public class NPC {
 
     public static final Set<NPC> all = new HashSet<>();
-    public final Set<PlayerConnection> listener = new HashSet<>();
+    public Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
-
     boolean autoSpawn;
     boolean autoListen = true;
     public final EntityPlayer entityPlayer;
@@ -33,6 +31,7 @@ public class NPC {
     float spawnBodyYaw;
     ItemStack itemInHand;
     ClickEvent event;
+    int ms = 4000;
 
     public interface ClickEvent {
         void run(Player player, PacketPlayInUseEntity.EnumEntityUseAction action);
@@ -55,42 +54,37 @@ public class NPC {
         all.add(this);
     }
 
+    public NPC spawn() {
+        float yaw = entityPlayer.yaw;
+        entityPlayer.yaw = spawnBodyYaw;
+        PacketPlayOutPlayerInfo p1 = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+        PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
+        entityPlayer.yaw = yaw;
+        PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
+        listener.forEach(a -> {
+                    a.sendPacket(p1);
+                    a.sendPacket(p2);
+                    a.sendPacket(p3);
+                }
+        );
+        if (nameTagHidden)
+            hideNametag();
+        if (nameTagHidden)
+            hideNametag();
+        if (itemInHand != null)
+            setItemInHand(itemInHand);
+        if (ms != -1)
+            hideFromTab(ms);
+        return this;
+    }
+
+
+    //AFTER
     public void delete() {
         for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
-            p.outRange.remove(this);
+            p.outRangeNPC.remove(this);
         }
         all.remove(this);
-    }
-
-    public NPC world(String... world) {
-        this.world.addAll(Sets.newHashSet(world));
-        return this;
-    }
-
-    public NPC setAutoSpawn(boolean autoSpawn) {
-        this.autoSpawn = autoSpawn;
-        return this;
-    }
-
-    public boolean getAutoSpawn() {
-        return autoSpawn;
-    }
-
-    public NPC setAutoListen(boolean autoListen) {
-        this.autoListen = autoListen;
-        listener.clear();
-        if (autoListen)
-            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
-        return this;
-    }
-
-    public boolean getAutoListen() {
-        return autoSpawn;
-    }
-
-    public NPC setSpawnBodyYaw(float spawnBodyYaw) {
-        this.spawnBodyYaw = spawnBodyYaw;
-        return this;
     }
 
     public NPC animation(int animation) {
@@ -116,6 +110,35 @@ public class NPC {
         return this;
     }
 
+    //ALWAYS
+    public NPC world(String... world) {
+        this.world.addAll(Sets.newHashSet(world));
+        return this;
+    }
+
+    public NPC setAutoSpawn(boolean autoSpawn) {
+        this.autoSpawn = autoSpawn;
+        return this;
+    }
+
+    public boolean getAutoSpawn() {
+        return autoSpawn;
+    }
+
+    public NPC setAutoListen(boolean autoListen) {
+        this.autoListen = autoListen;
+        return this;
+    }
+
+    public boolean getAutoListen() {
+        return autoSpawn;
+    }
+
+    public NPC setSpawnBodyYaw(float spawnBodyYaw) {
+        this.spawnBodyYaw = spawnBodyYaw;
+        return this;
+    }
+
     public NPC setItemInHand(ItemStack itemInHand) {
         this.itemInHand = itemInHand == null || itemInHand.getType().equals(Material.AIR) ? null : itemInHand;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(itemInHand));
@@ -123,23 +146,29 @@ public class NPC {
         return this;
     }
 
-    public NPC spawn() {
-        float yaw = entityPlayer.yaw;
-        entityPlayer.yaw = spawnBodyYaw;
-        PacketPlayOutPlayerInfo p1 = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
-        PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
-        entityPlayer.yaw = yaw;
-        PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
+    public NPC hideNametag() {
+        this.nameTagHidden = true;
+        PacketPlayOutScoreboardTeam p1 = new OutScoreboardTeam().a("~").e("never").h(1).packet;
+        PacketPlayOutScoreboardTeam p2 = new OutScoreboardTeam().a("~").e("never").packet;
+        PacketPlayOutScoreboardTeam p3 = new OutScoreboardTeam().a("~").g(Collections.singletonList(entityPlayer.getName())).h(3).packet;
         listener.forEach(a -> {
-                    a.sendPacket(p1);
-                    a.sendPacket(p2);
-                    a.sendPacket(p3);
-                }
-        );
-        if (nameTagHidden)
-            hideNametag();
-        if (itemInHand != null)
-            setItemInHand(itemInHand);
+            a.sendPacket(p1);
+            a.sendPacket(p2);
+            a.sendPacket(p3);
+        });
+        return this;
+    }
+
+    public NPC hideFromTab(int ms) {
+        this.ms = ms;
+        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        Set<PlayerConnection> copy = new HashSet<>(listener);
+        new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        copy.forEach(a -> a.sendPacket(packet));
+                    }
+                }, ms);
         return this;
     }
 
@@ -164,11 +193,9 @@ public class NPC {
         GameProfile gameProfile = entityPlayer.getProfile();
         gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", new Property("textures", value, signature));
-        if (!listener.isEmpty()) {
-            despawn();
-            spawn();
-            updateNpcLocation();
-        }
+        despawn();
+        spawn();
+        updateNpcLocation();
         return this;
     }
 
@@ -188,40 +215,29 @@ public class NPC {
         return setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
-    public NPC hideNametag() {
-        this.nameTagHidden = true;
-        PacketPlayOutScoreboardTeam p1 = new OutScoreboardTeam().a("").e("never").h(1).packet;
-        PacketPlayOutScoreboardTeam p2 = new OutScoreboardTeam().a("").e("never").packet;
-        PacketPlayOutScoreboardTeam p3 = new OutScoreboardTeam().a("").g(Collections.singletonList(entityPlayer.getName())).h(3).packet;
-        listener.forEach(a -> {
-            a.sendPacket(p1);
-            a.sendPacket(p2);
-            a.sendPacket(p3);
-        });
-        return this;
-    }
-
-    public NPC hideFromTab() {
-        return hideFromTab(4000);
-    }
-
-    public NPC hideFromTab(int delay) {
-        PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
-        if (delay < 1) {
-            listener.forEach(a -> a.sendPacket(packet));
-            return this;
+    public void aim(Location location) {
+        double x = location.getX();
+        double z = location.getZ();
+        double xDiff = x - entityPlayer.locX;
+        double zDiff = z - entityPlayer.locZ;
+        float yaw;
+        if (z == entityPlayer.locZ)
+            yaw = xDiff > 0 ? 270 : 90;
+        else if (x == entityPlayer.locX)
+            yaw = zDiff > 0 ? 0 : 180;
+        else {
+            float s = (float) Math.toDegrees(Math.atan(Math.abs(xDiff) / Math.abs(zDiff)));
+            yaw = zDiff > 0 ? (xDiff > 0 ? 360 - s : s) : 180 + (xDiff > 0 ? s : -s);
         }
-        Set<PlayerConnection> copy = new HashSet<>(listener);
-        new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        copy.forEach(a -> a.sendPacket(packet));
-                    }
-                }, delay);
-        return this;
+        double y = location.getY() - entityPlayer.locY;
+        double l = Math.sqrt(xDiff * xDiff + zDiff * zDiff);
+        setLocation(
+                entityPlayer.locX,
+                entityPlayer.locY,
+                entityPlayer.locZ,
+                yaw,
+                (l == 0) ? 270 : (y == 0 ? 0 : 360 - (float) Math.toDegrees(Math.atan(y / l)))).updateNpcLocation();
     }
-
 
     public NPC updateNpcLocation() {
         PacketPlayOutEntityTeleport p1 = new PacketPlayOutEntityTeleport(entityPlayer.getId(), MathHelper.floor(entityPlayer.locX * 32), MathHelper.floor(entityPlayer.locY * 32), MathHelper.floor(entityPlayer.locZ * 32), (byte) ((int) (entityPlayer.yaw * 256 / 360)), (byte) ((int) (entityPlayer.pitch * 256 / 360)), true);

@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit.listeners;
 
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -82,11 +81,26 @@ public class PlayerListener implements Listener {
                     xDiff = npc.entityPlayer.locX - to.getX();
                     zDiff = npc.entityPlayer.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
-                        cubingPlayer.outRange.add(npc);
-                    } else if (cubingPlayer.outRange.contains(npc)) {
-                        cubingPlayer.outRange.remove(npc);
-                        connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER,npc.entityPlayer));
-//                        npc.setListenerValues(connection).spawn().hideFromTab(0).rollBackListenerValues();
+                        cubingPlayer.outRangeNPC.add(npc);
+                        npc.despawn();
+                    } else if (cubingPlayer.outRangeNPC.contains(npc)) {
+                        cubingPlayer.outRangeNPC.remove(npc);
+                        npc.spawn().hideFromTab(50);
+                    }
+                }
+            }
+        }
+        for (Hologram hologram : Hologram.all) {
+            if (hologram.world.contains(world)) {
+                if (hologram.getAutoListen() || hologram.listener.contains(connection)) {
+                    xDiff = hologram.armorStand.locX - to.getX();
+                    zDiff = hologram.armorStand.locZ - to.getZ();
+                    if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 64) {
+                        cubingPlayer.outRangeHologram.add(hologram);
+                        hologram.despawn();
+                    } else if (cubingPlayer.outRangeHologram.contains(hologram)) {
+                        cubingPlayer.outRangeHologram.remove(hologram);
+                        hologram.spawn();
                     }
                 }
             }
