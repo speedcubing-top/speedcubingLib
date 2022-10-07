@@ -3,8 +3,10 @@ package top.speedcubing.lib.api;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import top.speedcubing.lib.api.event.ProfileRespondEvent;
-import top.speedcubing.lib.api.event.SkinRespondEvent;
 import top.speedcubing.lib.api.exception.APIErrorException;
+import top.speedcubing.lib.api.mojang.Profile;
+import top.speedcubing.lib.api.mojang.ProfileNameUUID;
+import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.utils.UUIDUtils;
 
 import java.io.IOException;
@@ -15,72 +17,90 @@ import java.util.UUID;
 
 public class MojangAPI {
 
-    public static class Profile {
-        private UUID uuid;
-        private String name;
+    public static void main(String[] a){
+        System.out.println(MojangAPI.getNameUUIDByUUID("9f0cd104-4b87-425c-975a-afdb8844b901").getName());
+    }
 
-        public Profile(String name) {
-            try {
-                HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
-                if (connection.getResponseCode() == 200) {
-                    JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
-                    this.uuid = UUID.fromString(UUIDUtils.addDash(object.get("id").getAsString()));
-                    this.name = object.get("name").getAsString();
-                    new ProfileRespondEvent(name, uuid).call();
-                } else
-                    throw new APIErrorException(connection.getResponseCode());
-            } catch (IOException e) {
-            }
+    static ProfileNameUUID t(String name, boolean call) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
+            if (connection.getResponseCode() == 200) {
+                JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+                String[] s = {object.get("name").getAsString(), UUIDUtils.addDash(object.get("id").getAsString())};
+                if (call)
+                    new ProfileRespondEvent(new Profile(s[0], s[1], null, null)).call();
+                return new ProfileNameUUID(s[0], s[1]);
+            } else
+                throw new APIErrorException(connection.getResponseCode());
+        } catch (IOException e) {
+            return null;
         }
     }
 
-    public static class Skin {
-        private String name;
-        private String value;
-        private String signature;
+    //uuid -> Profile
+    public static Profile getProfileByUUID(UUID uuid) {
+        return getProfileByUUID(uuid.toString());
+    }
 
-        public Skin(String uuid) {
-            try {
-                HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").openConnection();
-                if (connection.getResponseCode() == 200) {
-                    JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
-                    this.name = object.get("name").getAsString();
-                    object = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
-                    this.value = object.get("value").getAsString();
-                    this.signature = object.get("signature").getAsString();
-                    UUID id = UUID.fromString(uuid);
-                    new ProfileRespondEvent(name, id).call();
-                    new SkinRespondEvent(name, id, value, signature).call();
-                } else
-                    throw new APIErrorException(connection.getResponseCode());
-            } catch (IOException e) {
-            }
+    public static Profile getProfileByUUID(String uuid) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").openConnection();
+            if (connection.getResponseCode() == 200) {
+                JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+                JsonObject object2 = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
+                Profile profile = new Profile(object.get("name").getAsString(), uuid, object2.get("value").getAsString(), object2.get("signature").getAsString());
+                new ProfileRespondEvent(profile).call();
+                return profile;
+            } else
+                throw new APIErrorException(connection.getResponseCode());
+        } catch (IOException e) {
+            return null;
         }
     }
 
+    //name -> UUID
     public static UUID getUUID(String name) {
-        return new Profile(name).uuid;
+        return getNameUUIDByName(name).getUUID();
     }
 
-    public static String[] getUUIDAndName(String name) {
-        Profile profile = new Profile(name);
-        return profile.uuid == null ? null : new String[]{profile.uuid.toString(), profile.name};
+    public static String getUUIDString(String name) {
+        return getNameUUIDByName(name).getUUIDString();
     }
 
+    //uuid -> Name
     public static String getName(String uuid) {
-        return new Skin(uuid).name;
+        return getProfileByUUID(uuid).getName();
     }
 
     public static String getName(UUID uuid) {
         return getName(uuid.toString());
     }
 
-    public static String[] getSkin(String uuid) {
-        Skin skin = new Skin(uuid);
-        return skin.name == null ? null : new String[]{skin.value, skin.signature};
+    //any -> Name + UUID
+    public static ProfileNameUUID getNameUUIDByName(String name) {
+        return t(name, true);
     }
 
-    public static String[] getSkin(UUID uuid) {
-        return getSkin(uuid.toString());
+    public static ProfileNameUUID getNameUUIDByUUID(String uuid) {
+        Profile profile = getProfileByUUID(uuid);
+        return new ProfileNameUUID(profile.getName(), profile.getUUIDString());
+    }
+
+    public static ProfileNameUUID getNameUUIDByUUID(UUID uuid) {
+        return getNameUUIDByUUID(uuid.toString());
+    }
+
+    //any -> Skin
+    public static ProfileSkin getSkinByName(String name) {
+        return getSkinByUUID(t(name, false).getUUIDString());
+    }
+
+    public static ProfileSkin getSkinByUUID(String uuid) {
+        Profile s = getProfileByUUID(uuid);
+        return new ProfileSkin(s.getValue(), s.getSignature());
+    }
+
+    public static ProfileSkin getSkinByUUID(UUID uuid) {
+        return getSkinByUUID(uuid.toString());
     }
 }

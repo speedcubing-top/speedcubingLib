@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
+import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
@@ -164,18 +165,18 @@ public class NPC {
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         Set<PlayerConnection> copy = new HashSet<>(listener);
         new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        copy.forEach(a -> a.sendPacket(packet));
-                    }
-                }, ms);
+            @Override
+            public void run() {
+                copy.forEach(a -> a.sendPacket(packet));
+            }
+        }, ms);
         return this;
     }
 
     public NPC setSkin(UUID uuid) {
         try {
-            String[] skin = MojangAPI.getSkin(uuid);
-            return setSkin(skin[0], skin[1]);
+            ProfileSkin skin = MojangAPI.getSkinByUUID(uuid);
+            return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;
         }
@@ -183,7 +184,8 @@ public class NPC {
 
     public NPC setSkin(String name) {
         try {
-            return setSkin(MojangAPI.getUUID(name));
+            ProfileSkin skin = MojangAPI.getSkinByName(name);
+            return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;
         }

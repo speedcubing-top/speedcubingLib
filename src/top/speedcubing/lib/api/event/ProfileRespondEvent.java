@@ -1,15 +1,12 @@
 package top.speedcubing.lib.api.event;
 
+import top.speedcubing.lib.api.mojang.Profile;
 import top.speedcubing.lib.eventbus.LibEventManager;
 
-import java.util.UUID;
-
 public class ProfileRespondEvent extends LibEventManager {
-    public final String name;
-    public final UUID uuid;
+    public final Profile profile;
 
-    public ProfileRespondEvent(String name, UUID uuid) {
-        this.name = name;
-        this.uuid = uuid;
+    public ProfileRespondEvent(Profile profile) {
+        this.profile = profile;
     }
 }
