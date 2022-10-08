@@ -85,7 +85,7 @@ public class PlayerListener implements Listener {
                         npc.despawn();
                     } else if (cubingPlayer.outRangeNPC.contains(npc)) {
                         cubingPlayer.outRangeNPC.remove(npc);
-                        npc.spawn().hideFromTab(50);
+                        npc.spawn().tempHideFromTab(50);
                     }
                 }
             }

@@ -160,8 +160,8 @@ public class NPC {
         return this;
     }
 
-    public NPC hideFromTab(int ms) {
-        this.ms = ms;
+
+    public NPC tempHideFromTab(int ms) {
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         Set<PlayerConnection> copy = new HashSet<>(listener);
         new Timer().schedule(new TimerTask() {
@@ -171,6 +171,11 @@ public class NPC {
             }
         }, ms);
         return this;
+    }
+
+    public NPC hideFromTab(int ms) {
+        this.ms = ms;
+        return tempHideFromTab(ms);
     }
 
     public NPC setSkin(UUID uuid) {
