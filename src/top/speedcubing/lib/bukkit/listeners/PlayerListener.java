@@ -88,11 +88,11 @@ public class PlayerListener implements Listener {
                     zDiff = npc.entityPlayer.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
                         cubingPlayer.outRangeNPC.add(npc);
-                        npc.despawn();
+                        npc.setListenerValues(connection).despawn().rollBackListenerValues();
                     } else if (cubingPlayer.outRangeNPC.contains(npc)) {
                         cubingPlayer.outRangeNPC.remove(npc);
                         int p = npc.ms;
-                        npc.privSetMS(-1).spawn().privHideFromTab(50).privSetMS(p);
+                        npc.privSetMS(-1).setListenerValues(connection).spawn().privHideFromTab(50).rollBackListenerValues().privSetMS(p);
                     }
                 }
             }
@@ -104,10 +104,10 @@ public class PlayerListener implements Listener {
                     zDiff = hologram.armorStand.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 64) {
                         cubingPlayer.outRangeHologram.add(hologram);
-                        hologram.despawn();
+                        hologram.setListenerValues(connection).despawn().rollBackListenerValues();
                     } else if (cubingPlayer.outRangeHologram.contains(hologram)) {
                         cubingPlayer.outRangeHologram.remove(hologram);
-                        hologram.spawn();
+                        hologram.setListenerValues(connection).spawn().rollBackListenerValues();
                     }
                 }
             }
