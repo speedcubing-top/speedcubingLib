@@ -32,7 +32,7 @@ public class NPC {
     float spawnBodyYaw;
     ItemStack itemInHand;
     ClickEvent event;
-    int ms = 4000;
+    public int ms = 4000;
 
     public interface ClickEvent {
         void run(Player player, PacketPlayInUseEntity.EnumEntityUseAction action);
@@ -132,7 +132,7 @@ public class NPC {
     }
 
     public boolean getAutoListen() {
-        return autoSpawn;
+        return autoListen;
     }
 
     public NPC setSpawnBodyYaw(float spawnBodyYaw) {
@@ -161,7 +161,7 @@ public class NPC {
     }
 
 
-    public NPC tempHideFromTab(int ms) {
+    public NPC privHideFromTab(int ms) {
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         Set<PlayerConnection> copy = new HashSet<>(listener);
         new Timer().schedule(new TimerTask() {
@@ -173,9 +173,14 @@ public class NPC {
         return this;
     }
 
-    public NPC hideFromTab(int ms) {
+    public NPC privSetMS(int ms) {
         this.ms = ms;
-        return tempHideFromTab(ms);
+        return this;
+    }
+
+    public NPC hideFromTab(int ms) {
+        privSetMS(ms);
+        return privHideFromTab(ms);
     }
 
     public NPC setSkin(UUID uuid) {

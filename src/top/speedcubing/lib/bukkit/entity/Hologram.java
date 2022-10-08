@@ -58,7 +58,7 @@ public class Hologram {
     }
 
     public boolean getAutoListen() {
-        return autoSpawn;
+        return autoListen;
     }
 
     public Hologram setLocation(double x, double y, double z, float yaw, float pitch) {

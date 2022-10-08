@@ -1,5 +1,6 @@
 package top.speedcubing.lib.bukkit.listeners;
 
+import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -73,6 +74,11 @@ public class PlayerListener implements Listener {
         String world = to.getWorld().getName();
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         CubingLibPlayer cubingPlayer = CubingLibPlayer.get(player);
+        if (cubingPlayer.getBossbar() != null) {
+            Location newLocation = to.clone().add(to.getDirection().multiply(100));
+            speedcubingLibBukkit.wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(speedcubingLibBukkit.wither));
+        }
         double xDiff;
         double zDiff;
         for (NPC npc : NPC.all) {
@@ -85,7 +91,8 @@ public class PlayerListener implements Listener {
                         npc.despawn();
                     } else if (cubingPlayer.outRangeNPC.contains(npc)) {
                         cubingPlayer.outRangeNPC.remove(npc);
-                        npc.spawn().tempHideFromTab(50);
+                        int p = npc.ms;
+                        npc.privSetMS(-1).spawn().privHideFromTab(50).privSetMS(p);
                     }
                 }
             }
@@ -105,6 +112,7 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+
     }
 
     private void addHologram(PlayerConnection connection, Hologram hologram) {
