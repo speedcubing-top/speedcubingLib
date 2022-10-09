@@ -20,14 +20,13 @@ public class Hologram {
     public final EntityArmorStand armorStand;
 
 
-    public Hologram(String name, double x, double y, double z, float yaw, float pitch) {
+    public Hologram(String name) {
         armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
         armorStand.setCustomNameVisible(true);
         armorStand.setGravity(true);
         armorStand.setInvisible(true);
         armorStand.n(true);
         armorStand.setCustomName(name);
-        armorStand.setLocation(x, y, z, yaw, pitch);
         all.add(this);
     }
 

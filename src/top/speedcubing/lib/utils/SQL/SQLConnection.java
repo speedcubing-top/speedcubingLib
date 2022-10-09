@@ -22,8 +22,8 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder orderBy(String orderfield, String sort) {
-            sql += " ORDER BY " + orderfield + " " + sort;
+        public SQLBuilder orderBy(String orders) {
+            sql += " ORDER BY " + orders;
             return this;
         }
 
