@@ -7,33 +7,38 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Hologram {
-    public static final Set<Hologram> all = new HashSet<>();
-    public final Set<PlayerConnection> listener = new HashSet<>();
-    public final Set<String> world = new HashSet<>();
 
-    boolean autoSpawn;
-    boolean autoListen = true;
-    public final EntityArmorStand armorStand;
+    Set<PlayerConnection> temp;
 
+    public Hologram addListener(PlayerConnection... connections) {
+        listener.addAll(Sets.newHashSet(connections));
+        return this;
+    }
 
-    public Hologram(String name) {
-        armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
-        armorStand.setCustomNameVisible(true);
-        armorStand.setGravity(true);
-        armorStand.setInvisible(true);
-        armorStand.n(true);
-        armorStand.setCustomName(name);
-        all.add(this);
+    public Hologram addListener(Collection<PlayerConnection> connections) {
+        listener.addAll(connections);
+        return this;
+    }
+
+    public Hologram setListener(PlayerConnection... connections) {
+        temp = listener;
+        listener = Sets.newHashSet(connections);
+        return this;
+    }
+
+    public Hologram undoSetListener() {
+        listener = temp;
+        temp = null;
+        return this;
     }
 
     public void delete() {
-        for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
-            p.outRangeHologram.remove(this);
-        }
+        CubingLibPlayer.user.values().forEach(a -> a.outRangeHologram.remove(this));
         all.remove(this);
     }
 
@@ -42,22 +47,23 @@ public class Hologram {
         return this;
     }
 
-    public Hologram setAutoSpawn(boolean autoSpawn) {
+    public static final Set<Hologram> all = new HashSet<>();
+    public Set<PlayerConnection> listener = new HashSet<>();
+    public final Set<String> world = new HashSet<>();
+    public final boolean autoSpawn;
+    public final boolean everyoneCanSee;
+    public final EntityArmorStand armorStand;
+
+    public Hologram(String name, boolean everyoneCanSee, boolean autoSpawn) {
+        this.everyoneCanSee = everyoneCanSee;
         this.autoSpawn = autoSpawn;
-        return this;
-    }
-
-    public boolean getAutoSpawn() {
-        return autoSpawn;
-    }
-
-    public Hologram setAutoListen(boolean autoListen) {
-        this.autoListen = autoListen;
-        return this;
-    }
-
-    public boolean getAutoListen() {
-        return autoListen;
+        armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
+        armorStand.setCustomNameVisible(true);
+        armorStand.setGravity(true);
+        armorStand.setInvisible(true);
+        armorStand.n(true);
+        armorStand.setCustomName(name);
+        all.add(this);
     }
 
     public Hologram setLocation(double x, double y, double z, float yaw, float pitch) {
@@ -87,22 +93,6 @@ public class Hologram {
         armorStand.setCustomName(name);
         PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
         listener.forEach(a -> a.sendPacket(packet));
-        return this;
-    }
-
-    private final Set<PlayerConnection> temp = new HashSet<>();
-
-    public Hologram setListenerValues(PlayerConnection... connections) {
-        temp.addAll(listener);
-        listener.clear();
-        listener.addAll(Sets.newHashSet(connections));
-        return this;
-    }
-
-    public Hologram rollBackListenerValues() {
-        listener.clear();
-        listener.addAll(temp);
-        temp.clear();
         return this;
     }
 }

@@ -83,31 +83,31 @@ public class PlayerListener implements Listener {
         double zDiff;
         for (NPC npc : NPC.all) {
             if (npc.world.contains(world)) {
-                if (npc.getAutoListen() || npc.listener.contains(connection)) {
+                if (npc.everyoneCanSee || npc.listener.contains(connection)) {
                     xDiff = npc.entityPlayer.locX - to.getX();
                     zDiff = npc.entityPlayer.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
                         cubingPlayer.outRangeNPC.add(npc);
-                        npc.setListenerValues(connection).despawn().rollBackListenerValues();
+                        npc.setListener(connection).despawn().undoSetListener();
                     } else if (cubingPlayer.outRangeNPC.contains(npc)) {
                         cubingPlayer.outRangeNPC.remove(npc);
                         int p = npc.ms;
-                        npc.privSetMS(-1).setListenerValues(connection).spawn().privHideFromTab(50).rollBackListenerValues().privSetMS(p);
+                        npc.setHideFromTabDelay(-1).setListener(connection).spawn().hideFromTab(50).undoSetListener().setHideFromTabDelay(p);
                     }
                 }
             }
         }
         for (Hologram hologram : Hologram.all) {
             if (hologram.world.contains(world)) {
-                if (hologram.getAutoListen() || hologram.listener.contains(connection)) {
+                if (hologram.everyoneCanSee || hologram.listener.contains(connection)) {
                     xDiff = hologram.armorStand.locX - to.getX();
                     zDiff = hologram.armorStand.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 64) {
                         cubingPlayer.outRangeHologram.add(hologram);
-                        hologram.setListenerValues(connection).despawn().rollBackListenerValues();
+                        hologram.setListener(connection).despawn().undoSetListener();
                     } else if (cubingPlayer.outRangeHologram.contains(hologram)) {
                         cubingPlayer.outRangeHologram.remove(hologram);
-                        hologram.setListenerValues(connection).spawn().rollBackListenerValues();
+                        hologram.setListener(connection).spawn().undoSetListener();
                     }
                 }
             }
@@ -116,16 +116,16 @@ public class PlayerListener implements Listener {
     }
 
     private void addHologram(PlayerConnection connection, Hologram hologram) {
-        if (hologram.getAutoListen())
-            hologram.listener.add(connection);
-        if (hologram.getAutoSpawn())
-            hologram.setListenerValues(connection).spawn().rollBackListenerValues();
+        if (hologram.everyoneCanSee)
+            hologram.addListener(connection);
+        if (hologram.autoSpawn)
+            hologram.setListener(connection).spawn().undoSetListener();
     }
 
     private void addNPC(PlayerConnection connection, NPC npc) {
-        if (npc.getAutoListen())
-            npc.listener.add(connection);
-        if (npc.getAutoSpawn())
-            npc.setListenerValues(connection).spawn().rollBackListenerValues();
+        if (npc.everyoneCanSee)
+            npc.addListener(connection);
+        if (npc.autoSpawn)
+            npc.setListener(connection).spawn().undoSetListener();
     }
 }
