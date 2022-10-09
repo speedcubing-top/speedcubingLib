@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,19 +25,35 @@ public class NPC {
 
     Set<PlayerConnection> temp = new HashSet<>();
 
-    public NPC addListener(PlayerConnection... connections) {
-        listener.addAll(Sets.newHashSet(connections));
+    public NPC addListener(Player... players) {
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
         return this;
     }
 
-    public NPC addListener(Collection<PlayerConnection> connections) {
-        listener.addAll(connections);
+    public NPC addListener(Collection<Player> players) {
+        players.forEach(p -> listener.add(((CraftPlayer) p).getHandle().playerConnection));
         return this;
     }
 
-    public NPC setListener(PlayerConnection... connections) {
+    public NPC setListener(Player... players) {
         temp = listener;
-        listener = Sets.newHashSet(connections);
+        listener = new HashSet<>();
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
+        return this;
+    }
+
+    public boolean hasListener(Player player) {
+        return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
+    }
+
+    public NPC removeListener(Player... players) {
+        for (Player p : players) {
+            listener.remove(((CraftPlayer) p).getHandle().playerConnection);
+        }
         return this;
     }
 
@@ -57,7 +74,7 @@ public class NPC {
     }
 
     public static final Set<NPC> all = new HashSet<>();
-    public Set<PlayerConnection> listener = new HashSet<>();
+    Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
@@ -83,6 +100,8 @@ public class NPC {
     }
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
+        if (everyoneCanSee)
+            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         this.everyoneCanSee = everyoneCanSee;
         this.autoSpawn = autoSpawn;
         WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
@@ -174,6 +193,11 @@ public class NPC {
         return this;
     }
 
+    public NPC setSkin(Player player) {
+        Property property = ((CraftPlayer) player).getProfile().getProperties().get("textures").iterator().next();
+        return setSkin(property.getValue(), property.getSignature());
+    }
+
     public NPC setSkin(UUID uuid) {
         try {
             ProfileSkin skin = MojangAPI.getSkinByUUID(uuid);
@@ -194,7 +218,6 @@ public class NPC {
 
     public NPC setSkin(String value, String signature) {
         GameProfile gameProfile = entityPlayer.getProfile();
-        gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", new Property("textures", value, signature));
         despawn();
         spawn();

@@ -1,7 +1,6 @@
 package top.speedcubing.lib.bukkit.listeners;
 
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -21,20 +20,19 @@ public class PlayerListener implements Listener {
     public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
         if (speedcubingLibBukkit.is1_8_8) {
             Player player = e.getPlayer();
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
             String from = e.getFrom().getName();
             String to = player.getWorld().getName();
             for (NPC npc : NPC.all) {
                 if (npc.world.contains(from))
-                    npc.listener.remove(connection);
+                    npc.removeListener(player);
                 else if (npc.world.contains(to))
-                    addNPC(connection, npc);
+                    addNPC(player, npc);
             }
             for (Hologram hologram : Hologram.all) {
                 if (hologram.world.contains(from))
-                    hologram.listener.remove(connection);
+                    hologram.removeListener(player);
                 else if (hologram.world.contains(to))
-                    addHologram(connection, hologram);
+                    addHologram(player, hologram);
             }
         }
     }
@@ -42,10 +40,10 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent e) {
         if (speedcubingLibBukkit.is1_8_8) {
-            CubingLibPlayer.user.remove(e.getPlayer());
-            PlayerConnection connection = ((CraftPlayer) e.getPlayer()).getHandle().playerConnection;
-            NPC.all.forEach(a -> a.listener.remove(connection));
-            Hologram.all.forEach(a -> a.listener.remove(connection));
+            Player player = e.getPlayer();
+            CubingLibPlayer.user.remove(player);
+            NPC.all.forEach(a -> a.removeListener(player));
+            Hologram.all.forEach(a -> a.removeListener(player));
         }
     }
 
@@ -55,14 +53,13 @@ public class PlayerListener implements Listener {
             Player player = e.getPlayer();
             new CubingLibPlayer(player);
             String world = player.getWorld().getName();
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
             for (NPC npc : NPC.all) {
                 if (npc.world.contains(world))
-                    addNPC(connection, npc);
+                    addNPC(player, npc);
             }
             for (Hologram hologram : Hologram.all) {
                 if (hologram.world.contains(world))
-                    addHologram(connection, hologram);
+                    addHologram(player, hologram);
             }
         }
     }
@@ -72,7 +69,6 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         Location to = e.getTo();
         String world = to.getWorld().getName();
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         CubingLibPlayer cubingPlayer = CubingLibPlayer.get(player);
         if (cubingPlayer.getBossbar() != null) {
             Location newLocation = to.clone().add(to.getDirection().multiply(100));
@@ -83,31 +79,31 @@ public class PlayerListener implements Listener {
         double zDiff;
         for (NPC npc : NPC.all) {
             if (npc.world.contains(world)) {
-                if (npc.everyoneCanSee || npc.listener.contains(connection)) {
+                if (npc.everyoneCanSee || npc.hasListener(player)) {
                     xDiff = npc.entityPlayer.locX - to.getX();
                     zDiff = npc.entityPlayer.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
                         cubingPlayer.outRangeNPC.add(npc);
-                        npc.setListener(connection).despawn().undoSetListener();
+                        npc.setListener(player).despawn().undoSetListener();
                     } else if (cubingPlayer.outRangeNPC.contains(npc)) {
                         cubingPlayer.outRangeNPC.remove(npc);
                         int p = npc.ms;
-                        npc.setHideFromTabDelay(-1).setListener(connection).spawn().hideFromTab(50).undoSetListener().setHideFromTabDelay(p);
+                        npc.setHideFromTabDelay(-1).setListener(player).spawn().hideFromTab(50).undoSetListener().setHideFromTabDelay(p);
                     }
                 }
             }
         }
         for (Hologram hologram : Hologram.all) {
             if (hologram.world.contains(world)) {
-                if (hologram.everyoneCanSee || hologram.listener.contains(connection)) {
+                if (hologram.everyoneCanSee || hologram.hasListener(player)) {
                     xDiff = hologram.armorStand.locX - to.getX();
                     zDiff = hologram.armorStand.locZ - to.getZ();
                     if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 64) {
                         cubingPlayer.outRangeHologram.add(hologram);
-                        hologram.setListener(connection).despawn().undoSetListener();
+                        hologram.setListener(player).despawn().undoSetListener();
                     } else if (cubingPlayer.outRangeHologram.contains(hologram)) {
                         cubingPlayer.outRangeHologram.remove(hologram);
-                        hologram.setListener(connection).spawn().undoSetListener();
+                        hologram.setListener(player).spawn().undoSetListener();
                     }
                 }
             }
@@ -115,17 +111,17 @@ public class PlayerListener implements Listener {
 
     }
 
-    private void addHologram(PlayerConnection connection, Hologram hologram) {
+    private void addHologram(Player player, Hologram hologram) {
         if (hologram.everyoneCanSee)
-            hologram.addListener(connection);
+            hologram.addListener(player);
         if (hologram.autoSpawn)
-            hologram.setListener(connection).spawn().undoSetListener();
+            hologram.setListener(player).spawn().undoSetListener();
     }
 
-    private void addNPC(PlayerConnection connection, NPC npc) {
+    private void addNPC(Player player, NPC npc) {
         if (npc.everyoneCanSee)
-            npc.addListener(connection);
+            npc.addListener(player);
         if (npc.autoSpawn)
-            npc.setListener(connection).spawn().undoSetListener();
+            npc.setListener(player).spawn().undoSetListener();
     }
 }

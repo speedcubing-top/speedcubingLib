@@ -5,6 +5,8 @@ import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 
 import java.util.Collection;
@@ -13,21 +15,38 @@ import java.util.Set;
 
 public class Hologram {
 
-    Set<PlayerConnection> temp;
+    Set<PlayerConnection> temp = new HashSet<>();
 
-    public Hologram addListener(PlayerConnection... connections) {
-        listener.addAll(Sets.newHashSet(connections));
+    public Hologram addListener(Player... players) {
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
         return this;
     }
 
-    public Hologram addListener(Collection<PlayerConnection> connections) {
-        listener.addAll(connections);
+    public Hologram addListener(Collection<Player> players) {
+        players.forEach(p -> listener.add(((CraftPlayer) p).getHandle().playerConnection));
         return this;
     }
 
-    public Hologram setListener(PlayerConnection... connections) {
+
+    public Hologram setListener(Player... players) {
         temp = listener;
-        listener = Sets.newHashSet(connections);
+        listener = new HashSet<>();
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
+        return this;
+    }
+
+    public boolean hasListener(Player player) {
+        return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
+    }
+
+    public Hologram removeListener(Player... players) {
+        for (Player p : players) {
+            listener.remove(((CraftPlayer) p).getHandle().playerConnection);
+        }
         return this;
     }
 
@@ -48,13 +67,15 @@ public class Hologram {
     }
 
     public static final Set<Hologram> all = new HashSet<>();
-    public Set<PlayerConnection> listener = new HashSet<>();
+    Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityArmorStand armorStand;
 
     public Hologram(String name, boolean everyoneCanSee, boolean autoSpawn) {
+        if (everyoneCanSee)
+            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         this.everyoneCanSee = everyoneCanSee;
         this.autoSpawn = autoSpawn;
         armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());

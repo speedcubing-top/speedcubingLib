@@ -36,11 +36,34 @@ public class PlayerUtils {
         ((CraftPlayer) player).getHandle().playerConnection.teleport(new Location(player.getWorld(), x, y, z, yaw, pitch));
     }
 
+    public static void setTitleTime(Player player, int fadeIn, int stay, int fadeOut) {
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
+    }
+
+    public static void sendTitle(Player player, TitleType type, String text) {
+        PacketPlayOutTitle.EnumTitleAction action;
+        switch (type) {
+            case TITLE:
+                action = PacketPlayOutTitle.EnumTitleAction.TITLE;
+                break;
+            case SUBTITLE:
+                action = PacketPlayOutTitle.EnumTitleAction.SUBTITLE;
+                break;
+            default:
+                return;
+        }
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(action, new ChatComponentText(text)));
+    }
+
+    public static void sendTitle(Player player, TitleType type, String text, int fadeIn, int stay, int fadeOut) {
+        setTitleTime(player, fadeIn, stay, fadeOut);
+        sendTitle(player, type, text);
+    }
+
     public static List<Packet<?>>[] changeSkin(Player player, String[] skin) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         World world = entityPlayer.getWorld();
         GameProfile gameProfile = entityPlayer.getProfile();
-        gameProfile.getProperties().removeAll("textures");
         gameProfile.getProperties().put("textures", new Property("textures", skin[0], skin[1]));
         PacketPlayOutPlayerInfo removePlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         PacketPlayOutPlayerInfo addPlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
