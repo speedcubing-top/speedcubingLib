@@ -114,14 +114,14 @@ public class PlayerListener implements Listener {
     private void addHologram(Player player, Hologram hologram) {
         if (hologram.everyoneCanSee)
             hologram.addListener(player);
-        if (hologram.autoSpawn)
+        if (hologram.autoSpawn && (hologram.everyoneCanSee || hologram.hasListener(player)))
             hologram.setListener(player).spawn().undoSetListener();
     }
 
     private void addNPC(Player player, NPC npc) {
         if (npc.everyoneCanSee)
             npc.addListener(player);
-        if (npc.autoSpawn)
+        if (npc.autoSpawn && (npc.everyoneCanSee || npc.hasListener(player)))
             npc.setListener(player).spawn().undoSetListener();
     }
 }
