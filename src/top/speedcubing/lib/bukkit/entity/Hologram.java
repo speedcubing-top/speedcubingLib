@@ -14,6 +14,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Hologram {
+    public Hologram setClickEvent(ClickEvent e) {
+        armorStand.n(false);
+        this.event = e;
+        return this;
+    }
+
+    public ClickEvent getClickEvent() {
+        return event;
+    }
 
     Set<PlayerConnection> temp = new HashSet<>();
 
@@ -31,6 +40,15 @@ public class Hologram {
 
 
     public Hologram setListener(Player... players) {
+        temp = listener;
+        listener = new HashSet<>();
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
+        return this;
+    }
+
+    public Hologram setListener(Collection<Player> players) {
         temp = listener;
         listener = new HashSet<>();
         for (Player p : players) {
@@ -67,8 +85,9 @@ public class Hologram {
     }
 
     public static final Set<Hologram> all = new HashSet<>();
-    Set<PlayerConnection> listener = new HashSet<>();
+    public Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
+    ClickEvent event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityArmorStand armorStand;

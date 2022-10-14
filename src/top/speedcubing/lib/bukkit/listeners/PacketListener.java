@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.event.PlayInByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayInEvent;
@@ -60,6 +61,12 @@ public class PacketListener implements Listener {
                                 for (NPC npc : NPC.all) {
                                     if (npc.entityPlayer.getId() == id && npc.getClickEvent() != null) {
                                         npc.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
+                                        break;
+                                    }
+                                }
+                                for (Hologram hologram : Hologram.all) {
+                                    if (hologram.armorStand.getId() == id && hologram.getClickEvent() != null) {
+                                        hologram.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
                                         break;
                                     }
                                 }

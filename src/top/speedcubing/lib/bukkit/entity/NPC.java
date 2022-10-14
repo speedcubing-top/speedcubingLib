@@ -22,21 +22,24 @@ import top.speedcubing.lib.utils.Reflections;
 import java.util.*;
 
 public class NPC {
-
+    public NPC setClickEvent(ClickEvent e) {
+        this.event = e;
+        return this;
+    }
+    public ClickEvent getClickEvent() {
+        return event;
+    }
     Set<PlayerConnection> temp = new HashSet<>();
-
     public NPC addListener(Player... players) {
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
-
     public NPC addListener(Collection<Player> players) {
         players.forEach(p -> listener.add(((CraftPlayer) p).getHandle().playerConnection));
         return this;
     }
-
     public NPC setListener(Player... players) {
         temp = listener;
         listener = new HashSet<>();
@@ -45,7 +48,14 @@ public class NPC {
         }
         return this;
     }
-
+    public NPC setListener(Collection<Player> players) {
+        temp = listener;
+        listener = new HashSet<>();
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
+        return this;
+    }
     public boolean hasListener(Player player) {
         return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
     }
@@ -76,6 +86,7 @@ public class NPC {
     public static final Set<NPC> all = new HashSet<>();
     Set<PlayerConnection> listener = new HashSet<>();
     public final Set<String> world = new HashSet<>();
+    ClickEvent event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityPlayer entityPlayer;
@@ -83,21 +94,7 @@ public class NPC {
     boolean nameTagHidden;
     float spawnBodyYaw;
     ItemStack itemInHand;
-    ClickEvent event;
     public int ms = 4000;
-
-    public interface ClickEvent {
-        void run(Player player, PacketPlayInUseEntity.EnumEntityUseAction action);
-    }
-
-    public NPC setClickEvent(ClickEvent e) {
-        this.event = e;
-        return this;
-    }
-
-    public ClickEvent getClickEvent() {
-        return event;
-    }
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
         if (everyoneCanSee)
