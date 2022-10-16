@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLConnection {
+
     public class SQLBuilder {
+        PreparedStatement statement;
+        boolean prepared;
         String sql;
 
         public SQLBuilder(String sql) {
@@ -13,23 +16,27 @@ public class SQLConnection {
         }
 
         public SQLBuilder from(String table) {
-            sql += " FROM `" + table + "`";
-            return this;
+            return append(" FROM `" + table + "`");
         }
 
         public SQLBuilder where(String where) {
-            sql += " WHERE " + where;
-            return this;
+            return append(" WHERE " + where);
         }
 
         public SQLBuilder orderBy(String orders) {
-            sql += " ORDER BY " + orders;
-            return this;
+            return append(" ORDER BY " + orders);
         }
 
         public SQLBuilder limit(int index, int count) {
-            sql += " LIMIT " + index + "," + count;
-            return this;
+            return append(" LIMIT " + index + "," + count);
+        }
+
+        public SQLBuilder set(String set) {
+            return append(" SET " + set);
+        }
+
+        public SQLBuilder values(String values) {
+            return append(" VALUES (" + values + ")");
         }
 
         public SQLBuilder append(String s) {
@@ -37,10 +44,80 @@ public class SQLConnection {
             return this;
         }
 
+        void prepare() {
+            if (!prepared) {
+                prepared = true;
+                try {
+                    statement = connection.prepareStatement(sql);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public SQLBuilder setString(int index, String data) {
+            prepare();
+            try {
+                statement.setString(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        public SQLBuilder setInt(int index, int data) {
+            prepare();
+            try {
+                statement.setInt(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        public SQLBuilder setDouble(int index, double data) {
+            prepare();
+            try {
+                statement.setDouble(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        public SQLBuilder setFloat(int index, float data) {
+            prepare();
+            try {
+                statement.setFloat(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        public SQLBuilder setByte(int index, byte data) {
+            prepare();
+            try {
+                statement.setByte(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        public SQLBuilder setBoolean(int index, boolean data) {
+            prepare();
+            try {
+                statement.setBoolean(index, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
 
         public ResultSet executeQuery() {
             try {
-                return connection.prepareStatement(sql).executeQuery();
+                return statement != null ? statement.executeQuery() : connection.prepareStatement(sql).executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -49,7 +126,10 @@ public class SQLConnection {
 
         public void execute() {
             try {
-                connection.prepareStatement(sql).execute();
+                if (statement != null)
+                    statement.execute();
+                else
+                    connection.prepareStatement(sql).execute();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -173,10 +253,22 @@ public class SQLConnection {
         return new SQLBuilder("SELECT " + field);
     }
 
+    public SQLBuilder delet(String table) {
+        return new SQLBuilder("DELETE FROM `" + table + "`");
+    }
+
+    public SQLBuilder insert(String table, String field) {
+        return new SQLBuilder("INSERT INTO `" + table + "` (" + field + ")");
+    }
+
+    public SQLBuilder update(String table) {
+        return new SQLBuilder("UPDATE `" + table + "`");
+    }
+
 
     public void delete(String table, String where) {
         try {
-            execute("DELETE  FROM `" + table + "` WHERE " + where);
+            execute("DELETE FROM `" + table + "` WHERE " + where);
         } catch (Exception e) {
             e.printStackTrace();
         }
