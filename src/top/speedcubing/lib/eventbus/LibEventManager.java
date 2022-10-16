@@ -23,20 +23,18 @@ public class LibEventManager {
         for (Object o : objects) {
             for (Method m : o.getClass().getDeclaredMethods()) {
                 LibEventHandler handler = m.getAnnotation(LibEventHandler.class);
-                if (m.getModifiers() == Modifier.PUBLIC && handler != null) {
-                    if (m.getParameterTypes().length == 1) {
-                        Class<?> c = m.getParameterTypes()[0];
-                        createNewEvents(c);
-                        int priority = handler.priority();
-                        List<Integer> i = Priorities.get(c);
-                        if (priority == 0 || !i.contains(priority)) {
-                            i.add(priority);
-                            Collections.sort(i);
-                            int index = i.indexOf(priority);
-                            Methods.get(c).add(index, m);
-                            Instances.get(c).add(index, o);
-                        } else System.out.println("[speedcubingLib] Duplicated priority " + m + " " + o);
-                    }
+                if (m.getModifiers() == Modifier.PUBLIC && handler != null && m.getParameterTypes().length == 1) {
+                    Class<?> c = m.getParameterTypes()[0];
+                    createNewEvents(c);
+                    int priority = handler.priority();
+                    List<Integer> i = Priorities.get(c);
+                    if (priority == 0 || !i.contains(priority)) {
+                        i.add(priority);
+                        Collections.sort(i);
+                        int index = i.indexOf(priority);
+                        Methods.get(c).add(index, m);
+                        Instances.get(c).add(index, o);
+                    } else System.out.println("[speedcubingLib] Duplicated priority " + m + " " + o);
                 }
             }
         }
