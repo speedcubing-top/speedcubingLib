@@ -253,7 +253,7 @@ public class SQLConnection {
         return new SQLBuilder("SELECT " + field);
     }
 
-    public SQLBuilder delet(String table) {
+    public SQLBuilder delete(String table) {
         return new SQLBuilder("DELETE FROM `" + table + "`");
     }
 

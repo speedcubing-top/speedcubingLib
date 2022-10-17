@@ -1,7 +1,10 @@
 package top.speedcubing.lib.bukkit;
 
+import net.minecraft.server.v1_8_R3.EntityWither;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import top.speedcubing.lib.bukkit.entity.Hologram;
@@ -11,6 +14,12 @@ import top.speedcubing.lib.speedcubingLibBukkit;
 import java.util.*;
 
 public class CubingLibPlayer {
+    public static void init() {
+        wither = new EntityWither(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
+        wither.setInvisible(true);
+    }
+
+    public static EntityWither wither;
 
     public static Map<Player, CubingLibPlayer> user = new HashMap<>();
 
@@ -51,8 +60,8 @@ public class CubingLibPlayer {
         this.bossbar = bossbar;
         Location location = player.getLocation();
         Location newLocation = location.clone().add(location.getDirection().multiply(100));
-        speedcubingLibBukkit.wither.setCustomName(bossbar);
-        speedcubingLibBukkit.wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(speedcubingLibBukkit.wither));
+        wither.setCustomName(bossbar);
+        wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(wither));
     }
 }

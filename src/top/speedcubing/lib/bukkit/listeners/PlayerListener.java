@@ -72,8 +72,8 @@ public class PlayerListener implements Listener {
         CubingLibPlayer cubingPlayer = CubingLibPlayer.get(player);
         if (cubingPlayer.getBossbar() != null) {
             Location newLocation = to.clone().add(to.getDirection().multiply(100));
-            speedcubingLibBukkit.wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(speedcubingLibBukkit.wither));
+            CubingLibPlayer.wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(CubingLibPlayer.wither));
         }
         double xDiff;
         double zDiff;
