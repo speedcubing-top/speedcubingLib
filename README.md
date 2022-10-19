@@ -1,3 +1,4 @@
 # speedcubingLib
-A library plugin for speedcubing.top
-mainly for 1.8.8 servers
+A library plugin<br>
+For 1.8.8 Spigot/Bungeecord/Velocity<br>
+Also work as a dependency jar
