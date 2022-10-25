@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,58 +14,51 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
-import top.speedcubing.lib.speedcubingLibBukkit;
 
 public class PlayerListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
-        if (speedcubingLibBukkit.is1_8_8) {
-            Player player = e.getPlayer();
-            String from = e.getFrom().getName();
-            String to = player.getWorld().getName();
-            for (NPC npc : NPC.all) {
-                if (npc.world.contains(from))
-                    npc.removeListener(player);
-                else if (npc.world.contains(to))
-                    addNPC(player, npc);
-            }
-            for (Hologram hologram : Hologram.all) {
-                if (hologram.world.contains(from))
-                    hologram.removeListener(player);
-                else if (hologram.world.contains(to))
-                    addHologram(player, hologram);
-            }
+        Player player = e.getPlayer();
+        String from = e.getFrom().getName();
+        String to = player.getWorld().getName();
+        for (NPC npc : NPC.all) {
+            if (npc.world.contains(from))
+                npc.removeListener(player);
+            else if (npc.world.contains(to))
+                addNPC(player, npc);
+        }
+        for (Hologram hologram : Hologram.all) {
+            if (hologram.world.contains(from))
+                hologram.removeListener(player);
+            else if (hologram.world.contains(to))
+                addHologram(player, hologram);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerQuitEvent(PlayerQuitEvent e) {
-        if (speedcubingLibBukkit.is1_8_8) {
-            Player player = e.getPlayer();
-            CubingLibPlayer.user.remove(player);
-            NPC.all.forEach(a -> a.removeListener(player));
-            Hologram.all.forEach(a -> a.removeListener(player));
-        }
+        Player player = e.getPlayer();
+        CubingLibPlayer.user.remove(player);
+        NPC.all.forEach(a -> a.removeListener(player));
+        Hologram.all.forEach(a -> a.removeListener(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void PlayerJoinEvent(PlayerJoinEvent e) {
-        if (speedcubingLibBukkit.is1_8_8) {
-            Player player = e.getPlayer();
-            new CubingLibPlayer(player);
-            String world = player.getWorld().getName();
-            for (NPC npc : NPC.all) {
-                if (npc.world.contains(world))
-                    addNPC(player, npc);
-            }
-            for (Hologram hologram : Hologram.all) {
-                if (hologram.world.contains(world))
-                    addHologram(player, hologram);
-            }
+        Player player = e.getPlayer();
+        new CubingLibPlayer(player);
+        String world = player.getWorld().getName();
+        for (NPC npc : NPC.all) {
+            if (npc.world.contains(world))
+                addNPC(player, npc);
+        }
+        for (Hologram hologram : Hologram.all) {
+            if (hologram.world.contains(world))
+                addHologram(player, hologram);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerMoveEvent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Location to = e.getTo();
