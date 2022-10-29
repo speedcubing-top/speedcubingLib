@@ -1,4 +1,4 @@
-package top.speedcubing.lib.bukkit;
+package top.speedcubing.lib.bukkit.pluginMessage;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import top.speedcubing.lib.speedcubingLibBukkit;
 
 public class BungeePluginMessage {
+
     public static void switchServer(Player player, String server) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
@@ -15,6 +16,7 @@ public class BungeePluginMessage {
     }
 
     public static void sendRawMessage(Player player, String target, String text) {
+        new PluginMessageBuilder().UTF("MessageRaw").UTF(target).UTF(text).send(player,"BungeeCord");
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("MessageRaw");
         out.writeUTF(target);
