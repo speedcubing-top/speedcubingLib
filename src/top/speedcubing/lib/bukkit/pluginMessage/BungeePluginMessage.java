@@ -9,37 +9,19 @@ import top.speedcubing.lib.speedcubingLibBukkit;
 public class BungeePluginMessage {
 
     public static void switchServer(Player player, String server) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Connect");
-        out.writeUTF(server);
-        sendPluginMessage(player, "BungeeCord", out.toByteArray());
+        new PluginMessageBuilder().UTF("Connect", server).send(player);
     }
 
     public static void sendRawMessage(Player player, String target, String text) {
-        new PluginMessageBuilder().UTF("MessageRaw").UTF(target).UTF(text).send(player,"BungeeCord");
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("MessageRaw");
-        out.writeUTF(target);
-        out.writeUTF(text);
-        sendPluginMessage(player, "BungeeCord", out.toByteArray());
+        new PluginMessageBuilder().UTF("MessageRaw", target, text).send(player);
     }
 
     public static void msgPlayerCount(Player player, String server) {
-        if (server == null)
-            server = "ALL";
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("PlayerCount");
-        out.writeUTF(server);
-        sendPluginMessage(player, "BungeeCord", out.toByteArray());
+        new PluginMessageBuilder().UTF("PlayerCount", server == null ? "ALL" : server).send(player);
     }
 
     public static void msgPlayerList(Player player, String server) {
-        if (server == null)
-            server = "ALL";
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("PlayerList");
-        out.writeUTF(server);
-        sendPluginMessage(player, "BungeeCord", out.toByteArray());
+        new PluginMessageBuilder().UTF("PlayerList", server == null ? "ALL" : server).send(player);
     }
 
     public static void sendPluginMessage(Player player, String channel, byte[] out) {
