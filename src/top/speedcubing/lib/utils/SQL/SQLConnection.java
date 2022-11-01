@@ -49,7 +49,7 @@ public class SQLConnection {
                 prepared = true;
                 try {
                     statement = connection.prepareStatement(sql);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
@@ -59,7 +59,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setString(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -69,7 +69,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setInt(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -79,7 +79,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setDouble(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -89,7 +89,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setFloat(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -99,7 +99,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setByte(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -109,7 +109,7 @@ public class SQLConnection {
             prepare();
             try {
                 statement.setBoolean(index, data);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return this;
@@ -147,7 +147,7 @@ public class SQLConnection {
                 }
                 resultSet.getStatement().close();
                 return a.toArray(new String[]{});
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -165,7 +165,7 @@ public class SQLConnection {
                 }
                 resultSet.getStatement().close();
                 return list.toArray(new Integer[]{});
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -183,7 +183,7 @@ public class SQLConnection {
                 }
                 resultSet.getStatement().close();
                 return list.toArray(new Boolean[]{});
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -195,7 +195,7 @@ public class SQLConnection {
                 Blob b = resultSet.next() ? resultSet.getBlob(1) : null;
                 resultSet.getStatement().close();
                 return b;
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -207,7 +207,7 @@ public class SQLConnection {
                 String s = resultSet.next() ? resultSet.getString(1) : null;
                 resultSet.getStatement().close();
                 return s;
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -219,7 +219,7 @@ public class SQLConnection {
                 Integer i = resultSet.next() ? resultSet.getInt(1) : null;
                 resultSet.getStatement().close();
                 return i;
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -231,7 +231,7 @@ public class SQLConnection {
                 Boolean b = resultSet.next() ? resultSet.getBoolean(1) : null;
                 resultSet.getStatement().close();
                 return b;
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
             return null;
@@ -244,7 +244,7 @@ public class SQLConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, password);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -267,33 +267,21 @@ public class SQLConnection {
 
 
     public void delete(String table, String where) {
-        try {
-            execute("DELETE FROM `" + table + "` WHERE " + where);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        execute("DELETE FROM `" + table + "` WHERE " + where);
     }
 
     public void update(String table, String field, String where) {
-        try {
-            execute("UPDATE `" + table + "` SET " + field + " WHERE " + where);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        execute("UPDATE `" + table + "` SET " + field + " WHERE " + where);
     }
 
     public void insert(String table, String field, String value) {
-        try {
-            execute("INSERT INTO `" + table + "` (" + field + ") VALUES (" + value + ")");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        execute("INSERT INTO `" + table + "` (" + field + ") VALUES (" + value + ")");
     }
 
     public Boolean isStringExist(String table, String where) {
         try {
             return select("*").from(table).where(where).executeQuery().next();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -302,7 +290,7 @@ public class SQLConnection {
     public ResultSet executeQuery(String sql) {
         try {
             return connection.prepareStatement(sql).executeQuery();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -322,7 +310,7 @@ public class SQLConnection {
                 statement.executeBatch();
                 statement.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

@@ -1,5 +1,6 @@
 package top.speedcubing.lib.eventbus;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -52,8 +53,8 @@ public class LibEventManager {
                 }
             }
             return this;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
         return null;
     }

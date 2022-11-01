@@ -9,8 +9,8 @@ public class Reflections {
             Field field = c.getDeclaredField(name);
             field.setAccessible(true);
             field.set(field, value);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -19,8 +19,8 @@ public class Reflections {
             Field field = obj.getClass().getDeclaredField(name);
             field.setAccessible(true);
             field.set(obj, value);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -29,8 +29,8 @@ public class Reflections {
             Field field = obj.getClass().getDeclaredField(name);
             field.setAccessible(true);
             return field.get(obj);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -40,8 +40,8 @@ public class Reflections {
             Field field = obj.getClass().getSuperclass().getDeclaredField(name);
             field.setAccessible(true);
             return field.get(obj);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
             return null;
         }
     }

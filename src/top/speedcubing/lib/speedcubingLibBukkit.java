@@ -23,7 +23,7 @@ public class speedcubingLibBukkit extends JavaPlugin {
             try {
                 Glow.glow = new Glow(100);
                 Enchantment.registerEnchantment(Glow.glow);
-            } catch (Exception exception) {
+            } catch (Exception e) {
             }
         }
     }

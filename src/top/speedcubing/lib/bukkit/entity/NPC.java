@@ -26,20 +26,25 @@ public class NPC {
         this.event = e;
         return this;
     }
+
     public ClickEvent getClickEvent() {
         return event;
     }
+
     Set<PlayerConnection> temp = new HashSet<>();
+
     public NPC addListener(Player... players) {
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
+
     public NPC addListener(Collection<Player> players) {
         players.forEach(p -> listener.add(((CraftPlayer) p).getHandle().playerConnection));
         return this;
     }
+
     public NPC setListener(Player... players) {
         temp = listener;
         listener = new HashSet<>();
@@ -48,6 +53,7 @@ public class NPC {
         }
         return this;
     }
+
     public NPC setListener(Collection<Player> players) {
         temp = listener;
         listener = new HashSet<>();
@@ -56,6 +62,7 @@ public class NPC {
         }
         return this;
     }
+
     public boolean hasListener(Player player) {
         return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
     }

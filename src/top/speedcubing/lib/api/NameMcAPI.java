@@ -1,6 +1,7 @@
 package top.speedcubing.lib.api;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.UUID;
@@ -16,7 +17,7 @@ public class NameMcAPI {
             String str = in.readLine();
             in.close();
             return Boolean.parseBoolean(str);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
