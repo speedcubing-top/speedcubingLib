@@ -17,10 +17,9 @@ public class ByteArrayDataBuilder {
         return byteArrayOutputSteam.toByteArray();
     }
 
-    public ByteArrayDataBuilder write(int... b) {
+    public ByteArrayDataBuilder write(int b) {
         try {
-            for (int a : b)
-                dataOutputStream.write(a);
+            dataOutputStream.write(b);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,120 +35,108 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder write(byte[]... b) {
+    public ByteArrayDataBuilder write(byte[] b) {
         try {
-            for (byte[] a : b)
-                dataOutputStream.write(a);
+            dataOutputStream.write(b);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeInt(int... v) {
+    public ByteArrayDataBuilder writeInt(int v) {
         try {
-            for (int a : v)
-                dataOutputStream.writeInt(a);
+            dataOutputStream.writeInt(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeUTF(String... str) {
+    public ByteArrayDataBuilder writeUTF(String str) {
         try {
-            for (String a : str)
-                dataOutputStream.writeUTF(a);
+            dataOutputStream.writeUTF(str);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeChar(int... v) {
+    public ByteArrayDataBuilder writeChar(int v) {
         try {
-            for (int a : v)
-                dataOutputStream.writeChar(a);
+            dataOutputStream.writeChar(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeByte(int... v) {
+    public ByteArrayDataBuilder writeByte(int v) {
         try {
-            for (int a : v)
-                dataOutputStream.writeByte(a);
+            dataOutputStream.writeByte(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeBytes(String... s) {
+    public ByteArrayDataBuilder writeBytes(String s) {
         try {
-            for (String a : s)
-                dataOutputStream.writeBytes(a);
+            dataOutputStream.writeBytes(s);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeChars(String... s) {
+    public ByteArrayDataBuilder writeChars(String s) {
         try {
-            for (String a : s)
-                dataOutputStream.writeChars(a);
+            dataOutputStream.writeChars(s);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeLong(long... v) {
+    public ByteArrayDataBuilder writeLong(long v) {
         try {
-            for (long a : v)
-                dataOutputStream.writeLong(a);
+            dataOutputStream.writeLong(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeFloat(float... v) {
+    public ByteArrayDataBuilder writeFloat(float v) {
         try {
-            for (float a : v)
-                dataOutputStream.writeFloat(a);
+            dataOutputStream.writeFloat(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeDouble(double... v) {
+    public ByteArrayDataBuilder writeDouble(double v) {
         try {
-            for (double a : v)
-                dataOutputStream.writeDouble(a);
+            dataOutputStream.writeDouble(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeShort(short... v) {
+    public ByteArrayDataBuilder writeShort(short v) {
         try {
-            for (short a : v)
-                dataOutputStream.writeShort(a);
+            dataOutputStream.writeShort(v);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return this;
     }
 
-    public ByteArrayDataBuilder writeBoolean(boolean... v) {
+    public ByteArrayDataBuilder writeBoolean(boolean v) {
         try {
-            for (boolean a : v)
-                dataOutputStream.writeBoolean(a);
+            dataOutputStream.writeBoolean(v);
         } catch (IOException e) {
             e.printStackTrace();
         }

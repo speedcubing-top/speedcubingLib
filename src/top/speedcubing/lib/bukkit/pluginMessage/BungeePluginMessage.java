@@ -8,7 +8,7 @@ import top.speedcubing.lib.utils.ByteArrayDataBuilder;
 public class BungeePluginMessage {
 
     public static void switchServer(Player player, String server) {
-        sendPluginMessage(player, "BungeeCord", new ByteArrayDataBuilder().writeUTF("Connect", server).toByteArray());
+        sendPluginMessage(player, "BungeeCord", new ByteArrayDataBuilder().writeUTF("Connect").writeUTF(server).toByteArray());
     }
 
     public static void sendPluginMessage(Player player, String channel, byte[] out) {

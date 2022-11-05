@@ -16,8 +16,13 @@ import java.util.HashSet;
 import java.util.List;
 
 public class PlayerUtils {
+
+    public static PlayerConnection getConnection(Player player) {
+        return ((CraftPlayer) player).getHandle().playerConnection;
+    }
+
     public static void explosionCrash(Player player) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, new ArrayList<>(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)));
+        getConnection(player).sendPacket(new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, new ArrayList<>(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)));
     }
 
     public static void removeArrows(Player player) {
@@ -25,19 +30,19 @@ public class PlayerUtils {
     }
 
     public static void sendTabListHeaderFooter(Player player, String header, String footer) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new OutPlayerListHeaderFooter().a(header).b(footer).packet);
+        getConnection(player).sendPacket(new OutPlayerListHeaderFooter().a(header).b(footer).packet);
     }
 
     public static void sendActionBar(Player player, String message) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(new ChatComponentText(message), (byte) 2));
+        getConnection(player).sendPacket(new PacketPlayOutChat(new ChatComponentText(message), (byte) 2));
     }
 
     public static void teleportSilence(Player player, double x, double y, double z, float yaw, float pitch) {
-        ((CraftPlayer) player).getHandle().playerConnection.teleport(new Location(player.getWorld(), x, y, z, yaw, pitch));
+        getConnection(player).teleport(new Location(player.getWorld(), x, y, z, yaw, pitch));
     }
 
     public static void setTitleTime(Player player, int fadeIn, int stay, int fadeOut) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
+        getConnection(player).sendPacket(new PacketPlayOutTitle(fadeIn, stay, fadeOut));
     }
 
     public static void sendTitle(Player player, TitleType type, String text) {
@@ -52,7 +57,7 @@ public class PlayerUtils {
             default:
                 return;
         }
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutTitle(action, new ChatComponentText(text)));
+        getConnection(player).sendPacket(new PacketPlayOutTitle(action, new ChatComponentText(text)));
     }
 
     public static void sendTitle(Player player, TitleType type, String text, int fadeIn, int stay, int fadeOut) {

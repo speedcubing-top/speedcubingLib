@@ -1,11 +1,11 @@
 package top.speedcubing.lib.bukkit;
 
-import top.speedcubing.lib.utils.Reflections;
 import net.minecraft.server.v1_8_R3.GameRules;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import top.speedcubing.lib.utils.Reflections;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,17 +28,17 @@ public class WorldUtils {
 
     public static void fillAir(int x1, int y1, int z1, int x2, int y2, int z2, World world) {
         int a;
-        if(x1 > x2){
+        if (x1 > x2) {
             a = x2;
             x2 = x1;
             x1 = a;
         }
-        if(y1 > y2){
+        if (y1 > y2) {
             a = y2;
             y2 = y1;
             y1 = a;
         }
-        if(z1 > z2){
+        if (z1 > z2) {
             a = z2;
             z2 = z1;
             z1 = a;

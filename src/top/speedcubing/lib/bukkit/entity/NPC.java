@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit.entity;
 
-import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
@@ -18,6 +17,7 @@ import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class NPC {
         return event;
     }
 
-    Set<PlayerConnection> temp = new HashSet<>();
+    Set<PlayerConnection> temp = new java.util.HashSet<>();
 
     public NPC addListener(Player... players) {
         for (Player p : players) {
@@ -47,7 +47,7 @@ public class NPC {
 
     public NPC setListener(Player... players) {
         temp = listener;
-        listener = new HashSet<>();
+        listener = new java.util.HashSet<>();
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
@@ -56,7 +56,7 @@ public class NPC {
 
     public NPC setListener(Collection<Player> players) {
         temp = listener;
-        listener = new HashSet<>();
+        listener = new java.util.HashSet<>();
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
@@ -86,13 +86,13 @@ public class NPC {
     }
 
     public NPC world(String... world) {
-        this.world.addAll(Sets.newHashSet(world));
+        this.world.addAll(Sets.hashSet(world));
         return this;
     }
 
-    public static final Set<NPC> all = new HashSet<>();
-    Set<PlayerConnection> listener = new HashSet<>();
-    public final Set<String> world = new HashSet<>();
+    public static final Set<NPC> all = new java.util.HashSet<>();
+    Set<PlayerConnection> listener = new java.util.HashSet<>();
+    public final Set<String> world = new java.util.HashSet<>();
     ClickEvent event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
@@ -187,7 +187,7 @@ public class NPC {
     public NPC hideFromTab(int ms) {
         this.ms = ms;
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
-        Set<PlayerConnection> copy = new HashSet<>(listener);
+        Set<PlayerConnection> copy = new java.util.HashSet<>(listener);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit;
 
-import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -8,6 +7,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.*;
 
@@ -69,7 +69,7 @@ public class SideBar implements Listener {
             Set<String> s = scores.get(score);
             if (s != null)
                 s.add(str);
-            else scores.put(score, Sets.newHashSet(str));
+            else scores.put(score, Sets.hashSet(str));
         }
         line += 1;
         return this;

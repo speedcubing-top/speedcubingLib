@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit.entity;
 
-import com.google.common.collect.Sets;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,9 +7,9 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
+import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 public class Hologram {
@@ -24,7 +23,7 @@ public class Hologram {
         return event;
     }
 
-    Set<PlayerConnection> temp = new HashSet<>();
+    Set<PlayerConnection> temp = new java.util.HashSet<>();
 
     public Hologram addListener(Player... players) {
         for (Player p : players) {
@@ -41,7 +40,7 @@ public class Hologram {
 
     public Hologram setListener(Player... players) {
         temp = listener;
-        listener = new HashSet<>();
+        listener = new java.util.HashSet<>();
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
@@ -50,7 +49,7 @@ public class Hologram {
 
     public Hologram setListener(Collection<Player> players) {
         temp = listener;
-        listener = new HashSet<>();
+        listener = new java.util.HashSet<>();
         for (Player p : players) {
             listener.add(((CraftPlayer) p).getHandle().playerConnection);
         }
@@ -80,13 +79,13 @@ public class Hologram {
     }
 
     public Hologram world(String... world) {
-        this.world.addAll(Sets.newHashSet(world));
+        this.world.addAll(Sets.hashSet(world));
         return this;
     }
 
-    public static final Set<Hologram> all = new HashSet<>();
-    public Set<PlayerConnection> listener = new HashSet<>();
-    public final Set<String> world = new HashSet<>();
+    public static final Set<Hologram> all = new java.util.HashSet<>();
+    public Set<PlayerConnection> listener = new java.util.HashSet<>();
+    public final Set<String> world = new java.util.HashSet<>();
     ClickEvent event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
