@@ -26,16 +26,4 @@ public class TCPClient {
         clientSocket.getOutputStream().write(data);
         clientSocket.close();
     }
-
-    public void sendUnsafe(int port, String data) throws IOException {
-        sendUnsafe(port, data.getBytes());
-    }
-
-
-    public void send(int port, String data) {
-        try {
-            sendUnsafe(port, data);
-        } catch (IOException e) {
-        }
-    }
 }

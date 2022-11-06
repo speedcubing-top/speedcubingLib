@@ -18,7 +18,11 @@ public class SystemUtils {
         return -1;
     }
 
-    public static long getXMS(){
+    public static long getCurrentSecond() {
+        return System.currentTimeMillis() / 1000;
+    }
+
+    public static long getXMS() {
         return ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getInit();
     }
 }

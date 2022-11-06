@@ -225,6 +225,19 @@ public class SQLConnection {
             return null;
         }
 
+        public Long getLong() {
+            try {
+                ResultSet resultSet = executeQuery();
+                Long i = resultSet.next() ? resultSet.getLong(1) : null;
+                resultSet.getStatement().close();
+                return i;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
         public Boolean getBoolean() {
             try {
                 ResultSet resultSet = executeQuery();
