@@ -95,6 +95,17 @@ public class SQLConnection {
             return this;
         }
 
+        public SQLBuilder setLong(int index, long data) {
+            prepare();
+            try {
+                statement.setLong(index, data);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+
         public SQLBuilder setByte(int index, byte data) {
             prepare();
             try {
