@@ -5,6 +5,25 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+
+/**
+ class listener {
+    @LibEventHandler
+    public void a(MyEvent e){
+      //...
+    }
+ }
+
+ class MyEvent {
+   //...
+ }
+
+ //register listener
+ LibEventHandler.registerListeners(new listener(),...); //this will auto register MyEvent if MyEvent is not registered like below.
+ //register new event
+ LibEventHandler.createNewEvents(MyEvent.class,...);
+ }
+ */
 public class LibEventManager {
     private static final Map<Class<?>, List<Object>> Instances = new HashMap<>();
     private static final Map<Class<?>, List<Integer>> Priorities = new HashMap<>();

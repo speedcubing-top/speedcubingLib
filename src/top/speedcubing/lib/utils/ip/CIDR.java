@@ -1,5 +1,13 @@
 package top.speedcubing.lib.utils.ip;
 
+
+/**
+ CIDR c = new CIDR("10.0.0.0/24");
+ c.to // [10,0,0,255]
+ c.from // [10,0,0,0]
+ c.contains("10.0.0.1") // true
+ c.contains("0.0.0.0") // false
+ **/
 public class CIDR {
     int[] from = new int[4];
     int[] to = new int[4];

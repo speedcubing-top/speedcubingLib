@@ -3,6 +3,7 @@ package top.speedcubing.lib.bukkit.pluginMessage;
 import org.bukkit.entity.Player;
 import top.speedcubing.lib.utils.ByteArrayDataBuilder;
 
+//new PluginMessageBuilder(...).write...write...send();
 class PluginMessageBuilder {
     private final ByteArrayDataBuilder byteArrayDataBuilder = new ByteArrayDataBuilder();
     private final Player player;

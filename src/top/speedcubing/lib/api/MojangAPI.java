@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class MojangAPI {
 
-    static ProfileNameUUID t(String name, boolean call) {
+   private static ProfileNameUUID t(String name, boolean call) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
             if (connection.getResponseCode() == 200) {

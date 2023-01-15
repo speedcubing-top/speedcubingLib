@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 public class MorseCode {
 
+    //example: textToMorse("hello") = ".... . .-.. .-.. ---"
     public static String textToMorse(String text) {
         StringBuilder builder = new StringBuilder();
         int a;
@@ -25,6 +26,7 @@ public class MorseCode {
         return builder.substring(0, builder.length() - 1);
     }
 
+    //example: morseToText(".... . .-.. .-.. ---") = "HELLO"
     public static String morseToText(String code) {
         StringBuilder builder = new StringBuilder();
         int b;

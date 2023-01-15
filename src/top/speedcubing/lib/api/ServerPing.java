@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class ServerPing {
+    //its broken.
     public static String pingServer(String host, int port, int timeout) throws Exception {
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress(host, port), timeout);

@@ -2,6 +2,7 @@ package top.speedcubing.lib.utils.minecraft;
 
 public class TextUtils {
 
+    //get the last color of the text
     public static char getLastColor(String str) {
         for (int i = str.length() - 1; i >= 0; i--) {
             if (str.charAt(i) == '§')
@@ -10,6 +11,7 @@ public class TextUtils {
         return 'f';
     }
 
+    //get the last color of the text but return empty if there's no color found.
     public static char getLastColorExact(String str) {
         for (int i = str.length() - 1; i >= 0; i--) {
             if (str.charAt(i) == '§')
@@ -19,54 +21,54 @@ public class TextUtils {
     }
 
     public static String toHexColorCode(String c) {
-        switch (c) {
+        switch (c.toLowerCase()) {
             case "0":
-            case "BLACK":
+            case "black":
                 return "#000000";
             case "1":
-            case "DARK_BLUE":
+            case "dark_blue":
                 return "#0000AA";
             case "2":
-            case "DARK_GREEN":
+            case "dark_green":
                 return "#00AA00";
             case "3":
-            case "DARK_AQUA":
+            case "dark_aqua":
                 return "#00AAAA";
             case "4":
-            case "DARK_RED":
+            case "dark_red":
                 return "#AA0000";
             case "5":
-            case "DARK_PURPLE":
+            case "dark_purple":
                 return "#AA00AA";
             case "6":
-            case "GOLD":
+            case "gold":
                 return "#FFAA00";
             case "7":
-            case "GRAY":
+            case "gray":
                 return "#AAAAAA";
             case "8":
-            case "DARK_GRAY":
+            case "dark_gray":
                 return "#555555";
             case "9":
-            case "BLUE":
+            case "blue":
                 return "#5555FF";
             case "a":
-            case "GREEN":
+            case "green":
                 return "#55FF55";
             case "b":
-            case "AQUA":
+            case "aqua":
                 return "#55FFFF";
             case "c":
-            case "RED":
+            case "red":
                 return "#FF5555";
             case "d":
-            case "LIGHT_PURPLE":
+            case "light_purple":
                 return "#FF55FF";
             case "e":
-            case "YELLOW":
+            case "yellow":
                 return "#FFFF55";
             case "f":
-            case "WHITE":
+            case "white":
                 return "#FFFFFF";
         }
         return null;

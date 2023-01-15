@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+// new ByteArrayDataBuilder().write...write...write....toByteArray();
 public class ByteArrayDataBuilder {
     public final ByteArrayOutputStream byteArrayOutputSteam;
     public final DataOutputStream dataOutputStream;

@@ -3,7 +3,10 @@ package top.speedcubing.lib.utils;
 import java.util.regex.Pattern;
 
 public class StringUtils {
+
+    //match an url
     public static Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+
     public static String encodeUnicode(String s) {
         StringBuilder unicode = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
@@ -20,9 +23,12 @@ public class StringUtils {
         }
         return text.toString();
     }
-    public static int indexOf(String str, String c, int n) {
+
+    //get the index of the Nth c from str
+    //example: indexOf("ababa","b",2) = 3
+    public static int indexOf(String str, String c, int N) {
         int result = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < N; i++) {
             int index = str.indexOf(c) + 1;
             result += index;
             str = str.substring(index);

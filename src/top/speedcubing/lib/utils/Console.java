@@ -33,6 +33,7 @@ public class Console {
         );
     }
 
+    //convert ansi string to minecraft string
     public static String ansiToColoredText(String str) {
         if (str.endsWith("\n"))
             str = str.substring(0, str.length() - 1);
@@ -102,6 +103,7 @@ public class Console {
         }
     }
 
+    //convert ansi string to plain string
     public static String removeAnsi(String str) {
         return str.replaceAll("\u001B\\[[;\\d]*m", "");
     }
