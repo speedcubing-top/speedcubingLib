@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+//rgb >> 24 != 0x00
 public class ImageRotator {
 
     enum RotateType {
@@ -37,14 +38,14 @@ public class ImageRotator {
                 c[i][j] = image.getRGB(i, j);
         switch (type) {
             case ROTATE_90: {
-                image = new BufferedImage(h, w, BufferedImage.TYPE_INT_RGB);
+                image = new BufferedImage(h, w, image.getType());
                 for (int i = 0; i < w; i++)
                     for (int j = 0; j < h; j++)
                         image.setRGB(j, i, c[w - i - 1][j]);
             }
             break;
             case ROTATE_270: {
-                image = new BufferedImage(h, w, BufferedImage.TYPE_INT_RGB);
+                image = new BufferedImage(h, w, image.getType());
                 for (int i = 0; i < w; i++)
                     for (int j = 0; j < h; j++)
                         image.setRGB(j, i, c[i][h - j - 1]);

@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -14,8 +16,41 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
+import top.speedcubing.lib.bukkit.inventory.ClickInventoryEvent;
+import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
 
 public class PlayerListener implements Listener {
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void InventoryClickEvent(InventoryClickEvent e) {
+        int slot = e.getRawSlot();
+        if (slot != -999) {
+            for (InventoryBuilder b : InventoryBuilder.builderSet) {
+                if (b.holder == e.getInventory().getHolder()) {
+                    ClickInventoryEvent inventoryEvent = b.clickInventoryEventMap.get(slot);
+                    if (inventoryEvent != null)
+                        inventoryEvent.run((Player) e.getWhoClicked(), e);
+                    if (!b.clickable[slot])
+                        e.setCancelled(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void InventoryCloseEvent(InventoryCloseEvent e) {
+        InventoryBuilder close = null;
+        for (InventoryBuilder b : InventoryBuilder.builderSet) {
+            if (b.holder == e.getInventory().getHolder()) {
+                if (b.deleteOnClose)
+                    close = b;
+                break;
+            }
+        }
+        if (close != null)
+            InventoryBuilder.builderSet.remove(close);
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
