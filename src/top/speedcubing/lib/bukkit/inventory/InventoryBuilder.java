@@ -25,7 +25,7 @@ public class InventoryBuilder {
 
     public InventoryBuilder(int size, String title) {
         inventory = Bukkit.createInventory(holder, size, title);
-        clickable = new boolean[size];
+        clickable = new boolean[size + 36];
         builderSet.add(this);
     }
 
@@ -94,18 +94,18 @@ public class InventoryBuilder {
         return this;
     }
 
-    public InventoryBuilder setDraggable(boolean flag, int slot) {
+    public InventoryBuilder setClickable(boolean flag, int slot) {
         clickable[slot] = flag;
         return this;
     }
 
-    public InventoryBuilder setDraggable(boolean flag, int... slots) {
+    public InventoryBuilder setClickable(boolean flag, int... slots) {
         for (int i : slots)
             clickable[i] = flag;
         return this;
     }
 
-    public InventoryBuilder setDraggable(boolean flag, int start, int end) {
+    public InventoryBuilder setClickable(boolean flag, int start, int end) {
         for (; start <= end; start++)
             clickable[start] = flag;
         return this;
