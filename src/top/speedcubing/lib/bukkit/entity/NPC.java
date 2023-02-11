@@ -135,9 +135,9 @@ public class NPC {
             hideNametag();
         if (itemInHand != null)
             setItemInHand(itemInHand);
-        for(int i =0;i<4;i++)
-            if(armor[i] != null)
-                setArmor(i,armor[i]);
+        for (int i = 0; i < 4; i++)
+            if (armor[i] != null)
+                setArmor(i+1, armor[i]);
         if (ms != -1)
             hideFromTab(ms);
         return this;
@@ -174,8 +174,8 @@ public class NPC {
         return this;
     }
 
-    public NPC setArmor(int i,ItemStack armor) {
-        this.armor[i] = armor;
+    public NPC setArmor(int i, ItemStack armor) {
+        this.armor[i-1] = armor;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), i, CraftItemStack.asNMSCopy(armor));
         listener.forEach(a -> a.sendPacket(packet));
         return this;
