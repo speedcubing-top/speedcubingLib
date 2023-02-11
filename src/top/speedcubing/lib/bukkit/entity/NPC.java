@@ -101,6 +101,7 @@ public class NPC {
     boolean nameTagHidden;
     float spawnBodyYaw;
     ItemStack itemInHand;
+    ItemStack[] armor = new ItemStack[4];
     public int ms = 4000;
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
@@ -134,6 +135,9 @@ public class NPC {
             hideNametag();
         if (itemInHand != null)
             setItemInHand(itemInHand);
+        for(int i =0;i<4;i++)
+            if(armor[i] != null)
+                setArmor(i,armor[i]);
         if (ms != -1)
             hideFromTab(ms);
         return this;
@@ -166,6 +170,13 @@ public class NPC {
     public NPC setItemInHand(ItemStack itemInHand) {
         this.itemInHand = itemInHand == null || itemInHand.getType().equals(Material.AIR) ? null : itemInHand;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(itemInHand));
+        listener.forEach(a -> a.sendPacket(packet));
+        return this;
+    }
+
+    public NPC setArmor(int i,ItemStack armor) {
+        this.armor[i] = armor;
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), i, CraftItemStack.asNMSCopy(armor));
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
