@@ -17,15 +17,16 @@ import java.util.UUID;
 
 public class MojangAPI {
 
-   private static ProfileNameUUID t(String name, boolean call) {
+   private static ProfileNameUUID t(String name,boolean call) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openConnection();
             if (connection.getResponseCode() == 200) {
                 JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
-                String[] s = {object.get("name").getAsString(), UUIDUtils.addDash(object.get("id").getAsString())};
-                if (call)
-                    new ProfileRespondEvent(new Profile(s[0], s[1], null, null)).call();
-                return new ProfileNameUUID(s[0], s[1]);
+                String fixedName = object.get("name").getAsString();
+                String uuid = UUIDUtils.addDash(object.get("id").getAsString());
+                if(call)
+                    new ProfileRespondEvent(new Profile(fixedName, uuid, null, null)).call();
+                return new ProfileNameUUID(fixedName, uuid);
             } else
                 throw new APIErrorException(connection.getResponseCode());
         } catch (IOException e) {
