@@ -15,6 +15,8 @@ public class InventoryBuilder {
     public final Map<Integer, ClickInventoryEvent> clickInventoryEventMap = new HashMap<>();
     public final boolean[] clickable;
     public boolean deleteOnClose;
+    public ClickInventoryEvent allClickEvent;
+    public CloseInventoryEvent closeInventoryEvent;
     public final InventoryHolder holder = new InventoryHolder() {
         @Override
         public Inventory getInventory() {
@@ -36,6 +38,11 @@ public class InventoryBuilder {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public InventoryBuilder setCloseInventory(CloseInventoryEvent e){
+        this.closeInventoryEvent = closeInventoryEvent;
+        return this;
     }
 
     public InventoryBuilder setItem(ItemStack stack, int slot) {
@@ -91,6 +98,11 @@ public class InventoryBuilder {
     public InventoryBuilder setClickEvent(ClickInventoryEvent event, int start, int end) {
         for (; start <= end; start++)
             clickInventoryEventMap.put(start, event);
+        return this;
+    }
+
+    public InventoryBuilder setAllClickEvent(ClickInventoryEvent event) {
+        this.allClickEvent = event;
         return this;
     }
 

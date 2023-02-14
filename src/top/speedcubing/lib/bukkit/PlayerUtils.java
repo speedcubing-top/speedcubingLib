@@ -2,6 +2,7 @@ package top.speedcubing.lib.bukkit;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -68,8 +69,9 @@ public class PlayerUtils {
     public static List<Packet<?>>[] changeSkin(Player player, String[] skin) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         World world = entityPlayer.getWorld();
-        GameProfile gameProfile = entityPlayer.getProfile();
-        gameProfile.getProperties().put("textures", new Property("textures", skin[0], skin[1]));
+        PropertyMap property = entityPlayer.getProfile().getProperties();
+        property.removeAll("textures");
+        property.put("textures", new Property("textures", skin[0], skin[1]));
         PacketPlayOutPlayerInfo removePlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         PacketPlayOutPlayerInfo addPlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
         PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityPlayer.getId());

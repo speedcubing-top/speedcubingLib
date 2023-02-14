@@ -24,9 +24,13 @@ public class PlayerListener implements Listener {
     public void InventoryClickEvent(InventoryClickEvent e) {
         int slot = e.getRawSlot();
         if (slot != -999) {
+            ClickInventoryEvent inventoryEvent;
             for (InventoryBuilder b : InventoryBuilder.builderSet) {
                 if (b.holder == e.getInventory().getHolder()) {
-                    ClickInventoryEvent inventoryEvent = b.clickInventoryEventMap.get(slot);
+                    inventoryEvent = b.allClickEvent;
+                    if(inventoryEvent != null)
+                        inventoryEvent.run((Player) e.getWhoClicked(), e);
+                    inventoryEvent = b.clickInventoryEventMap.get(slot);
                     if (inventoryEvent != null)
                         inventoryEvent.run((Player) e.getWhoClicked(), e);
                     if (!b.clickable[slot])
@@ -48,7 +52,7 @@ public class PlayerListener implements Listener {
             }
         }
         if (close != null)
-            InventoryBuilder.builderSet.remove(close);
+            close.delete();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
