@@ -4,10 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.nio.BufferOverflowException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ByteUtils {
@@ -69,7 +67,7 @@ public class ByteUtils {
             }
             buffer = new byte[grow * size];
             size = 0;
-            s =  0;
+            s = 0;
             for (byte[] b : buffers) {
                 for (; size < grow; size++) {
                     buffer[s] = b[size];

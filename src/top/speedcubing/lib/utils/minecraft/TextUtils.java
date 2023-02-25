@@ -2,6 +2,20 @@ package top.speedcubing.lib.utils.minecraft;
 
 public class TextUtils {
 
+    //translate
+    public static String colorCode(char altColorChar, String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+
+        for (int i = 0; i < b.length - 1; ++i) {
+            if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+                b[i] = 167;
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+
+        return new String(b);
+    }
+
     //get the last color of the text
     public static char getLastColor(String str) {
         for (int i = str.length() - 1; i >= 0; i--) {

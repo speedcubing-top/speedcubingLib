@@ -23,7 +23,6 @@ import top.speedcubing.lib.bukkit.event.PlayInEvent;
 import top.speedcubing.lib.bukkit.event.PlayOutByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayOutEvent;
 import top.speedcubing.lib.utils.Reflections;
-import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.*;
 
@@ -59,10 +58,14 @@ public class CubingLibPlayer {
         ByteToMessageDecoder byteToMessageDecoder = new ByteToMessageDecoder() {
             @Override // In Byte
             protected void decode(ChannelHandlerContext channel, ByteBuf byteBuf, List<Object> arg) {
-                if (!((PlayInByteEvent) new PlayInByteEvent(player, byteBuf).call()).isCancelled)
-                    arg.add(byteBuf.readBytes(byteBuf.readableBytes()));
-                else
-                    byteBuf.skipBytes(byteBuf.readableBytes());
+                try {
+                    if (!((PlayInByteEvent) new PlayInByteEvent(player, byteBuf).call()).isCancelled)
+                        arg.add(byteBuf.readBytes(byteBuf.readableBytes()));
+                    else
+                        byteBuf.skipBytes(byteBuf.readableBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
         if (pipeline.get("decompress") != null)
@@ -73,29 +76,37 @@ public class CubingLibPlayer {
             pipeline.addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
                 @Override // Out Byte
                 public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) throws Exception {
-                    if (!((PlayOutByteEvent) new PlayOutByteEvent(player, (ByteBuf) byteBuf).call()).isCancelled)
-                        super.write(channel, byteBuf, promise);
+                    try {
+                        if (!((PlayOutByteEvent) new PlayOutByteEvent(player, (ByteBuf) byteBuf).call()).isCancelled)
+                            super.write(channel, byteBuf, promise);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override // In Packet
                 public void channelRead(ChannelHandlerContext channel, Object packet) throws Exception {
-                    if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
-                        super.channelRead(channel, packet);
-                        if (packet instanceof PacketPlayInUseEntity) {
-                            int id = (int) Reflections.getField(packet, "a");
-                            for (NPC npc : NPC.all) {
-                                if (npc.entityPlayer.getId() == id && npc.getClickEvent() != null) {
-                                    npc.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
-                                    break;
+                    try {
+                        if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
+                            super.channelRead(channel, packet);
+                            if (packet instanceof PacketPlayInUseEntity) {
+                                int id = (int) Reflections.getField(packet, "a");
+                                for (NPC npc : NPC.all) {
+                                    if (npc.entityPlayer.getId() == id && npc.getClickEvent() != null) {
+                                        npc.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
+                                        break;
+                                    }
                                 }
-                            }
-                            for (Hologram hologram : Hologram.all) {
-                                if (hologram.armorStand.getId() == id && hologram.getClickEvent() != null) {
-                                    hologram.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
-                                    break;
+                                for (Hologram hologram : Hologram.all) {
+                                    if (hologram.armorStand.getId() == id && hologram.getClickEvent() != null) {
+                                        hologram.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
+                                        break;
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -104,8 +115,12 @@ public class CubingLibPlayer {
             pipeline.addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
                 @Override // Out Packet
                 protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
-                    if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled)
-                        arg.add(packet);
+                    try {
+                        if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled)
+                            arg.add(packet);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         user.put(player, this);

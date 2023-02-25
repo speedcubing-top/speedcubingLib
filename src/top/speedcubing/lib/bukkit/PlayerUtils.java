@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import net.minecraft.server.v1_8_R3.*;
@@ -69,21 +68,22 @@ public class PlayerUtils {
     public static List<Packet<?>>[] changeSkin(Player player, String[] skin) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         World world = entityPlayer.getWorld();
+        PlayerConnection connection = entityPlayer.playerConnection;
+        PlayerInventory inventory = player.getInventory();
+        Location l = player.getLocation();
         PropertyMap property = entityPlayer.getProfile().getProperties();
         property.removeAll("textures");
         property.put("textures", new Property("textures", skin[0], skin[1]));
         PacketPlayOutPlayerInfo removePlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         PacketPlayOutPlayerInfo addPlayerPacket = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
         PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityPlayer.getId());
-        PlayerInventory inventory = player.getInventory();
-        Location l = player.getLocation();
+        connection.sendPacket(removePlayerPacket);
+        connection.sendPacket(addPlayerPacket);
+        connection.sendPacket(new PacketPlayOutRespawn(world.getWorld().getEnvironment().getId(), world.getDifficulty(), world.getWorldData().getType(), entityPlayer.playerInteractManager.getGameMode()));
+        connection.sendPacket(new PacketPlayOutPosition(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch(), new HashSet<>()));
+        connection.sendPacket(new PacketPlayOutHeldItemSlot(player.getInventory().getHeldItemSlot()));
+        player.updateInventory();
         return new List[]{
-                Arrays.asList(
-                        removePlayerPacket,
-                        addPlayerPacket,
-                        new PacketPlayOutRespawn(world.getWorld().getEnvironment().getId(), world.getDifficulty(), world.getWorldData().getType(), entityPlayer.playerInteractManager.getGameMode()),
-                        new PacketPlayOutPosition(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch(), new HashSet<>()),
-                        new PacketPlayOutHeldItemSlot(player.getInventory().getHeldItemSlot())),
                 Arrays.asList(
                         removePlayerPacket,
                         addPlayerPacket,
