@@ -6,45 +6,70 @@ import java.util.List;
 
 public class SQLConnection {
 
-    public class SQLBuilder {
+    public class SQLPrepare extends SQLBuilder {
         PreparedStatement statement;
         boolean prepared;
-        String sql;
 
-        public SQLBuilder(String sql) {
-            this.sql = sql;
+        public SQLPrepare() {
         }
 
-        public SQLBuilder from(String table) {
-            return append(" FROM `" + table + "`");
+
+        public SQLPrepare append(String s) {
+            super.append(s);
+            return this;
         }
 
-        public SQLBuilder from(String database, String table) {
-            return append(" FROM `" + database + "`.`" + table + "`");
+        public SQLPrepare select(String field) {
+            super.select(field);
+            return this;
         }
 
-        public SQLBuilder where(String where) {
-            return append(" WHERE " + where);
+        public SQLPrepare delete(String table) {
+            super.delete(table);
+            return this;
         }
 
-        public SQLBuilder orderBy(String orders) {
-            return append(" ORDER BY " + orders);
+        public SQLPrepare insert(String table, String field) {
+            super.insert(table, field);
+            return this;
         }
 
-        public SQLBuilder limit(int index, int count) {
-            return append(" LIMIT " + index + "," + count);
+        public SQLPrepare update(String table) {
+            super.update(table);
+            return this;
         }
 
-        public SQLBuilder set(String set) {
-            return append(" SET " + set);
+        public SQLPrepare from(String table) {
+            super.from(table);
+            return this;
         }
 
-        public SQLBuilder values(String values) {
-            return append(" VALUES (" + values + ")");
+        public SQLPrepare from(String database, String table) {
+            return from("`" + database + "`.`" + table + "`");
         }
 
-        public SQLBuilder append(String s) {
-            sql += s;
+        public SQLPrepare where(String where) {
+            super.where(where);
+            return this;
+        }
+
+        public SQLPrepare orderBy(String orders) {
+            super.orderBy(orders);
+            return this;
+        }
+
+        public SQLPrepare limit(int index, int count) {
+            super.limit(index, count);
+            return this;
+        }
+
+        public SQLPrepare set(String set) {
+            super.set(set);
+            return this;
+        }
+
+        public SQLPrepare values(String values) {
+            super.values(values);
             return this;
         }
 
@@ -59,7 +84,7 @@ public class SQLConnection {
             }
         }
 
-        public SQLBuilder setString(int index, String data) {
+        public SQLPrepare setString(int index, String data) {
             prepare();
             try {
                 statement.setString(index, data);
@@ -69,7 +94,7 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder setInt(int index, int data) {
+        public SQLPrepare setInt(int index, int data) {
             prepare();
             try {
                 statement.setInt(index, data);
@@ -79,7 +104,7 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder setDouble(int index, double data) {
+        public SQLPrepare setDouble(int index, double data) {
             prepare();
             try {
                 statement.setDouble(index, data);
@@ -89,7 +114,7 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder setFloat(int index, float data) {
+        public SQLPrepare setFloat(int index, float data) {
             prepare();
             try {
                 statement.setFloat(index, data);
@@ -99,7 +124,7 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder setLong(int index, long data) {
+        public SQLPrepare setLong(int index, long data) {
             prepare();
             try {
                 statement.setLong(index, data);
@@ -110,7 +135,7 @@ public class SQLConnection {
         }
 
 
-        public SQLBuilder setByte(int index, byte data) {
+        public SQLPrepare setByte(int index, byte data) {
             prepare();
             try {
                 statement.setByte(index, data);
@@ -120,7 +145,7 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLBuilder setBoolean(int index, boolean data) {
+        public SQLPrepare setBoolean(int index, boolean data) {
             prepare();
             try {
                 statement.setBoolean(index, data);
@@ -277,20 +302,20 @@ public class SQLConnection {
         }
     }
 
-    public SQLBuilder select(String field) {
-        return new SQLBuilder("SELECT " + field);
+    public SQLPrepare select(String field) {
+        return new SQLPrepare().select(field);
     }
 
-    public SQLBuilder delete(String table) {
-        return new SQLBuilder("DELETE FROM `" + table + "`");
+    public SQLPrepare delete(String table) {
+        return new SQLPrepare().delete(table);
     }
 
-    public SQLBuilder insert(String table, String field) {
-        return new SQLBuilder("INSERT INTO `" + table + "` (" + field + ")");
+    public SQLPrepare insert(String table, String field) {
+        return new SQLPrepare().insert(table, field);
     }
 
-    public SQLBuilder update(String table) {
-        return new SQLBuilder("UPDATE `" + table + "`");
+    public SQLPrepare update(String table) {
+        return new SQLPrepare().update(table);
     }
 
 
