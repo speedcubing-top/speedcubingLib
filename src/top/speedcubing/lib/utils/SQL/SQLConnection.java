@@ -19,6 +19,10 @@ public class SQLConnection {
             return append(" FROM `" + table + "`");
         }
 
+        public SQLBuilder from(String database, String table) {
+            return append(" FROM `" + database + "`.`" + table + "`");
+        }
+
         public SQLBuilder where(String where) {
             return append(" WHERE " + where);
         }
