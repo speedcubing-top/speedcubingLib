@@ -45,7 +45,8 @@ public class SQLConnection {
         }
 
         public SQLPrepare from(String database, String table) {
-            return from("`" + database + "`.`" + table + "`");
+            super.from(database,table);
+            return this;
         }
 
         public SQLPrepare where(String where) {

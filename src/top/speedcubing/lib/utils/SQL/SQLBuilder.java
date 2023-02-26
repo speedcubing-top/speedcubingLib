@@ -14,6 +14,7 @@ public class SQLBuilder {
 
     public SQLBuilder() {
     }
+
     public SQLBuilder select(String field) {
         return append("SELECT " + field);
     }
@@ -35,7 +36,7 @@ public class SQLBuilder {
     }
 
     public SQLBuilder from(String database, String table) {
-        return append(" FROM `" + database + "`.`" + table + "`");
+        return from(database + "`.`" + table);
     }
 
     public SQLBuilder where(String where) {
