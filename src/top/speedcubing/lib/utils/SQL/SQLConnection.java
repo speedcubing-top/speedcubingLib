@@ -45,7 +45,7 @@ public class SQLConnection {
         }
 
         public SQLPrepare from(String database, String table) {
-            super.from(database,table);
+            super.from(database, table);
             return this;
         }
 
@@ -317,6 +317,10 @@ public class SQLConnection {
 
     public SQLPrepare update(String table) {
         return new SQLPrepare().update(table);
+    }
+
+    public SQLPrepare execute(String sql) {
+        return new SQLPrepare().append(sql);
     }
 
 

@@ -15,9 +15,9 @@ public class TextBuilder {
             case 4:
                 return net.kyori.adventure.text.event.ClickEvent.openUrl(c.getString());
             case 5:
-                return net.kyori.adventure.text.event.ClickEvent.suggestCommand(c.getString());
-            case 6:
                 return net.kyori.adventure.text.event.ClickEvent.runCommand(c.getString());
+            case 6:
+                return net.kyori.adventure.text.event.ClickEvent.suggestCommand(c.getString());
         }
         return null;
     }
