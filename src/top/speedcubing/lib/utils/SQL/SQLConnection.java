@@ -319,10 +319,10 @@ public class SQLConnection {
         return new SQLPrepare().update(table);
     }
 
-    public SQLPrepare execute(String sql) {
+
+    public SQLPrepare executeQuery2(String sql) {
         return new SQLPrepare().append(sql);
     }
-
 
     public void delete(String table, String where) {
         execute("DELETE FROM `" + table + "` WHERE " + where);
