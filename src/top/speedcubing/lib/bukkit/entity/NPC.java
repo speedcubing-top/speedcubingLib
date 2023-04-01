@@ -137,7 +137,7 @@ public class NPC {
             setItemInHand(itemInHand);
         for (int i = 0; i < 4; i++)
             if (armor[i] != null)
-                setArmor(i+1, armor[i]);
+                setArmor(i + 1, armor[i]);
         if (ms != -1)
             hideFromTab(ms);
         return this;
@@ -175,7 +175,7 @@ public class NPC {
     }
 
     public NPC setArmor(int i, ItemStack armor) {
-        this.armor[i-1] = armor;
+        this.armor[i - 1] = armor;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), i, CraftItemStack.asNMSCopy(armor));
         listener.forEach(a -> a.sendPacket(packet));
         return this;
@@ -215,7 +215,7 @@ public class NPC {
 
     public NPC setSkin(UUID uuid) {
         try {
-            ProfileSkin skin = MojangAPI.getSkinByUUID(uuid);
+            ProfileSkin skin = MojangAPI.getByUUID(uuid);
             return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;
@@ -224,7 +224,7 @@ public class NPC {
 
     public NPC setSkin(String name) {
         try {
-            ProfileSkin skin = MojangAPI.getSkinByName(name);
+            ProfileSkin skin = MojangAPI.getDetailByName(name);
             return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;

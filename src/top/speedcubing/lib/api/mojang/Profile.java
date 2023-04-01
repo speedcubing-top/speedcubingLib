@@ -1,24 +1,23 @@
 package top.speedcubing.lib.api.mojang;
 
+import top.speedcubing.lib.utils.UUIDUtils;
+
 import java.util.UUID;
 
 public class Profile {
     final String name;
     final String uuidString;
-    final String value;
-    final String signature;
     UUID uuid;
 
-    public Profile(String name, String uuidString, String value, String signature) {
+    public Profile(String name, String uuidString) {
         this.name = name;
         this.uuidString = uuidString;
-        this.value = value;
-        this.signature = signature;
     }
 
     public String getName() {
         return name;
     }
+
 
     public UUID getUUID() {
         if (uuid == null)
@@ -30,11 +29,7 @@ public class Profile {
         return uuidString;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getSignature() {
-        return signature;
+    public String getUndashedUUID() {
+        return UUIDUtils.unDash(uuidString);
     }
 }
