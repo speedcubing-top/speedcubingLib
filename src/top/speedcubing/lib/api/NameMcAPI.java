@@ -7,11 +7,11 @@ import java.net.URL;
 import java.util.UUID;
 
 public class NameMcAPI {
-    public static boolean likedServer(UUID uuid, String ip) {
-        return likedServer(uuid.toString(),ip);
+    public static Boolean likedServer(UUID uuid, String ip) {
+        return likedServer(uuid.toString(), ip);
     }
 
-    public static boolean likedServer(String uuid, String ip) {
+    public static Boolean likedServer(String uuid, String ip) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(new URL("https://api.namemc.com/server/" + ip + "/likes?profile=" + uuid).openStream()));
             String str = in.readLine();
@@ -19,7 +19,7 @@ public class NameMcAPI {
             return Boolean.parseBoolean(str);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 }
