@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import top.speedcubing.lib.bukkit.packetwrapper.OutPlayerListHeaderFooter;
 
@@ -63,6 +64,14 @@ public class PlayerUtils {
     public static void sendTitle(Player player, TitleType type, String text, int fadeIn, int stay, int fadeOut) {
         setTitleTime(player, fadeIn, stay, fadeOut);
         sendTitle(player, type, text);
+    }
+
+    public static int countItem(Player player, org.bukkit.Material material) {
+        int i = 0;
+        for (ItemStack s : player.getInventory().getContents())
+            if (s != null && s.getType() == material)
+                i += s.getAmount();
+        return i;
     }
 
     public static List<Packet<?>>[] changeSkin(Player player, String[] skin) {

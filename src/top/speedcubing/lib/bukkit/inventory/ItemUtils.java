@@ -20,4 +20,11 @@ public class ItemUtils {
         itemStack.setItemMeta(meta);
         return itemStack;
     }
+
+    public static ItemStack setDisplayName(ItemStack itemStack, String displayName) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(displayName);
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
 }

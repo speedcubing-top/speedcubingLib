@@ -2,18 +2,14 @@ package top.speedcubing.lib.bukkit.inventory;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import top.speedcubing.lib.utils.Reflections;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionEffect;
+import top.speedcubing.lib.utils.Reflections;
 
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemBuilder {
 
@@ -22,6 +18,11 @@ public class ItemBuilder {
 
     public ItemBuilder(Material material) {
         itemStack = new ItemStack(material);
+        meta = itemStack.getItemMeta();
+    }
+
+    public ItemBuilder(ItemStack itemStack) {
+        this.itemStack = itemStack;
         meta = itemStack.getItemMeta();
     }
 
@@ -50,6 +51,17 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder addLore(String... lore) {
+        List<String> s = meta.getLore();
+        if (s == null) {
+            meta.setLore(Arrays.asList(lore));
+        } else {
+            s.addAll(Arrays.asList(lore));
+            meta.setLore(s);
+        }
+        return this;
+    }
+
     public ItemBuilder hideUnBreak() {
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         return this;
@@ -75,10 +87,16 @@ public class ItemBuilder {
         return this;
     }
 
+    @Deprecated
     public ItemBuilder ench(Enchantment[] enchantments, int[] levels) {
         for (int i = 0; i < enchantments.length; i++) {
             meta.addEnchant(enchantments[i], levels[i], true);
         }
+        return this;
+    }
+
+    public ItemBuilder ench(Enchantment enchantment, int level) {
+        meta.addEnchant(enchantment, level, true);
         return this;
     }
 
