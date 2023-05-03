@@ -75,7 +75,7 @@ public class CubingLibPlayer {
         if (pipeline.get("decoder") != null)
             pipeline.addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
                 @Override // Out Byte
-                public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) throws Exception {
+                public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) {
                     try {
                         if (!((PlayOutByteEvent) new PlayOutByteEvent(player, (ByteBuf) byteBuf).call()).isCancelled)
                             super.write(channel, byteBuf, promise);
@@ -85,7 +85,7 @@ public class CubingLibPlayer {
                 }
 
                 @Override // In Packet
-                public void channelRead(ChannelHandlerContext channel, Object packet) throws Exception {
+                public void channelRead(ChannelHandlerContext channel, Object packet) {
                     try {
                         if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
                             super.channelRead(channel, packet);

@@ -4,18 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- TCPClient tcp = new TCPClient("localhost",500);
-
- tcp.send(targetPort,bytes);
-
- try {
-   sendUnsafe(targetPort, bytes);
- } catch (IOException e) {
-   //action
- }
-
-**/
 public class TCPClient {
     private final String host;
     private final int timeout;

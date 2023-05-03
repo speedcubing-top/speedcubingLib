@@ -18,17 +18,19 @@ public class FileUtils {
     }
 
     public static void deleteDirectory(File dir) {
-        for (File file : dir.listFiles()) {
-            try {
-                if (file.isDirectory())
-                    deleteDirectory(file);
-                else
-                    file.delete();
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (dir != null && dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                try {
+                    if (file.isDirectory())
+                        deleteDirectory(file);
+                    else
+                        file.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            dir.delete();
         }
-        dir.delete();
     }
 
     public static void copyDirectory(String fromDir, String toDir) {

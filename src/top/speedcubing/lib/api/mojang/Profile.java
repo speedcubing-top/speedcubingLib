@@ -5,11 +5,13 @@ import top.speedcubing.lib.utils.UUIDUtils;
 import java.util.UUID;
 
 public class Profile {
+    final long time;
     final String name;
     final String uuidString;
     UUID uuid;
 
     public Profile(String name, String uuidString) {
+        this.time = System.currentTimeMillis();
         this.name = name;
         this.uuidString = uuidString;
     }
@@ -17,7 +19,6 @@ public class Profile {
     public String getName() {
         return name;
     }
-
 
     public UUID getUUID() {
         if (uuid == null)
@@ -31,5 +32,9 @@ public class Profile {
 
     public String getUndashedUUID() {
         return UUIDUtils.unDash(uuidString);
+    }
+
+    public long getTimeMillis() {
+        return time;
     }
 }
