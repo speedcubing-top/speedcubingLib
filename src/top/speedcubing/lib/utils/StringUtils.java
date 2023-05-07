@@ -35,4 +35,11 @@ public class StringUtils {
         }
         return result - 1;
     }
+
+    public static String repeat(String s, int count) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < count; i++)
+            b.append(s);
+        return b.toString();
+    }
 }
