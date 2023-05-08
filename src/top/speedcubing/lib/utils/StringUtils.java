@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
     //match an url
-    public static Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+    public static Pattern url = Pattern.compile("\"(?:(https?)://)?([-\\\\w_.]+\\\\.\\\\w{2,})(/\\\\S*)?\"");
 
     public static String encodeUnicode(String s) {
         StringBuilder unicode = new StringBuilder();
