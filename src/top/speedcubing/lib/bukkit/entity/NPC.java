@@ -3,11 +3,10 @@ package top.speedcubing.lib.bukkit.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -16,6 +15,7 @@ import top.speedcubing.lib.api.MojangAPI;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
+import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.Reflections;
 import top.speedcubing.lib.utils.collection.Sets;
 
@@ -99,6 +99,7 @@ public class NPC {
     public final EntityPlayer entityPlayer;
 
     boolean nameTagHidden;
+    boolean gravity;
     float spawnBodyYaw;
     ItemStack itemInHand;
     ItemStack[] armor = new ItemStack[4];
@@ -152,6 +153,7 @@ public class NPC {
         return this;
     }
 
+
     public NPC status(int status) {
         PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus();
         Reflections.setField(packet, "a", entityPlayer.getId());
@@ -159,6 +161,16 @@ public class NPC {
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
+
+    public NPC setGravity(boolean b){
+        this.gravity = b;
+        return this;
+    }
+
+    public boolean isGravity(){
+        return gravity;
+    }
+
 
     public NPC setSneaking(boolean sneaking) {
         entityPlayer.setSneaking(sneaking);
@@ -215,7 +227,7 @@ public class NPC {
 
     public NPC setSkin(UUID uuid) {
         try {
-            ProfileSkin skin = MojangAPI.getByUUID(uuid);
+            ProfileSkin skin = MojangAPI.getSkinByUUID(uuid);
             return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;
@@ -224,7 +236,7 @@ public class NPC {
 
     public NPC setSkin(String name) {
         try {
-            ProfileSkin skin = MojangAPI.getDetailByName(name);
+            ProfileSkin skin = MojangAPI.getSkinByName(name);
             return setSkin(skin.getValue(), skin.getSignature());
         } catch (Exception e) {
             return this;

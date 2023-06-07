@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
+import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.inventory.Glow;
 import top.speedcubing.lib.bukkit.listeners.PlayerListener;
 import top.speedcubing.lib.utils.Reflections;
@@ -25,6 +26,18 @@ public class speedcubingLibBukkit extends JavaPlugin {
                 Enchantment.registerEnchantment(Glow.glow);
             } catch (Exception e) {
             }
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                try {
+                    for (NPC n : NPC.all) {
+                        if (n.isGravity()) {
+                            n.entityPlayer.g(0, 0);
+                            n.updateNpcLocation();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, 0, 0);
         }
     }
 

@@ -2,6 +2,7 @@ package top.speedcubing.lib.api;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.jetbrains.annotations.NotNull;
 import top.speedcubing.lib.api.event.ProfileRespondEvent;
 import top.speedcubing.lib.api.exception.APIErrorException;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
@@ -37,17 +38,17 @@ public class MojangAPI {
         return t(name, true);
     }
 
-    public static ProfileSkin getDetailByName(String name) {
+    public static ProfileSkin getSkinByName(String name) {
         Profile p = t(name, false);
-        return getByUUID(p.getUUIDString());
+        return getSkinByUUID(p.getUUID());
     }
 
 
-    public static ProfileSkin getByUUID(UUID uuid) {
-        return getByUUID(uuid.toString());
+    public static ProfileSkin getSkinByUUID(UUID uuid) {
+        return getSkinByUUID(uuid.toString());
     }
 
-    public static ProfileSkin getByUUID(String uuid) {
+    public static ProfileSkin getSkinByUUID(String uuid) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false").openConnection();
             if (connection.getResponseCode() == 200) {
