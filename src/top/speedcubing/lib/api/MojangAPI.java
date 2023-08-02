@@ -2,7 +2,6 @@ package top.speedcubing.lib.api;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.jetbrains.annotations.NotNull;
 import top.speedcubing.lib.api.event.ProfileRespondEvent;
 import top.speedcubing.lib.api.exception.APIErrorException;
 import top.speedcubing.lib.api.mojang.ProfileSkin;

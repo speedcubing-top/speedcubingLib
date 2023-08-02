@@ -28,8 +28,9 @@ public class StringUtils {
     //example: indexOf("ababa","b",2) = 3
     public static int indexOf(String str, String c, int N) {
         int result = 0;
+        int index;
         for (int i = 0; i < N; i++) {
-            int index = str.indexOf(c) + 1;
+            index = str.indexOf(c) + 1;
             result += index;
             str = str.substring(index);
         }
