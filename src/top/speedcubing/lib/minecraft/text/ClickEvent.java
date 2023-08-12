@@ -16,14 +16,10 @@ public class ClickEvent {
     }
 
     private final String s;
-    private final char b;
+    public final char b;
 
     public String getString() {
         return s;
-    }
-
-    public char getB() {
-        return b;
     }
 
     public ClickEvent(String s, char b) {

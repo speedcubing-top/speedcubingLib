@@ -31,17 +31,17 @@ public class TextBuilder {
     }
 
     public TextBuilder click(String s, ClickEvent c) {
-        serial.append(s).append(c.getB()).append(c.getString()).append((char) 1);
+        serial.append(s).append(c.b).append(c.getString()).append((char) 1);
         return this;
     }
 
     public TextBuilder hover(String s, HoverEvent h) {
-        serial.append(s).append(h.getB()).append(h.getString()).append((char) 2);
+        serial.append(s).append(h.b).append(h.getString()).append((char) 2);
         return this;
     }
 
     public TextBuilder both(String s, ClickEvent c, HoverEvent h) {
-        serial.append(s).append(c.getB()).append(c.getString()).append(h.getB()).append(h.getString()).append((char) 3);
+        serial.append(s).append(c.b).append(c.getString()).append(h.b).append(h.getString()).append((char) 3);
         return this;
     }
 
@@ -104,7 +104,7 @@ public class TextBuilder {
         }
 
         private net.md_5.bungee.api.chat.ClickEvent a(ClickEvent c) {
-            switch (c.getB()) {
+            switch (c.b) {
                 case 4:
                     return new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL, c.getString());
                 case 5:
@@ -116,7 +116,7 @@ public class TextBuilder {
         }
 
         private net.md_5.bungee.api.chat.HoverEvent a(HoverEvent h) {
-            switch (h.getB()) {
+            switch (h.b) {
                 case 7:
                     return new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new TextBuilder().str(h.getString()).toBungee());
             }
@@ -213,7 +213,7 @@ public class TextBuilder {
         }
 
         private net.kyori.adventure.text.event.ClickEvent a(ClickEvent c) {
-            switch (c.getB()) {
+            switch (c.b) {
                 case 4:
                     return net.kyori.adventure.text.event.ClickEvent.openUrl(c.getString());
                 case 5:
@@ -225,7 +225,7 @@ public class TextBuilder {
         }
 
         private net.kyori.adventure.text.event.HoverEvent<?> a(HoverEvent h) {
-            switch (h.getB()) {
+            switch (h.b) {
                 case 7:
                     return net.kyori.adventure.text.event.HoverEvent.showText(new TextBuilder().str(h.getString()).toVelo());
             }

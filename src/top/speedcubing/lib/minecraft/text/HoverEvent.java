@@ -7,14 +7,10 @@ public class HoverEvent {
     }
 
     private final String s;
-    private final char b;
+    public final char b;
 
     public String getString() {
         return s;
-    }
-
-    public char getB() {
-        return b;
     }
 
     public HoverEvent(String s, char b) {
