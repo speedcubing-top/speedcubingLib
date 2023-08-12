@@ -127,7 +127,7 @@ public class TextBuilder {
             this.builder.addAll(Arrays.asList(TextComponent.fromLegacyText(s)));
         }
 
-        public void click(String s, ClickEvent c) {
+        private void click(String s, ClickEvent c) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
             for (BaseComponent a : b) {
@@ -136,7 +136,7 @@ public class TextBuilder {
             }
         }
 
-        public void hover(String s, HoverEvent h) {
+        private void hover(String s, HoverEvent h) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
             for (BaseComponent a : b) {
@@ -145,7 +145,7 @@ public class TextBuilder {
             }
         }
 
-        public void both(String s, ClickEvent c, HoverEvent h) {
+        private void both(String s, ClickEvent c, HoverEvent h) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
             net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
@@ -156,7 +156,7 @@ public class TextBuilder {
             }
         }
 
-        public BungeeText(String serial) {
+        private BungeeText(String serial) {
             char lastclick = (char) -1;
             char lasthover = (char) -1;
             StringBuilder s = new StringBuilder();
@@ -169,13 +169,7 @@ public class TextBuilder {
                         s = new StringBuilder();
                         break;
                     case 1:
-                        BaseComponent[] b = TextComponent.fromLegacyText(s2);
-                        net.md_5.bungee.api.chat.ClickEvent clickEvent = a(new ClickEvent(s.toString(), lastclick));
-                        for (BaseComponent a : b) {
-                            a.setClickEvent(clickEvent);
-                            builder.add(a);
-                        }
-
+                        click(s2, new ClickEvent(s.toString(), lastclick));
                         s = new StringBuilder();
                         s2 = "";
                         break;
@@ -212,6 +206,12 @@ public class TextBuilder {
     }
 
     static class VeloBuilder {
+        private net.kyori.adventure.text.TextComponent builder = Component.text("");
+
+        public net.kyori.adventure.text.TextComponent get() {
+            return builder;
+        }
+
         private net.kyori.adventure.text.event.ClickEvent a(ClickEvent c) {
             switch (c.getB()) {
                 case 4:
@@ -236,39 +236,34 @@ public class TextBuilder {
             return LegacyComponentSerializer.builder().extractUrls(Style.style().build()).build().deserialize(s);
         }
 
-        private final StringBuilder last = new StringBuilder();
         private char lastcolor = 'f';
-        private net.kyori.adventure.text.TextComponent builder = Component.text("");
 
-        public void str(String s) {
+        private void str(String s) {
             builder = builder.append(legacy("§" + lastcolor + s));
+            checkLastColor(s);
         }
 
-        public void click(String s, ClickEvent c) {
+        private void click(String s, ClickEvent c) {
             builder = builder.append(legacy("§" + lastcolor + s).clickEvent(a(c)));
+            checkLastColor(s);
         }
 
-        public void hover(String s, HoverEvent h) {
+        private void hover(String s, HoverEvent h) {
             builder = builder.append(legacy("§" + lastcolor + s).hoverEvent(a(h)));
+            checkLastColor(s);
         }
 
-        public void both(String s, ClickEvent c, HoverEvent h) {
+        private void both(String s, ClickEvent c, HoverEvent h) {
             builder = builder.append(legacy("§" + lastcolor + s).clickEvent(a(c)).hoverEvent(a(h)));
+            checkLastColor(s);
         }
 
-        VeloBuilder add(String s) {
-            last.append(s);
-            char ch = TextUtils.getLastColorExact(last.toString());
-            if (ch != ' ')
-                lastcolor = ch;
-            return this;
+        private void checkLastColor(String s) {
+            char ch = TextUtils.getLastColorExact(s);
+            lastcolor = ch == ' ' ? lastcolor : ch;
         }
 
-        public net.kyori.adventure.text.TextComponent get() {
-            return builder;
-        }
-
-        public VeloBuilder(String serial) {
+        private VeloBuilder(String serial) {
             char lastclick = (char) -1;
             char lasthover = (char) -1;
             StringBuilder s = new StringBuilder();
