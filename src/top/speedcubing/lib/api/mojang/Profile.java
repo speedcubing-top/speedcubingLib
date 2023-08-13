@@ -5,7 +5,7 @@ public class Profile {
     final String name;
     final String uuid;
 
-    public Profile(String name, String uuid) {
+    public  Profile(String name, String uuid) {
         this.time = System.currentTimeMillis();
         this.name = name;
         this.uuid = uuid;

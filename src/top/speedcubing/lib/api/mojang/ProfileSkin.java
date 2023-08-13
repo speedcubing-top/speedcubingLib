@@ -17,4 +17,8 @@ public class ProfileSkin extends Profile {
     public String getSignature() {
         return signature;
     }
+
+    public ProfileTexture getTexture() {
+        return new ProfileTexture(value);
+    }
 }

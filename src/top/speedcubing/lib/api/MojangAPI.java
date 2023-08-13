@@ -1,17 +1,13 @@
 package top.speedcubing.lib.api;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import top.speedcubing.lib.api.event.ProfileRespondEvent;
 import top.speedcubing.lib.api.exception.APIErrorException;
-import top.speedcubing.lib.api.mojang.ProfileSkin;
-import top.speedcubing.lib.api.mojang.Profile;
+import top.speedcubing.lib.api.mojang.*;
 import top.speedcubing.lib.utils.UUIDUtils;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.util.UUID;
 
 public class MojangAPI {
@@ -61,5 +57,9 @@ public class MojangAPI {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static ProfileTexture getTextureByUUID(String uuid) {
+        return getSkinByUUID(uuid).getTexture();
     }
 }
