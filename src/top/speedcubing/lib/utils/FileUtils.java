@@ -1,10 +1,7 @@
 package top.speedcubing.lib.utils;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 public class FileUtils {
     public static String getExtension(String f) {

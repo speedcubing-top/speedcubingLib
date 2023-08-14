@@ -108,7 +108,7 @@ public class HypixelPlayer {
                 color = new StringBuilder("c f f f f f f f c");
                 prefix = "[YOUTUBE] ";
                 break;
-            case "NONE":
+            case "NORMAL":
                 color = new StringBuilder("7");
                 prefix = "";
                 break;

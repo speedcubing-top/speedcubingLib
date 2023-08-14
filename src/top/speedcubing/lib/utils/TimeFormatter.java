@@ -1,8 +1,6 @@
 package top.speedcubing.lib.utils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
@@ -78,12 +76,20 @@ public class TimeFormatter {
     }
 
     public static String unixToRealTime(long t, String format, TimeUnit timeUnit) {
+        return unixToRealTime(t, DateTimeFormatter.ofPattern(format), timeUnit);
+    }
+
+    public static String unixToRealTime(long t, DateTimeFormatter formatter, TimeUnit timeUnit) {
         switch (timeUnit) {
             case SECONDS:
-                return DateTimeFormatter.ofPattern(format).format(LocalDateTime.ofInstant(Instant.ofEpochSecond(t), ZoneId.systemDefault()));
+                return formatter.format(LocalDateTime.ofInstant(Instant.ofEpochSecond(t), ZoneId.systemDefault()));
             case MILLISECONDS:
-                return DateTimeFormatter.ofPattern(format).format(LocalDateTime.ofInstant(Instant.ofEpochMilli(t), ZoneId.systemDefault()));
+                return formatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(t), ZoneId.systemDefault()));
         }
         return null;
+    }
+
+    public static String unixToRealTime(DateTimeFormatter formatter, OffsetDateTime offsetDateTime) {
+        return formatter.format(LocalDateTime.ofInstant(offsetDateTime.toInstant(), ZoneId.systemDefault()));
     }
 }
