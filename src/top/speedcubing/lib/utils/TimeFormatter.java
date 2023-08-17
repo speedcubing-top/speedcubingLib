@@ -82,14 +82,34 @@ public class TimeFormatter {
     public static String unixToRealTime(long t, DateTimeFormatter formatter, TimeUnit timeUnit) {
         switch (timeUnit) {
             case SECONDS:
-                return formatter.format(LocalDateTime.ofInstant(Instant.ofEpochSecond(t), ZoneId.systemDefault()));
+                return unixToRealTime(Instant.ofEpochSecond(t), formatter);
             case MILLISECONDS:
-                return formatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(t), ZoneId.systemDefault()));
+                return unixToRealTime(Instant.ofEpochMilli(t), formatter);
         }
         return null;
     }
 
+    public static String unixToRealTime(Instant instant, DateTimeFormatter formatter) {
+        return formatter.format(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
+    }
+
+    public static String unixToRealTime(String format, OffsetDateTime offsetDateTime) {
+        return DateTimeFormatter.ofPattern(format).format(LocalDateTime.ofInstant(offsetDateTime.toInstant(), ZoneId.systemDefault()));
+    }
+
     public static String unixToRealTime(DateTimeFormatter formatter, OffsetDateTime offsetDateTime) {
         return formatter.format(LocalDateTime.ofInstant(offsetDateTime.toInstant(), ZoneId.systemDefault()));
+    }
+
+    public static String formatNow(String format) {
+        return DateTimeFormatter.ofPattern(format).format(LocalDateTime.now());
+    }
+
+    public static String formatNow(DateTimeFormatter formatter) {
+        return formatter.format(LocalDateTime.now());
+    }
+
+    public static String format(DateTimeFormatter formatter, LocalDateTime localDateTime) {
+        return formatter.format(localDateTime);
     }
 }
