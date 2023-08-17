@@ -35,6 +35,8 @@ public class TCPClient {
         out.flush();
         byte[] b = new byte[buffer];
         in.read(b);
+        out.close();
+        in.close();
         return b;
     }
 }
