@@ -3,16 +3,17 @@ package top.speedcubing.lib.bukkit.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R3.*;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
-import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
 import top.speedcubing.lib.utils.collection.Sets;
@@ -79,7 +80,6 @@ public class NPC {
     }
 
     public void delete() {
-        CubingLibPlayer.user.values().forEach(a -> a.outRangeNPC.remove(this));
         all.remove(this);
     }
 
@@ -160,12 +160,12 @@ public class NPC {
         return this;
     }
 
-    public NPC setGravity(boolean b){
+    public NPC setGravity(boolean b) {
         this.gravity = b;
         return this;
     }
 
-    public boolean isGravity(){
+    public boolean isGravity() {
         return gravity;
     }
 

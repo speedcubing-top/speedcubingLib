@@ -44,9 +44,6 @@ public class CubingLibPlayer {
         return user.values();
     }
 
-    public final Set<NPC> outRangeNPC = new HashSet<>();
-    public final Set<Hologram> outRangeHologram = new HashSet<>();
-
     SideBar sideBar;
     Player player;
 

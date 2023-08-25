@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.Collection;
@@ -74,7 +73,6 @@ public class Hologram {
     }
 
     public void delete() {
-        CubingLibPlayer.user.values().forEach(a -> a.outRangeHologram.remove(this));
         all.remove(this);
     }
 

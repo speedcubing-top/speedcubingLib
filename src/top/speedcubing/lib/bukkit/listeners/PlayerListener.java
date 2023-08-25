@@ -101,6 +101,7 @@ public class PlayerListener implements Listener {
     public void PlayerMoveEvent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Location to = e.getTo();
+        Location from = e.getFrom();
         String world = to.getWorld().getName();
         CubingLibPlayer cubingPlayer = CubingLibPlayer.get(player);
         if (cubingPlayer.getBossbar() != null) {
@@ -108,18 +109,24 @@ public class PlayerListener implements Listener {
             CubingLibPlayer.wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(CubingLibPlayer.wither));
         }
-        double xDiff;
-        double zDiff;
+        double xDiffFrom;
+        double zDiffFrom;
+        double xDiffTo;
+        double zDiffTo;
+        double fromDiff;
+        double toDiff;
         for (NPC npc : NPC.all) {
             if (npc.world.contains(world)) {
                 if (npc.everyoneCanSee || npc.hasListener(player)) {
-                    xDiff = npc.entityPlayer.locX - to.getX();
-                    zDiff = npc.entityPlayer.locZ - to.getZ();
-                    if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 128) {
-                        cubingPlayer.outRangeNPC.add(npc);
+                    xDiffTo = npc.entityPlayer.locX - to.getX();
+                    zDiffTo = npc.entityPlayer.locZ - to.getZ();
+                    xDiffFrom = npc.entityPlayer.locX - from.getX();
+                    zDiffFrom = npc.entityPlayer.locZ - from.getZ();
+                    fromDiff = xDiffFrom * xDiffFrom + zDiffFrom * zDiffFrom;
+                    toDiff = xDiffTo * xDiffTo + zDiffTo * zDiffTo;
+                    if (toDiff > 128 * 128 && fromDiff < 128 * 128) {
                         npc.setListener(player).despawn().undoSetListener();
-                    } else if (cubingPlayer.outRangeNPC.contains(npc)) {
-                        cubingPlayer.outRangeNPC.remove(npc);
+                    } else if (toDiff < 128 * 128 && fromDiff > 128 * 128) {
                         int p = npc.ms;
                         npc.setHideFromTabDelay(-1).setListener(player).spawn().hideFromTab(50).undoSetListener().setHideFromTabDelay(p);
                     }
@@ -129,13 +136,15 @@ public class PlayerListener implements Listener {
         for (Hologram hologram : Hologram.all) {
             if (hologram.world.contains(world)) {
                 if (hologram.everyoneCanSee || hologram.hasListener(player)) {
-                    xDiff = hologram.armorStand.locX - to.getX();
-                    zDiff = hologram.armorStand.locZ - to.getZ();
-                    if (Math.sqrt(xDiff * xDiff + zDiff * zDiff) > 64) {
-                        cubingPlayer.outRangeHologram.add(hologram);
+                    xDiffTo = hologram.armorStand.locX - to.getX();
+                    zDiffTo = hologram.armorStand.locZ - to.getZ();
+                    xDiffFrom = hologram.armorStand.locX - from.getX();
+                    zDiffFrom = hologram.armorStand.locZ - from.getZ();
+                    fromDiff = xDiffFrom * xDiffFrom + zDiffFrom * zDiffFrom;
+                    toDiff = xDiffTo * xDiffTo + zDiffTo * zDiffTo;
+                    if (toDiff > 64 * 64 && fromDiff < 64 * 64) {
                         hologram.setListener(player).despawn().undoSetListener();
-                    } else if (cubingPlayer.outRangeHologram.contains(hologram)) {
-                        cubingPlayer.outRangeHologram.remove(hologram);
+                    } else if (toDiff < 64 * 64 && fromDiff > 64 * 64) {
                         hologram.setListener(player).spawn().undoSetListener();
                     }
                 }
