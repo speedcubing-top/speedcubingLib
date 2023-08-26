@@ -1,7 +1,12 @@
 package top.speedcubing.lib.utils.sockets;
 
-import java.io.*;
-import java.net.*;
+import top.speedcubing.lib.utils.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 public class TCPClient {
     private final String host;
@@ -20,23 +25,23 @@ public class TCPClient {
     }
 
     public void sendUnsafe(int port, byte[] data) throws IOException {
-        Socket clientSocket = new Socket();
-        clientSocket.connect(new InetSocketAddress(host, port), timeout);
-        clientSocket.getOutputStream().write(data);
-        clientSocket.close();
+        Socket client = new Socket();
+        client.connect(new InetSocketAddress(host, port), timeout);
+        client.getOutputStream().write(data);
+        client.close();
     }
 
     public byte[] sendAndRead(int port, byte[] data, int buffer) throws IOException {
-        Socket clientSocket = new Socket();
-        clientSocket.connect(new InetSocketAddress(host, port), timeout);
-        DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-        DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+        Socket client = new Socket();
+        client.connect(new InetSocketAddress(host, port), timeout);
+        InputStream in = client.getInputStream();
+        OutputStream out = client.getOutputStream();
         out.write(data);
         out.flush();
-        byte[] b = new byte[buffer];
-        in.read(b);
+        byte[] b = IOUtils.readOnce(in, buffer);
         out.close();
         in.close();
+        client.close();
         return b;
     }
 }
