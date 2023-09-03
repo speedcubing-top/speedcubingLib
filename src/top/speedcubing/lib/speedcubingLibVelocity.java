@@ -23,5 +23,9 @@ public class speedcubingLibVelocity {
         speedcubingLibVelocity.commandManager = commandManager;
         speedcubingLibVelocity.logger = logger;
         speedcubingLibVelocity.folder = folder;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+        }
     }
 }

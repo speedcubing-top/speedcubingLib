@@ -19,6 +19,7 @@ public class speedcubingLibBukkit extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
             Reflections.setClassField(Enchantment.class, "acceptingNew", true);
             try {
+                Class.forName("com.mysql.jdbc.Driver");
                 Glow.glow = new Glow(100);
                 Enchantment.registerEnchantment(Glow.glow);
             } catch (Exception e) {

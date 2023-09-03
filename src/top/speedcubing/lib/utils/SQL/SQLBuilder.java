@@ -1,7 +1,7 @@
 package top.speedcubing.lib.utils.SQL;
 
 public class SQLBuilder {
-    String sql = "";
+    private String sql = "";
 
     public String toSQL() {
         return sql;
