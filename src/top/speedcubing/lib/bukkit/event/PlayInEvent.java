@@ -2,10 +2,10 @@ package top.speedcubing.lib.bukkit.event;
 
 import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.eventbus.LibEventManager;
+import top.speedcubing.lib.eventbus.*;
 
 //EVENT of listening PlayInPACKETS
-public class PlayInEvent extends LibEventManager {
+public class PlayInEvent extends CubingEvent {
     public boolean isCancelled;
     public final Player player;
     public final Packet<?> packet;

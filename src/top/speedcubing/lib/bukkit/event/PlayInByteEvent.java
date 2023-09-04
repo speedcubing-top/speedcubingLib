@@ -2,10 +2,10 @@ package top.speedcubing.lib.bukkit.event;
 
 import io.netty.buffer.ByteBuf;
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.eventbus.LibEventManager;
+import top.speedcubing.lib.eventbus.*;
 
 //EVENT of listening PlayInBytes
-public class PlayInByteEvent extends LibEventManager {
+public class PlayInByteEvent extends CubingEvent {
     public boolean isCancelled;
     public final Player player;
     public final ByteBuf byteBuf;

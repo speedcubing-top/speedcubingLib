@@ -4,6 +4,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LibEventHandler {
+public @interface CubingEventHandler {
     int priority() default 0;
 }
