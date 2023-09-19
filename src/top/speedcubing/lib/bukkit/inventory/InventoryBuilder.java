@@ -41,7 +41,7 @@ public class InventoryBuilder {
     }
 
     public InventoryBuilder setCloseInventory(CloseInventoryEvent e){
-        this.closeInventoryEvent = closeInventoryEvent;
+        this.closeInventoryEvent = e;
         return this;
     }
 
