@@ -13,6 +13,7 @@ public class ServerPingRequest {
     private int port = 25565;
     private int protocol = 47;
     private boolean dnsLookup = true;
+    private boolean srvLookup = true;
     private int timeout = 1000;
 
     public ServerPingRequest() {
@@ -33,6 +34,12 @@ public class ServerPingRequest {
         return this;
     }
 
+    public ServerPingRequest srvLookup(boolean srvLookup) {
+        this.srvLookup = srvLookup;
+        return this;
+    }
+
+
     public ServerPingRequest dnsLookup(boolean dnsLookup) {
         this.dnsLookup = dnsLookup;
         return this;
@@ -48,19 +55,21 @@ public class ServerPingRequest {
         int srvPort = port;
         boolean srv = false;
         List<DNSRecord> records = new ArrayList<>();
-        try {
-            SRVRecord srvRecord = SRVRecord.lookup("_minecraft._tcp." + hostname);
-            srvHostname = srvRecord.getTarget();
-            srvPort = srvRecord.getPort();
-            if (dnsLookup) {
-                records.add(srvRecord);
-                srv = true;
-                List<DNSRecord> cname = CNAMERecord.lookupAll(hostname);
-                records.addAll(cname);
-                records.add(ARecord.lookup(cname.isEmpty() ? hostname : cname.get(cname.size() - 1).toCNAME().getTarget()));
+        if(srvLookup) {
+            try {
+                SRVRecord srvRecord = SRVRecord.lookup("_minecraft._tcp." + hostname);
+                srvHostname = srvRecord.getTarget();
+                srvPort = srvRecord.getPort();
+                if (dnsLookup) {
+                    records.add(srvRecord);
+                    srv = true;
+                    List<DNSRecord> cname = CNAMERecord.lookupAll(hostname);
+                    records.addAll(cname);
+                    records.add(ARecord.lookup(cname.isEmpty() ? hostname : cname.get(cname.size() - 1).toCNAME().getTarget()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         long ping;
         Socket socket = new Socket();
