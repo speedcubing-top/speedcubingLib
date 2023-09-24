@@ -25,10 +25,14 @@ public class ServerPingInfo {
         playerOnline = object.get("online").getAsInt();
         for (JsonElement e : object.get("sample").getAsJsonArray())
             playerSample.add(new PlayerSample(e.getAsJsonObject().get("name").getAsString(), e.getAsJsonObject().get("id").getAsString()));
-        description = data.getAsJsonObject("description").get("text").getAsString();
         if (data.has("favicon"))
             favicon = data.get("favicon").getAsString();
         else favicon = null;
+
+        if (data.get("description").isJsonPrimitive())
+            description = data.get("description").getAsString();
+        else
+            description = data.getAsJsonObject("description").get("text").getAsString();
     }
 
     @Override

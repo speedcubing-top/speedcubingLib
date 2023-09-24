@@ -11,8 +11,8 @@ public class ServerPingRequest {
     public static void main(String[] args) {
 
         try {
-            ServerPingResponse s = new ServerPingRequest().hostname("speedcubing.top").port(25565).ping();
-            System.out.println(s.getResponse());
+            ServerPingResponse s = new ServerPingRequest().hostname("speedcubing.top").ping();
+            System.out.println(s.getServerInfo());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,7 +29,9 @@ public class ServerPingRequest {
     }
 
     public ServerPingRequest hostname(String hostname) {
-        this.hostname = hostname;
+        String[] s = hostname.split(":");
+        this.hostname = s[0];
+        this.port = s.length == 2 ? Integer.parseInt(s[1]) : 25565;
         return this;
     }
 

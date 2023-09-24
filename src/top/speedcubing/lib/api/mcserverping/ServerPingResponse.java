@@ -25,15 +25,15 @@ public class ServerPingResponse {
         this.records = records;
     }
 
-    public String getSrvHostname() {
+    public String getLookedUpHost() {
         return SRVHostname;
     }
 
-    public int getSRVPort() {
+    public int getLookedUpPort() {
         return SRVPort;
     }
 
-    public String getHostname() {
+    public String getHost() {
         return hostname;
     }
 
@@ -49,7 +49,7 @@ public class ServerPingResponse {
         return srv;
     }
 
-    public ServerPingInfo getResponse() {
+    public ServerPingInfo getServerInfo() {
         return response;
     }
 
