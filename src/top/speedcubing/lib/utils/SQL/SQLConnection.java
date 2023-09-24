@@ -36,8 +36,8 @@ public class SQLConnection {
         return new SQLPrepare(new SQLBuilder().append(sql));
     }
 
-    public void select(String table, String field, String where) {
-        execute("SELECT " + field + " FROM " + table + " WHERE " + where);
+    public ResultSet select(String table, String field, String where) {
+        return executeQuery("SELECT " + field + " FROM " + table + " WHERE " + where);
     }
 
     public void delete(String table, String where) {
@@ -71,6 +71,18 @@ public class SQLConnection {
     }
 
     public void execute(String... sqls) {
+        try {
+            Statement statement = connection.createStatement();
+            for (String sql : sqls)
+                statement.addBatch(sql);
+            statement.executeBatch();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute(Collection<String> sqls) {
         try {
             Statement statement = connection.createStatement();
             for (String sql : sqls)

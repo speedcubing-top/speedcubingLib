@@ -1,6 +1,6 @@
 package top.speedcubing.lib.api.mcserverping;
 
-import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.*;
 import top.speedcubing.lib.utils.internet.dnsrecords.*;
 
 import java.io.*;
@@ -8,6 +8,15 @@ import java.net.*;
 import java.util.*;
 
 public class ServerPingRequest {
+    public static void main(String[] args) {
+
+        try {
+            ServerPingResponse s = new ServerPingRequest().hostname("speedcubing.top").port(25565).ping();
+            System.out.println(s.getResponse());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private String hostname;
     private int port = 25565;
@@ -55,17 +64,23 @@ public class ServerPingRequest {
         int srvPort = port;
         boolean srv = false;
         List<DNSRecord> records = new ArrayList<>();
-        if(srvLookup) {
+        if (srvLookup) {
             try {
                 SRVRecord srvRecord = SRVRecord.lookup("_minecraft._tcp." + hostname);
-                srvHostname = srvRecord.getTarget();
-                srvPort = srvRecord.getPort();
-                if (dnsLookup) {
-                    records.add(srvRecord);
-                    srv = true;
-                    List<DNSRecord> cname = CNAMERecord.lookupAll(hostname);
-                    records.addAll(cname);
-                    records.add(ARecord.lookup(cname.isEmpty() ? hostname : cname.get(cname.size() - 1).toCNAME().getTarget()));
+                if (srvRecord != null) {
+                    srvHostname = srvRecord.getTarget();
+                    srvPort = srvRecord.getPort();
+                    if (dnsLookup) {
+                        records.add(srvRecord);
+                        srv = true;
+                        List<DNSRecord> cname = CNAMERecord.lookupAll(srvHostname);
+                        records.addAll(cname);
+                        ARecord aRecord = ARecord.lookup(cname.isEmpty() ? srvHostname : cname.get(cname.size() - 1).toCNAME().getTarget());
+                        if (aRecord != null) {
+                            records.add(aRecord);
+                            srvHostname = aRecord.getIPv4();
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -74,24 +89,24 @@ public class ServerPingRequest {
         long ping;
         Socket socket = new Socket();
         long start = System.currentTimeMillis();
-        socket.connect(new InetSocketAddress(hostname, port), timeout);
+        socket.connect(new InetSocketAddress(srvHostname, srvPort), timeout);
         ping = System.currentTimeMillis() - start;
         DataInputStream in = new DataInputStream(socket.getInputStream());
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-        ByteArrayOutputStream handshake_bytes = new ByteArrayOutputStream();
-        DataOutputStream handshake = new DataOutputStream(handshake_bytes);
-
-        handshake.writeByte(0x00);
-        IOUtils.writeVarInt(handshake, protocol);
-        IOUtils.writeVarInt(handshake, hostname.length());
-        handshake.writeBytes(hostname);
-        handshake.writeShort(port);
-        IOUtils.writeVarInt(handshake, 1);
-        IOUtils.writeVarInt(out, handshake_bytes.size());
-        out.write(handshake_bytes.toByteArray());
-        out.writeByte(0x01);
-        out.writeByte(0x00);
+        ByteArrayDataBuilder data = new ByteArrayDataBuilder()
+                .writeVarInt(0)
+                .writeVarInt(protocol)
+                .writeVarInt(hostname.length())
+                .write(hostname.getBytes())
+                .writeShort((short) 25565)
+                .writeVarInt(1);
+        ByteArrayDataBuilder handshake = new ByteArrayDataBuilder()
+                .writeVarInt(data.toByteArray().length)
+                .write(data.toByteArray())
+                .writeVarInt(1)
+                .writeVarInt(0);
+        out.write(handshake.toByteArray());
 
         IOUtils.readVarInt(in);
         int id = IOUtils.readVarInt(in);
@@ -103,8 +118,8 @@ public class ServerPingRequest {
         io(length == -1, "Server prematurely ended stream.");
         io(length == 0, "Server returned unexpected value.");
 
-        byte[] data = new byte[length];
-        in.readFully(data);
+        byte[] dt = new byte[length];
+        in.readFully(dt);
         out.writeByte(0x09);
         out.writeByte(0x01);
         out.writeLong(System.currentTimeMillis());
@@ -113,7 +128,7 @@ public class ServerPingRequest {
         id = IOUtils.readVarInt(in);
         io(id == -1, "Server prematurely ended stream.");
         io(id != 0x01, "Server returned invalid packet.");
-        return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(data)), records);
+        return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
     }
 
     private static void io(boolean f, String s) throws Exception {

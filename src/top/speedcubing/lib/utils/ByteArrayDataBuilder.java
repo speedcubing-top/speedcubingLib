@@ -1,8 +1,6 @@
 package top.speedcubing.lib.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 // new ByteArrayDataBuilder().write...write...write....toByteArray();
 public class ByteArrayDataBuilder {
@@ -138,6 +136,16 @@ public class ByteArrayDataBuilder {
     public ByteArrayDataBuilder writeBoolean(boolean v) {
         try {
             dataOutputStream.writeBoolean(v);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    //?
+    public ByteArrayDataBuilder writeVarInt(int i) {
+        try {
+            IOUtils.writeVarInt(dataOutputStream, i);
         } catch (IOException e) {
             e.printStackTrace();
         }

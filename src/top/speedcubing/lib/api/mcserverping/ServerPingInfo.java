@@ -26,7 +26,9 @@ public class ServerPingInfo {
         for (JsonElement e : object.get("sample").getAsJsonArray())
             playerSample.add(new PlayerSample(e.getAsJsonObject().get("name").getAsString(), e.getAsJsonObject().get("id").getAsString()));
         description = data.getAsJsonObject("description").get("text").getAsString();
-        favicon = data.get("favicon").getAsString();
+        if (data.has("favicon"))
+            favicon = data.get("favicon").getAsString();
+        else favicon = null;
     }
 
     @Override
