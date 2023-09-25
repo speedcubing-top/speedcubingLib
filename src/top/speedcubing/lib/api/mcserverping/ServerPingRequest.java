@@ -77,12 +77,13 @@ public class ServerPingRequest {
                         srv = true;
                         List<DNSRecord> cname = CNAMERecord.lookupAll(srvHostname);
                         records.addAll(cname);
-                        ARecord aRecord = ARecord.lookup(cname.isEmpty() ? srvHostname : cname.get(cname.size() - 1).toCNAME().getTarget());
-                        if (aRecord != null) {
-                            records.add(aRecord);
-                            srvHostname = aRecord.getIPv4();
-                        }
+                        srvHostname = cname.isEmpty() ? srvHostname : cname.get(cname.size() - 1).toCNAME().getTarget();
                     }
+                }
+                List<ARecord> aRecord = ARecord.lookup(srvHostname);
+                if (!aRecord.isEmpty()) {
+                    records.addAll(aRecord);
+                    srvHostname = aRecord.get(0).getIPv4();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -14,6 +14,7 @@ public class ServerPingInfo {
     private final List<PlayerSample> playerSample = new ArrayList<>();
     private final String description;
     private final String favicon;
+    private final String modType;
 
     public ServerPingInfo(String s) {
         this.json = s;
@@ -34,6 +35,13 @@ public class ServerPingInfo {
             description = data.get("description").getAsString();
         else
             description = TextUtils.componentToText(data.getAsJsonObject("description"));
+
+        //forge
+        if (data.has("modinfo")) {
+            modType = data.getAsJsonObject("modinfo").get("type").getAsString();
+        } else {
+            modType = null;
+        }
     }
 
     @Override

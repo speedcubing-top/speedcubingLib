@@ -2,7 +2,7 @@ package top.speedcubing.lib.utils.internet.dnsrecords;
 
 import javax.naming.*;
 import javax.naming.directory.*;
-import java.util.Properties;
+import java.util.*;
 
 public class ARecord extends DNSRecord {
     private final String name;
@@ -26,19 +26,25 @@ public class ARecord extends DNSRecord {
         return "A{name:\"" + name + "\",IPv4:\"" + IPv4 + "\"}";
     }
 
-    public static ARecord lookup(String name) throws Exception {
+    public static List<ARecord> lookup(String name) throws Exception {
         try {
             Properties env = new Properties();
             env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
             InitialDirContext idc = new InitialDirContext(env);
             Attributes attrs = idc.getAttributes(name, new String[]{"A"});
             Attribute attr = attrs.get("A");
-            if (attr == null)
-                return null;
-            return new ARecord(name, ((String) attr.get()).replaceFirst("\\.$", ""));
+            List<ARecord> records = new ArrayList<>();
+            if (attr != null)
+                for (String s : attr.toString().substring(3).split(", "))
+                    records.add(new ARecord(name,s));
+            return records;
         } catch (
                 NameNotFoundException e) {
             return null;
         }
+    }
+
+    public static void main(String[] s) throws Exception {
+        System.out.println(lookup("mt.mc.production.hypixel.io"));
     }
 }
