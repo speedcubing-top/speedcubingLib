@@ -23,9 +23,11 @@ public class TextUtils {
     }
 
     private static String componentToText(JsonObject o, String s, String color) {
-        if (o.has("color"))
+        if (o.has("color")) {
             color = "§" + toMinecraftColorCode(o.get("color").getAsString());
-        s += color + o.get("text").getAsString();
+            s += color;
+        }
+        s += o.get("text").getAsString();
         if (o.has("extra"))
             for (JsonElement e : o.get("extra").getAsJsonArray())
                 s = componentToText(e.getAsJsonObject(), s, color);
