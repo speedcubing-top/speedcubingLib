@@ -1,6 +1,7 @@
 package top.speedcubing.lib.api.mcserverping;
 
 import com.google.gson.*;
+import top.speedcubing.lib.utils.minecraft.TextUtils;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class ServerPingInfo {
         if (data.get("description").isJsonPrimitive())
             description = data.get("description").getAsString();
         else
-            description = data.getAsJsonObject("description").get("text").getAsString();
+            description = TextUtils.componentToText(data.getAsJsonObject("description"));
     }
 
     @Override
