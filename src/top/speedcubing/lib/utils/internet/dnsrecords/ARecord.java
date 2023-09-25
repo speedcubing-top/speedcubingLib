@@ -36,15 +36,11 @@ public class ARecord extends DNSRecord {
             List<ARecord> records = new ArrayList<>();
             if (attr != null)
                 for (String s : attr.toString().substring(3).split(", "))
-                    records.add(new ARecord(name,s));
+                    records.add(new ARecord(name, s));
             return records;
         } catch (
                 NameNotFoundException e) {
             return null;
         }
-    }
-
-    public static void main(String[] s) throws Exception {
-        System.out.println(lookup("mt.mc.production.hypixel.io"));
     }
 }

@@ -8,15 +8,6 @@ import java.net.*;
 import java.util.*;
 
 public class ServerPingRequest {
-    public static void main(String[] args) {
-
-        try {
-            ServerPingResponse s = new ServerPingRequest().hostname("speedcubing.top").ping();
-            System.out.println(s.getServerInfo());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private String hostname;
     private int port = 25565;
