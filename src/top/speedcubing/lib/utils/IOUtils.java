@@ -17,17 +17,6 @@ public class IOUtils {
         return out;
     }
 
-    public static void writeVarInt(DataOutputStream out, int i) throws IOException {
-        int part;
-        do {
-            part = i & 0x7F;
-            i >>>= 7;
-            if (i != 0)
-                part |= 0x80;
-            out.writeByte(part);
-        } while (i != 0);
-    }
-
     public static DataInputStream toDataInputStream(byte[] b) {
         return new DataInputStream(new ByteArrayInputStream(b));
     }
