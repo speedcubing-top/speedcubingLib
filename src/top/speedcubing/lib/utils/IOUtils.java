@@ -4,6 +4,30 @@ import java.io.*;
 
 public class IOUtils {
 
+    public static String readString(DataInputStream input) throws IOException {
+        int length = IOUtils.readVarInt(input);
+        byte[] target = new byte[length];
+        input.readFully(target);
+        return new String(target);
+    }
+
+    public static void writeString(DataOutputStream out, String s) throws IOException {
+        byte[] b = s.getBytes();
+        writeVarInt(out, b.length);
+        out.write(b);
+    }
+
+    public static void writeVarInt(DataOutputStream out, int i) throws IOException {
+        int part;
+        do {
+            part = i & 0x7F;
+            i >>>= 7;
+            if (i != 0)
+                part |= 0x80;
+            out.writeByte(part);
+        } while (i != 0);
+    }
+
     public static int readVarInt(DataInputStream input) throws IOException {
         int out = 0;
         int bytes = 0;

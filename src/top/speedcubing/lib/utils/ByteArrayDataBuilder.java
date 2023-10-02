@@ -1,7 +1,6 @@
 package top.speedcubing.lib.utils;
 
 import java.io.*;
-import java.util.Arrays;
 
 // new ByteArrayDataBuilder().write...write...write....toByteArray();
 public class ByteArrayDataBuilder {
@@ -146,14 +145,7 @@ public class ByteArrayDataBuilder {
     //?
     public ByteArrayDataBuilder writeVarInt(int i) {
         try {
-            int part;
-            do {
-                part = i & 0x7F;
-                i >>>= 7;
-                if (i != 0)
-                    part |= 0x80;
-                dataOutputStream.writeByte(part);
-            } while (i != 0);
+            IOUtils.writeVarInt(dataOutputStream, i);
         } catch (IOException e) {
             e.printStackTrace();
         }
