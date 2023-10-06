@@ -2,7 +2,22 @@ package top.speedcubing.lib.utils.internet.protocol;
 
 import top.speedcubing.lib.utils.ByteArrayDataBuilder;
 
-public class HAProxyProtcol {
+public class HAProxyProtocol {
+    public static byte[] v1(String sourceIPV4, String destIPV4, int sourcePort, int destPort) {
+        ByteArrayDataBuilder builder = new ByteArrayDataBuilder();
+        builder.write(new byte[]{80, 82, 79, 88, 89, 32, 84, 67, 80, 52, 32});
+        builder.write(sourceIPV4.getBytes());
+        builder.write(32);
+        builder.write(destIPV4.getBytes());
+        builder.write(32);
+        builder.write(String.valueOf(sourcePort).getBytes());
+        builder.write(32);
+        builder.write(String.valueOf(destPort).getBytes());
+        builder.write(13);
+        builder.write(10);
+        return builder.toByteArray();
+    }
+
     public static byte[] v2(String sourceIPV4, String destIPV4, int sourcePort, int destPort) {
         ByteArrayDataBuilder builder = new ByteArrayDataBuilder();
         builder.write(new byte[]{13, 10, 13, 10, 0, 13, 10, 81, 85, 73, 84, 10, 33, 17, 0, 12});
