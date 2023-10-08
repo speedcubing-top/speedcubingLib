@@ -1,4 +1,4 @@
-package top.speedcubing.lib.utils.ip;
+package top.speedcubing.lib.utils.internet.ip;
 
 
 /**

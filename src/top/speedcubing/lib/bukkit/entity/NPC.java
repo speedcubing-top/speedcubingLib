@@ -1,7 +1,7 @@
 package top.speedcubing.lib.bukkit.entity;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.*;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Material;
 import org.bukkit.*;
@@ -242,8 +242,9 @@ public class NPC {
     }
 
     public NPC setSkin(String value, String signature) {
-        GameProfile gameProfile = entityPlayer.getProfile();
-        gameProfile.getProperties().put("textures", new Property("textures", value, signature));
+        PropertyMap properties = entityPlayer.getProfile().getProperties();
+        properties.removeAll("textures");
+        properties.put("textures", new Property("textures", value, signature));
         despawn();
         spawn();
         updateNpcLocation();
