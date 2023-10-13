@@ -25,8 +25,9 @@ public class ServerPingInfo {
         object = data.getAsJsonObject("players");
         playerMax = object.get("max").getAsInt();
         playerOnline = object.get("online").getAsInt();
-        for (JsonElement e : object.get("sample").getAsJsonArray())
-            playerSample.add(new PlayerSample(e.getAsJsonObject().get("name").getAsString(), e.getAsJsonObject().get("id").getAsString()));
+        if (object.has("sample"))
+            for (JsonElement e : object.get("sample").getAsJsonArray())
+                playerSample.add(new PlayerSample(e.getAsJsonObject().get("name").getAsString(), e.getAsJsonObject().get("id").getAsString()));
         if (data.has("favicon"))
             favicon = data.get("favicon").getAsString();
         else favicon = null;
@@ -81,6 +82,10 @@ public class ServerPingInfo {
 
     public String getFavicon() {
         return favicon;
+    }
+
+    public String getModType() {
+        return modType;
     }
 
 

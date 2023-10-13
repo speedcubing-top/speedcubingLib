@@ -46,10 +46,6 @@ public class NumberConversion {
         return Integer.parseInt(s, radix);
     }
 
-    public static void main(String[] s){
-        System.out.println(toBinary(0xFF));
-    }
-
     public static int toUnsigned(byte b) {
         return ((int) b) & 0xFF;
     }

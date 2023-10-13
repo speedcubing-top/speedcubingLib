@@ -38,8 +38,7 @@ public class ARecord extends DNSRecord {
                 for (String s : attr.toString().substring(3).split(", "))
                     records.add(new ARecord(name, s));
             return records;
-        } catch (
-                NameNotFoundException e) {
+        } catch (NameNotFoundException e) {
             return null;
         }
     }
