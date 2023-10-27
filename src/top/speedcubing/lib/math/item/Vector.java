@@ -5,10 +5,15 @@ import top.speedcubing.lib.math.exception.*;
 public class Vector {
     private final double[] vec;
     private final int dimension;
+    private final double length;
 
     public Vector(double... values) {
         vec = values;
         dimension = values.length;
+        double result = 0;
+        for (double k : vec)
+            result += k * k;
+        length = Math.sqrt(result);
     }
 
     public double get(int index) {
@@ -38,19 +43,16 @@ public class Vector {
     public Vector multiPly(double d) {
         Vector vec = clone();
         for (int i = 0; i < dimension; i++)
-            vec.vec[i] = vec.vec[i] * d;
+            vec.vec[i] *= d;
         return vec;
     }
 
     public double getLength() {
-        double result = 0;
-        for (double k : vec)
-            result += k * k;
-        return Math.sqrt(result);
+        return length;
     }
 
     public int getDimension() {
-        return vec.length;
+        return dimension;
     }
 
     public Vector crossProduct(Vector v2) {
