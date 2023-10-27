@@ -2,11 +2,8 @@ package top.speedcubing.lib.utils.sockets;
 
 import top.speedcubing.lib.utils.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class TCPClient {
     private final String host;
@@ -28,7 +25,7 @@ public class TCPClient {
         Socket client = new Socket();
         client.connect(new InetSocketAddress(host, port), timeout);
         client.getOutputStream().write(data);
-        client.close();
+        IOUtils.closeQuietly(client);
     }
 
     public byte[] sendAndRead(int port, byte[] data, int buffer) throws IOException {
@@ -39,9 +36,7 @@ public class TCPClient {
         out.write(data);
         out.flush();
         byte[] b = IOUtils.readOnce(in, buffer);
-        out.close();
-        in.close();
-        client.close();
+        IOUtils.closeQuietly(out, in, client);
         return b;
     }
 }

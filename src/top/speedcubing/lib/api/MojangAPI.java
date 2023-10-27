@@ -22,9 +22,10 @@ public class MojangAPI {
         return new Profile(fixedName, uuid);
     }
 
-    public static List<String> blockedServers(){
+    public static List<String> blockedServers() {
         return Arrays.asList(HTTPUtils.get("https://sessionserver.mojang.com/blockedservers").split("\n"));
     }
+
     public static List<Profile> getByNames(String... names) {
         try {
             if (names.length > 10)
@@ -40,7 +41,7 @@ public class MojangAPI {
             DataOutputStream out = new DataOutputStream(connection.getOutputStream());
             out.writeBytes(payload.toString());
             out.flush();
-            out.close();
+            IOUtils.closeQuietly(out);
             if (connection.getResponseCode() == 200) {
                 StringBuilder textBuilder = new StringBuilder();
                 InputStream in = connection.getInputStream();

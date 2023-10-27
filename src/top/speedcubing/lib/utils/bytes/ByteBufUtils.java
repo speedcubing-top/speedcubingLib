@@ -28,6 +28,26 @@ public class ByteBufUtils {
         } while (i != 0);
     }
 
+    public static int readVarShort(ByteBuf buf) {
+        int low = buf.readUnsignedShort();
+        int high = 0;
+        if ((low & 0x8000) != 0) {
+            low = low & 0x7FFF;
+            high = buf.readUnsignedByte();
+        }
+        return ((high & 0xFF) << 15) | low;
+    }
+
+    public static void writeVarShort(ByteBuf buf, int i) {
+        int low = i & 0x7FFF;
+        int high = (i & 0x7F8000) >> 15;
+        if (high != 0)
+            low |= 0x8000;
+        buf.writeShort(low);
+        if (high != 0)
+            buf.writeByte(high);
+    }
+
     public static String readString(ByteBuf buf) {
         int len = readVarInt(buf);
         byte[] b = new byte[len];
@@ -39,15 +59,5 @@ public class ByteBufUtils {
         byte[] b = s.getBytes();
         writeVarInt(buf, b.length);
         buf.writeBytes(b);
-    }
-
-    public static void writeVarShort(ByteBuf buf, int i) {
-        int low = i & 0x7FFF;
-        int high = (i & 0x7F8000) >> 15;
-        if (high != 0)
-            low = low | 0x8000;
-        buf.writeShort(low);
-        if (high != 0)
-            buf.writeByte(high);
     }
 }
