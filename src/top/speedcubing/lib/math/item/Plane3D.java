@@ -1,8 +1,5 @@
 package top.speedcubing.lib.math.item;
 
-import top.speedcubing.lib.math.vector.Vector;
-import top.speedcubing.lib.math.vector.Vector3D;
-
 public class Plane3D {
     // ax + by + cz = d
     public final double a;
@@ -30,7 +27,7 @@ public class Plane3D {
             if (d * b == a * e && e * c == b * f)
                 throw new IllegalArgumentException();
             else {
-                Vector3D res = new Vector3D(a, b, c).crossProduct(new Vector3D(d, e, f));
+                Vector res = new Vector(a, b, c).crossProduct(new Vector(d, e, f));
                 this.a = res.get(1);
                 this.b = res.get(2);
                 this.c = res.get(3);

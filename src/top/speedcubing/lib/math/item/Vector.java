@@ -1,6 +1,6 @@
-package top.speedcubing.lib.math.vector;
+package top.speedcubing.lib.math.item;
 
-import top.speedcubing.lib.math.exception.InvalidDimensionException;
+import top.speedcubing.lib.math.exception.*;
 
 public class Vector {
     private final double[] vec;
@@ -9,6 +9,10 @@ public class Vector {
     public Vector(double... values) {
         vec = values;
         dimension = values.length;
+    }
+
+    public double get(int index) {
+        return vec[index - 1];
     }
 
     public double dotProduct(Vector vector) {
@@ -38,10 +42,6 @@ public class Vector {
         return vec;
     }
 
-    public double get(int index) {
-        return vec[index - 1];
-    }
-
     public double getLength() {
         double result = 0;
         for (double k : vec)
@@ -53,10 +53,10 @@ public class Vector {
         return vec.length;
     }
 
-    public Vector3D toVec3D() {
-        if (getDimension() != 3)
-            throw new InvalidDimensionException();
-        return new Vector3D(vec[0], vec[1], vec[2]);
+    public Vector crossProduct(Vector v2) {
+        if (v2.dimension != 3)
+            throw new InvalidMatrixException();
+        return new Vector(get(2) * v2.get(3) - v2.get(2) * get(3), get(3) * v2.get(1) - v2.get(3) * get(1), get(1) * v2.get(2) - v2.get(1) * get(2));
     }
 
     public Vector clone() {
