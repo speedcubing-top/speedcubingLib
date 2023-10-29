@@ -21,14 +21,37 @@ public class NumberConversion {
     public static String toBinary(byte i) {
         return toBinary(i, 8);
     }
+    public static String toSizedBinary(short i) {
+        return toSizedBinary(i, 16);
+    }
+
+    public static String toSizedBinary(byte i) {
+        return toSizedBinary(i, 8);
+    }
+
+    public static String toSizedBinary(long i) {
+        return toSizedBinary(i, 64);
+    }
+
+    public static String toSizedBinary(int i) {
+        return toSizedBinary(i, 32);
+    }
 
     public static String toBinary(long i, int size) {
+        return toBinaryString(i,size,false);
+    }
+
+    public static String toSizedBinary(long i, int size) {
+        return toBinaryString(i,size,true);
+    }
+
+    public static String toBinaryString(long i, int size,boolean actualSize) {
         boolean negative = i < 0;
         if (negative)
             i = -i - 1;
         StringBuilder s = new StringBuilder();
         int j = 0;
-        while (negative ? j < size : i != 0) {
+        while (negative || actualSize ? j < size : i != 0) {
             s.insert(0, negative ? 1 - i % 2 : i % 2);
             i >>>= 1;
             j++;
