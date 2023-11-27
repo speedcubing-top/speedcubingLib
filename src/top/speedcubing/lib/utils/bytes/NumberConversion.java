@@ -137,8 +137,8 @@ public class NumberConversion {
         return ArrayUtils.toPrimitiveArray(b);
     }
 
-    public static int toDecimal(String s, int radix) {
-        return Integer.parseInt(s, radix);
+    public static long toDecimal(String s, int radix) {
+        return Long.parseLong(s, radix);
     }
 
     public static int toUnsigned(byte b) {

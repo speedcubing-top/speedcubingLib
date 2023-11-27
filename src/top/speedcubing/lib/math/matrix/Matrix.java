@@ -26,15 +26,15 @@ public class Matrix {
 
     public Matrix multiply(Matrix matrix2D) {
         int r1 = getRowCount();
-        int r2 = getColumnCount();
-        int c1 = matrix2D.getRowCount();
+        int c1 = getColumnCount();
+        int r2 = matrix2D.getRowCount();
         int c2 = matrix2D.getColumnCount();
-        if (r2 != c1)
+        if (c1 != r2)
             throw new InvalidMatrixException();
         double[][] sum = new double[r1][c2];
         for (int i = 0; i < r1; i++)
             for (int j = 0; j < c2; j++)
-                for (int k = 0; k < c1; k++)
+                for (int k = 0; k < r2; k++)
                     sum[i][j] += v[i][k] * matrix2D.v[k][j];
         return new Matrix(sum);
     }
