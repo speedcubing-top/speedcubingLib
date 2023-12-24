@@ -14,7 +14,7 @@ public class MojangAPI {
 
     private static Profile t(String name, boolean call) {
         String s = HTTPUtils.get("https://api.mojang.com/users/profiles/minecraft/" + name);
-        JsonObject object = JsonParser.parseString(s).getAsJsonObject();
+        JsonObject object = new JsonParser().parse(s).getAsJsonObject();
         String fixedName = object.get("name").getAsString();
         String uuid = UUIDUtils.addDash(object.get("id").getAsString());
         if (call)
@@ -49,7 +49,7 @@ public class MojangAPI {
                 while ((b = in.read()) != -1)
                     textBuilder.append((char) b);
                 List<Profile> result = new ArrayList<>();
-                for (JsonElement e : JsonParser.parseString(textBuilder.toString()).getAsJsonArray()) {
+                for (JsonElement e : new JsonParser().parse(textBuilder.toString()).getAsJsonArray()) {
                     String fixedName = e.getAsJsonObject().get("name").getAsString();
                     String uuid = UUIDUtils.addDash(e.getAsJsonObject().get("id").getAsString());
                     result.add(new Profile(fixedName, uuid));
@@ -79,7 +79,7 @@ public class MojangAPI {
 
     public static ProfileSkin getSkinByUUID(String uuid) {
         String s = HTTPUtils.get("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
-        JsonObject object = JsonParser.parseString(s).getAsJsonObject();
+        JsonObject object = new JsonParser().parse(s).getAsJsonObject();
         JsonObject object2 = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
         ProfileSkin profile = new ProfileSkin(object.get("name").getAsString(), uuid, object2.get("value").getAsString(), object2.get("signature").getAsString());
         new ProfileRespondEvent(profile).call();

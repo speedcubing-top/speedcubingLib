@@ -18,7 +18,7 @@ public class ServerPingInfo {
 
     public ServerPingInfo(String s) {
         this.json = s;
-        JsonObject data = JsonParser.parseString(s).getAsJsonObject();
+        JsonObject data = new JsonParser().parse(s).getAsJsonObject();
         JsonObject object = data.getAsJsonObject("version");
         versionName = object.get("name").getAsString();
         versionProtocol = object.get("protocol").getAsInt();
@@ -48,7 +48,7 @@ public class ServerPingInfo {
     @Override
     public String toString() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonElement jsonElement = JsonParser.parseString(getJson());
+        JsonElement jsonElement = new JsonParser().parse(getJson());
         return gson.toJson(jsonElement);
     }
 

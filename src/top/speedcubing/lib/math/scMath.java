@@ -13,7 +13,7 @@ public class scMath {
     public static boolean isPrime(long l) {
         if (l < 2 || ((l & 1) == 0 && l != 2))
             return false;
-        for (long i = 3; i * i < l; i += 2)
+        for (long i = 3; i * i <= l; i += 2)
             if (l % i == 0)
                 return false;
         return true;
