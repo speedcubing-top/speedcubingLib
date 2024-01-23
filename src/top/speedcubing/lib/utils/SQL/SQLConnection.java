@@ -63,7 +63,7 @@ public class SQLConnection {
 
     public ResultSet executeQuery(String sql) {
         try {
-            return connection.prepareStatement(sql).executeQuery();
+            return connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -165,7 +165,7 @@ public class SQLConnection {
         }
 
         void prepare() throws SQLException {
-            statement = connection.prepareStatement(builder.toSQL());
+            statement = connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             prepared = true;
         }
 
@@ -242,7 +242,7 @@ public class SQLConnection {
 
         public ResultSet executeQuery() {
             try {
-                return prepared ? statement.executeQuery() : connection.prepareStatement(builder.toSQL()).executeQuery();
+                return prepared ? statement.executeQuery() : connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -254,7 +254,7 @@ public class SQLConnection {
                 if (prepared)
                     statement.execute();
                 else
-                    connection.prepareStatement(builder.toSQL()).execute();
+                    connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).execute();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
