@@ -32,7 +32,6 @@ jobs:
 
       - name: Build speedcubingLib
         run: |
-          cd cubingPaper
           mvn -B package --file pom.xml
 
       - name: Upload jar
