@@ -21,13 +21,14 @@ jobs:
           repository: speedcubing-top/cubingPaper
           path: cubingPaper
 
-      - name: Checkout speedcubingLib
-        uses: actions/checkout@v4
 
       - name: Install CubingPaper For Maven
         run: |
           cd cubingPaper
           mvn -B install --file cubingPaper/pom.xml
+
+      - name: Checkout speedcubingLib
+        uses: actions/checkout@v4
 
       - name: Build speedcubingLib
         run: |
