@@ -1,0 +1,75 @@
+name: Build and create release
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: 'adopt'
+
+      - name: Checkout CubingPaper
+        uses: actions/checkout@v4
+        with:
+          repository: speedcubing-top/cubingPaper
+          path: cubingPaper
+
+      - name: Checkout speedcubingLib
+        uses: actions/checkout@v4
+
+      - name: Install CubingPaper For Maven
+        run: |
+          cd cubingPaper
+          mvn -B install --file cubingPaper/pom.xml
+
+      - name: Build speedcubingLib
+        run: |
+          cd cubingPaper
+          mvn -B package --file pom.xml
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: speedcubingLib
+          path: cubingPaper/target/speedcubingLib-1.0-SNAPSHOT.jar
+
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Get commit hash
+        id: commit
+        run: echo "::set-output name=hash::$(git rev-parse --short HEAD)"
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.commit.outputs.hash }}
+          release_name: Release ${{ steps.commit.outputs.hash }}
+          body: Release ${{ steps.commit.outputs.hash }}
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./cubingPaper/target/speedcubingLib-1.0-SNAPSHOT.jar
+          asset_name: speedcubingLib-1.0-SNAPSHOT.jar
+          asset_content_type: application/java-archive
