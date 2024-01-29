@@ -25,7 +25,7 @@ jobs:
       - name: Install CubingPaper For Maven
         run: |
           cd cubingPaper
-          mvn -B install --file cubingPaper/pom.xml
+          mvn -B install --file pom.xml
 
       - name: Checkout speedcubingLib
         uses: actions/checkout@v4
