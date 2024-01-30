@@ -55,6 +55,8 @@ public class CubingLibPlayer {
         ByteToMessageDecoder byteToMessageDecoder = new ByteToMessageDecoder() {
             @Override // In Byte
             protected void decode(ChannelHandlerContext channel, ByteBuf byteBuf, List<Object> arg) {
+                if (byteBuf == null)
+                    return;
                 try {
                     if (!((PlayInByteEvent) new PlayInByteEvent(player, byteBuf).call()).isCancelled)
                         arg.add(byteBuf.readBytes(byteBuf.readableBytes()));
@@ -73,6 +75,8 @@ public class CubingLibPlayer {
             pipeline.addAfter("decoder", "speedcubingLib-channel", new ChannelDuplexHandler() {
                 @Override // Out Byte
                 public void write(ChannelHandlerContext channel, Object byteBuf, ChannelPromise promise) {
+                    if (byteBuf == null)
+                        return;
                     try {
                         if (!((PlayOutByteEvent) new PlayOutByteEvent(player, (ByteBuf) byteBuf).call()).isCancelled)
                             super.write(channel, byteBuf, promise);
@@ -83,6 +87,8 @@ public class CubingLibPlayer {
 
                 @Override // In Packet
                 public void channelRead(ChannelHandlerContext channel, Object packet) {
+                    if (packet == null)
+                        return;
                     try {
                         if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
                             super.channelRead(channel, packet);
@@ -112,6 +118,8 @@ public class CubingLibPlayer {
             pipeline.addAfter("encoder", "speedcubingLib-PacketEncode", new MessageToMessageEncoder<Packet<?>>() {
                 @Override // Out Packet
                 protected void encode(ChannelHandlerContext channel, Packet<?> packet, List<Object> arg) {
+                    if (packet == null)
+                        return;
                     try {
                         if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled)
                             arg.add(packet);
