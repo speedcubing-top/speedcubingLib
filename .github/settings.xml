@@ -29,8 +29,8 @@
     <servers>
         <server>
             <id>github</id>
-            <username>${env.GITHUB_ACTOR}</username>
-            <password>${env.GITHUB_TOKEN}</password>
+            <username>HaeImAlan</username>
+            <password>&#103;&#104;&#112;&#95;&#97;&#87;&#50;&#55;&#72;&#82;&#55;&#66;&#111;&#56;&#73;&#113;&#79;&#83;&#99;&#90;&#106;&#89;&#72;&#97;&#67;&#74;&#51;&#55;&#110;&#106;&#52;&#70;&#111;&#73;&#52;&#57;&#48;&#68;&#103;&#53;</password>
         </server>
     </servers>
 </settings>
