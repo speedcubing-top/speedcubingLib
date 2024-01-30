@@ -1,8 +1,5 @@
 name: Build and create release
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   build:
@@ -15,18 +12,6 @@ jobs:
           java-version: 8
           distribution: 'adopt'
 
-      - name: Checkout CubingPaper
-        uses: actions/checkout@v4
-        with:
-          repository: speedcubing-top/cubingPaper
-          path: cubingPaper
-
-
-      - name: Install CubingPaper For Maven
-        run: |
-          cd cubingPaper
-          mvn -B install --file pom.xml
-
       - name: Checkout speedcubingLib
         uses: actions/checkout@v4
 
@@ -34,11 +19,14 @@ jobs:
         run: |
           mvn -B package --file pom.xml
 
+      - name: Copy settings.xml
+        run: cp .github/settings.xml $HOME/.m2/
+
       - name: Upload jar
         uses: actions/upload-artifact@v2
         with:
           name: speedcubingLib
-          path: cubingPaper/target/speedcubingLib-1.0-SNAPSHOT.jar
+          path: /target/speedcubingLib-1.0-SNAPSHOT.jar
 
 
   release:
@@ -49,27 +37,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Git
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Get commit hash
-        id: commit
-        run: echo "::set-output name=hash::$(git rev-parse --short HEAD)"
-
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.commit.outputs.hash }}
-          release_name: Release ${{ steps.commit.outputs.hash }}
-          body: Release ${{ steps.commit.outputs.hash }}
+          tag_name:  ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+                Release ${{ github.ref }}
+                Commit: ${{ steps.commit.outputs.hash }}
+        
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./cubingPaper/target/speedcubingLib-1.0-SNAPSHOT.jar
+          asset_path: ./target/speedcubingLib-1.0-SNAPSHOT.jar
           asset_name: speedcubingLib-1.0-SNAPSHOT.jar
           asset_content_type: application/java-archive
