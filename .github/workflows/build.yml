@@ -42,11 +42,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
             artifacts: speedcubingLib
-            tag: ${{ env.TAG_NAME }}
             draft: false
             prerelease: true
-            releaseName: ${{ env.TAG_NAME }}
+            releaseName: ${{ github.ref }}
             releaseNotes: |
-                ${{ env.TAG_NAME }}
-                ${{ github.event.release.body }}
+                This is an automated release.
         
