@@ -16,6 +16,10 @@
             <id>velocity</id>
             <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>cubingpaper</id>
+            <url>https://maven.pkg.github.com/speedcubing-top/cubingpaper</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -30,9 +34,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <!-- `mvn clean install` Cubing Paper -->
-            <groupId>org.github.paperspigot</groupId>
-            <artifactId>paperspigot</artifactId>
+            <groupId>top.speedcubing</groupId>
+            <artifactId>cubingpaper</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -41,6 +44,4 @@
             <version>1.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    
 </project>
