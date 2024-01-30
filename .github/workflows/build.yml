@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: speedcubingLib-1.0-SNAPSHOT.jar
-          path: /target/speedcubingLib-1.0-SNAPSHOT.jar
+          path: target/speedcubingLib-1.0-SNAPSHOT.jar
 
       - name: Create release
         uses: ncipollo/release-action@v1
