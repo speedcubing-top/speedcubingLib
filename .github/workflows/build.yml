@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Copy settings.xml
-        run: cp .github/settings.xml $HOME/.m2/
+        run: cp .github/settings.xml $HOME/.m2/settings.xml
 
       - name: Build speedcubingLib
         run: |
