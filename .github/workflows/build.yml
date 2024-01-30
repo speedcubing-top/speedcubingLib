@@ -34,7 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          artifacts: speedcubingLib-1.0-SNAPSHOT.jar
+          artifacts: target/speedcubingLib-1.0-SNAPSHOT.jar
           draft: false
           prerelease: true
           releaseName: ${{ github.ref }}
