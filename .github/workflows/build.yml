@@ -34,31 +34,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set Tag Name
-        run: |
-          TAG_NAME=$(echo "${GITHUB_REF}" | sed 's|refs/tags/||')
-          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+        uses: actions/checkout@v3
 
       - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: Release ${{ env.TAG_NAME }}
-          prerelease: true
-          body: |
-                Release ${{ github.ref }}
-                This is an auto-generated release.
+            artifacts: speedcubingLib
+            tag: ${{ env.TAG_NAME }}
+            draft: false
+            prerelease: true
+            releaseName: ${{ env.TAG_NAME }}
+            releaseNotes: |
+                ${{ env.TAG_NAME }}
+                ${{ github.event.release.body }}
         
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/speedcubingLib-1.0-SNAPSHOT.jar
-          asset_name: speedcubingLib-1.0-SNAPSHOT.jar
-          asset_content_type: application/java-archive
