@@ -24,6 +24,10 @@ jobs:
       - name: Build speedcubingLib
         run: |
           mvn -B package --file pom.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.GITHUB_ACTOR }}
+          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Upload jar
         uses: actions/upload-artifact@v2
