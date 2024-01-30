@@ -18,6 +18,9 @@ jobs:
       - name: Copy settings.xml
         run: cp .github/settings.xml $HOME/.m2/settings.xml
 
+      - name: Print GITHUB_ACTOR
+        run: echo $GITHUB_ACTOR
+
       - name: Build speedcubingLib
         run: |
           mvn -B package --file pom.xml
