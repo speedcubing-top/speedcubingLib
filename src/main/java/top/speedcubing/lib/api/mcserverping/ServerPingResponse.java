@@ -4,7 +4,7 @@ import top.speedcubing.lib.utils.internet.dnsrecords.DNSRecord;
 
 import java.util.List;
 
-public class MServerPingResponse {
+public class ServerPingResponse {
     private final String SRVHostname;
     private final int SRVPort;
     private final long ping;
