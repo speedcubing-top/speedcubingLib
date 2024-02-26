@@ -7,7 +7,7 @@ import top.speedcubing.lib.bukkit.inventory.Glow;
 public class speedcubingLibBungee extends Plugin {
     public void onEnable() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
         }
     }

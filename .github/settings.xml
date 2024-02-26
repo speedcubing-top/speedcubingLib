@@ -1,0 +1,36 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <activeProfiles>
+        <activeProfile>github</activeProfile>
+    </activeProfiles>
+
+    <profiles>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                </repository>
+                <repository>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/speedcubing-top/CubingPaper</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <servers>
+        <server>
+            <id>github</id>
+            <username>HaeImAlan</username>
+            <password>&#103;&#104;&#112;&#95;&#97;&#87;&#50;&#55;&#72;&#82;&#55;&#66;&#111;&#56;&#73;&#113;&#79;&#83;&#99;&#90;&#106;&#89;&#72;&#97;&#67;&#74;&#51;&#55;&#110;&#106;&#52;&#70;&#111;&#73;&#52;&#57;&#48;&#68;&#103;&#53;</password>
+        </server>
+    </servers>
+</settings>

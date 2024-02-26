@@ -1,0 +1,43 @@
+name: Build and create release
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Install JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: 'adopt'
+
+      - name: Checkout speedcubingLib
+        uses: actions/checkout@v4
+
+      - name: Build speedcubingLib
+        run: |
+          mvn -B package --file pom.xml
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: speedcubingLib-1.0-SNAPSHOT.jar
+          path: target/speedcubingLib-1.0-SNAPSHOT.jar
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          artifacts: target/speedcubingLib-1.0-SNAPSHOT.jar
+          draft: false
+          prerelease: true
+          releaseName: ${{ github.ref }}
+          releaseNotes: |
+            This is an automated release.
+
