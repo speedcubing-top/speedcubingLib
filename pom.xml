@@ -16,10 +16,6 @@
             <id>velocity</id>
             <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>cubingpaper</id>
-            <url>https://maven.pkg.github.com/speedcubing-top/cubingpaper</url>
-        </repository>
     </repositories>
     <dependencies>
         <dependency>
