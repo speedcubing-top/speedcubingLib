@@ -1,8 +1,8 @@
 package top.speedcubing.lib.api;
 
-import top.speedcubing.lib.utils.HTTPUtils;
-
 import java.util.UUID;
+import top.speedcubing.lib.utils.http.HTTPResponse;
+import top.speedcubing.lib.utils.http.HTTPUtils;
 
 public class NameMcAPI {
     public static Boolean likedServer(UUID uuid, String ip) {
@@ -11,7 +11,8 @@ public class NameMcAPI {
 
     public static Boolean likedServer(String uuid, String ip) {
         try {
-            return Boolean.parseBoolean(HTTPUtils.get("https://api.namemc.com/server/" + ip + "/likes?profile=" + uuid));
+            HTTPResponse http = HTTPUtils.get("https://api.namemc.com/server/" + ip + "/likes?profile=" + uuid);
+            return Boolean.parseBoolean(http.getData());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
