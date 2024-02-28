@@ -1,4 +1,5 @@
 /target
+/out
 /.idea
 dependency-reduced-pom.xml
 *.iml
