@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class CryptoUtils {
     public static String toSHA256(File f) {
+        //new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(f.toPath()))).toString(16);
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             try (DigestInputStream dis = new DigestInputStream(new FileInputStream(f), digest)) {
