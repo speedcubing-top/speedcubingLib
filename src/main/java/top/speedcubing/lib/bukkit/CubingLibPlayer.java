@@ -24,7 +24,10 @@ import top.speedcubing.lib.bukkit.event.PlayOutByteEvent;
 import top.speedcubing.lib.bukkit.event.PlayOutEvent;
 import top.speedcubing.lib.utils.Reflections;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CubingLibPlayer {
     public static void init() {

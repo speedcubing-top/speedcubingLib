@@ -1,9 +1,14 @@
 package top.speedcubing.lib.api.mcserverping;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import top.speedcubing.lib.utils.minecraft.TextUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerPingInfo {
     private final String json;

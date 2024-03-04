@@ -2,10 +2,6 @@ package top.speedcubing.lib.bukkit;
 
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
@@ -36,6 +32,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import top.speedcubing.lib.bukkit.packetwrapper.OutPlayerListHeaderFooter;
 import top.speedcubing.lib.speedcubingLibBukkit;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 public class PlayerUtils {
 

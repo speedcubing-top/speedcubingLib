@@ -1,11 +1,18 @@
 package top.speedcubing.lib.api.mcserverping;
 
-import top.speedcubing.lib.utils.*;
-import top.speedcubing.lib.utils.internet.dnsrecords.*;
+import top.speedcubing.lib.utils.ByteArrayDataBuilder;
+import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.internet.dnsrecords.ARecord;
+import top.speedcubing.lib.utils.internet.dnsrecords.CNAMERecord;
+import top.speedcubing.lib.utils.internet.dnsrecords.DNSRecord;
+import top.speedcubing.lib.utils.internet.dnsrecords.SRVRecord;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerPingRequest {
 

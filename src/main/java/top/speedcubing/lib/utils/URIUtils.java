@@ -1,6 +1,7 @@
 package top.speedcubing.lib.utils;
 
-import java.net.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class URIUtils {
     public static String slashAfterDomain(String uri) {

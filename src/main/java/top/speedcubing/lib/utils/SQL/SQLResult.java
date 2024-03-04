@@ -1,6 +1,7 @@
 package top.speedcubing.lib.utils.SQL;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SQLResult {

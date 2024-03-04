@@ -4,12 +4,20 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
-import top.speedcubing.lib.bukkit.entity.*;
-import top.speedcubing.lib.bukkit.inventory.*;
+import top.speedcubing.lib.bukkit.entity.Hologram;
+import top.speedcubing.lib.bukkit.entity.NPC;
+import top.speedcubing.lib.bukkit.inventory.ClickInventoryEvent;
+import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
 
 public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -1,6 +1,7 @@
 package top.speedcubing.lib.math.item;
 
-import top.speedcubing.lib.math.exception.*;
+import top.speedcubing.lib.math.exception.InvalidDimensionException;
+import top.speedcubing.lib.math.exception.InvalidMatrixException;
 
 public class Vector {
     private final double[] vec;

@@ -1,6 +1,6 @@
 package top.speedcubing.lib.discord;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 
 public class SimpleWebhook {
