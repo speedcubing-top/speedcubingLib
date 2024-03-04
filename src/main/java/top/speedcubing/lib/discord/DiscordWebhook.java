@@ -1,7 +1,6 @@
 package top.speedcubing.lib.discord;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Class used to execute Discord Webhooks with low effort

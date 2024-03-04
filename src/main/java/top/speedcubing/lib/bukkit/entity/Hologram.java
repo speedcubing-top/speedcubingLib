@@ -1,5 +1,7 @@
 package top.speedcubing.lib.bukkit.entity;
 
+import java.util.Collection;
+import java.util.Set;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
@@ -11,9 +13,6 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import top.speedcubing.lib.utils.collection.Sets;
-
-import java.util.Collection;
-import java.util.Set;
 
 public class Hologram {
     public Hologram setClickEvent(ClickEvent e) {

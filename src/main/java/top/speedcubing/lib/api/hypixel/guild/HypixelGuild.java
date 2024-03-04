@@ -3,15 +3,14 @@ package top.speedcubing.lib.api.hypixel.guild;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import top.speedcubing.lib.api.hypixel.HypixelLib;
-import top.speedcubing.lib.utils.UUIDUtils;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import top.speedcubing.lib.api.hypixel.HypixelLib;
+import top.speedcubing.lib.utils.UUIDUtils;
 
 public class HypixelGuild {
     private final JsonObject guild;

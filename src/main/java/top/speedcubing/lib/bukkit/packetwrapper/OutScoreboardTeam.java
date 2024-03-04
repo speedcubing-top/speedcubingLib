@@ -1,9 +1,8 @@
 package top.speedcubing.lib.bukkit.packetwrapper;
 
+import java.util.Collection;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import top.speedcubing.lib.utils.Reflections;
-
-import java.util.Collection;
 
 public class OutScoreboardTeam {
     public final PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();

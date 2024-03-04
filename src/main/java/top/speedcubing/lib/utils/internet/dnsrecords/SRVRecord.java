@@ -1,11 +1,11 @@
 package top.speedcubing.lib.utils.internet.dnsrecords;
 
+import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
-import java.util.Properties;
 
 public class SRVRecord extends DNSRecord {
     private final String host;

@@ -5,10 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import top.speedcubing.lib.utils.minecraft.TextUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import top.speedcubing.lib.utils.minecraft.TextUtils;
 
 public class ServerPingInfo {
     private final String json;

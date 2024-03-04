@@ -1,15 +1,14 @@
 package top.speedcubing.lib.bukkit;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeMap;
 import net.minecraft.server.v1_8_R3.GameRules;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import top.speedcubing.lib.utils.Reflections;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeMap;
 
 public class WorldUtils {
     public static void clearGameRules(World world) {

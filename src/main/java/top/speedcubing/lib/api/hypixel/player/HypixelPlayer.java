@@ -2,14 +2,13 @@ package top.speedcubing.lib.api.hypixel.player;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import top.speedcubing.lib.api.hypixel.HypixelLib;
-import top.speedcubing.lib.api.hypixel.stats.BedwarsStats;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
+import top.speedcubing.lib.api.hypixel.HypixelLib;
+import top.speedcubing.lib.api.hypixel.stats.BedwarsStats;
 
 public class HypixelPlayer {
     private final JsonObject player;

@@ -1,8 +1,7 @@
 package top.speedcubing.lib.utils;
 
-import org.fusesource.jansi.Ansi;
-
 import java.util.Arrays;
+import org.fusesource.jansi.Ansi;
 
 public class Console {
     public static void printColor(String message) {

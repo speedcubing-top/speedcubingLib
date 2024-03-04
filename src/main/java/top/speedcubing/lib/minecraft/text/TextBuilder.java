@@ -1,16 +1,15 @@
 package top.speedcubing.lib.minecraft.text;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import top.speedcubing.lib.utils.minecraft.TextUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class TextBuilder {
 

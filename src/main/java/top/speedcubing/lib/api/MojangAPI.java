@@ -3,15 +3,6 @@ package top.speedcubing.lib.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import top.speedcubing.lib.api.event.ProfileRespondEvent;
-import top.speedcubing.lib.api.mojang.Profile;
-import top.speedcubing.lib.api.mojang.ProfileSkin;
-import top.speedcubing.lib.api.mojang.ProfileTexture;
-import top.speedcubing.lib.utils.IOUtils;
-import top.speedcubing.lib.utils.UUIDUtils;
-import top.speedcubing.lib.utils.http.HTTPResponse;
-import top.speedcubing.lib.utils.http.HTTPUtils;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import top.speedcubing.lib.api.event.ProfileRespondEvent;
+import top.speedcubing.lib.api.mojang.Profile;
+import top.speedcubing.lib.api.mojang.ProfileSkin;
+import top.speedcubing.lib.api.mojang.ProfileTexture;
+import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.UUIDUtils;
+import top.speedcubing.lib.utils.http.HTTPResponse;
+import top.speedcubing.lib.utils.http.HTTPUtils;
 
 public class MojangAPI {
 

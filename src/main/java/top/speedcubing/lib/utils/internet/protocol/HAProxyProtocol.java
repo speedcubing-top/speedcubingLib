@@ -1,8 +1,7 @@
 package top.speedcubing.lib.utils.internet.protocol;
 
-import top.speedcubing.lib.utils.ByteArrayDataBuilder;
-
 import java.net.StandardProtocolFamily;
+import top.speedcubing.lib.utils.ByteArrayDataBuilder;
 
 public class HAProxyProtocol {
 

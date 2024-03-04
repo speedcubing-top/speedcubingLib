@@ -2,7 +2,6 @@ package top.speedcubing.lib.api.mojang;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.util.Base64;
 
 public class ProfileTexture {

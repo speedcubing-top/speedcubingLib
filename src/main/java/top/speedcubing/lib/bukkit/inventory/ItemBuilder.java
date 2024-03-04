@@ -2,6 +2,9 @@ package top.speedcubing.lib.bukkit.inventory;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -11,10 +14,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import top.speedcubing.lib.utils.Reflections;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 public class ItemBuilder {
 

@@ -1,10 +1,9 @@
 package top.speedcubing.lib.utils.image;
 
-import top.speedcubing.lib.utils.FileUtils;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import javax.imageio.ImageIO;
+import top.speedcubing.lib.utils.FileUtils;
 
 //rgb >> 24 != 0x00
 public class ImageRotator {
