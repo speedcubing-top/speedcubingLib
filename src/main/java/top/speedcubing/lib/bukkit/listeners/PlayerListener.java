@@ -16,23 +16,28 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
-import top.speedcubing.lib.bukkit.inventory.ClickInventoryEvent;
+import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
+
+import java.util.function.Consumer;
 
 public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void InventoryClickEvent(InventoryClickEvent e) {
         int slot = e.getRawSlot();
         if (slot != -999) {
-            ClickInventoryEvent inventoryEvent;
+            Consumer<ClickInventoryEvent> inventoryEvent;
             for (InventoryBuilder b : InventoryBuilder.builderSet) {
                 if (b.holder == e.getInventory().getHolder()) {
                     inventoryEvent = b.allClickEvent;
                     if (inventoryEvent != null)
-                        inventoryEvent.run((Player) e.getWhoClicked(), e);
+                        inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
+
                     inventoryEvent = b.clickInventoryEventMap.get(slot);
+
                     if (inventoryEvent != null)
-                        inventoryEvent.run((Player) e.getWhoClicked(), e);
+                        inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
+
                     if (!b.clickable[slot])
                         e.setCancelled(true);
                     break;

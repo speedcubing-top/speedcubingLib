@@ -2,6 +2,8 @@ package top.speedcubing.lib.bukkit.entity;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Consumer;
+
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
@@ -12,16 +14,17 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
 import top.speedcubing.lib.utils.collection.Sets;
 
 public class Hologram {
-    public Hologram setClickEvent(ClickEvent e) {
+    public Hologram setClickEvent(Consumer<ClickEvent> e) {
         armorStand.n(false);
         this.event = e;
         return this;
     }
 
-    public ClickEvent getClickEvent() {
+    public Consumer<ClickEvent> getClickEvent() {
         return event;
     }
 
@@ -87,7 +90,7 @@ public class Hologram {
     public static final Set<Hologram> all = new java.util.HashSet<>();
     public Set<PlayerConnection> listener = new java.util.HashSet<>();
     public final Set<String> world = new java.util.HashSet<>();
-    ClickEvent event;
+    Consumer<ClickEvent> event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityArmorStand armorStand;

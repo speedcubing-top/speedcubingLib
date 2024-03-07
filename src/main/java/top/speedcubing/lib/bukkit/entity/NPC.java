@@ -3,12 +3,6 @@ package top.speedcubing.lib.bukkit.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.MathHelper;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
@@ -36,17 +30,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
+import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
+import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.Reflections;
 import top.speedcubing.lib.utils.collection.Sets;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 public class NPC {
-    public NPC setClickEvent(ClickEvent e) {
+    public NPC setClickEvent(Consumer<ClickEvent> e) {
         this.event = e;
         return this;
     }
 
-    public ClickEvent getClickEvent() {
+    public Consumer<ClickEvent> getClickEvent() {
         return event;
     }
 
@@ -111,7 +114,7 @@ public class NPC {
     public static final Set<NPC> all = new java.util.HashSet<>();
     Set<PlayerConnection> listener = new java.util.HashSet<>();
     public final Set<String> world = new java.util.HashSet<>();
-    ClickEvent event;
+    Consumer<ClickEvent> event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityPlayer entityPlayer;
@@ -231,12 +234,9 @@ public class NPC {
             return this;
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         Set<PlayerConnection> copy = new java.util.HashSet<>(listener);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                copy.forEach(a -> a.sendPacket(packet));
-            }
-        }, ms);
+        speedcubingLibBukkit.scheduledThreadPool.schedule(() ->
+            copy.forEach(a -> a.sendPacket(packet))
+        , ms, TimeUnit.MILLISECONDS);
         return this;
     }
 

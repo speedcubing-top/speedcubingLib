@@ -1,9 +1,9 @@
 package top.speedcubing.lib.minecraft.text;
 
-public class HoverEvent {
+public class TextHoverEvent {
 
-    public static HoverEvent showText(String s) {
-        return new HoverEvent(s, (char) 7);
+    public static TextHoverEvent showText(String s) {
+        return new TextHoverEvent(s, (char) 7);
     }
 
     private final String s;
@@ -13,7 +13,7 @@ public class HoverEvent {
         return s;
     }
 
-    public HoverEvent(String s, char b) {
+    public TextHoverEvent(String s, char b) {
         this.s = s;
         this.b = b;
     }

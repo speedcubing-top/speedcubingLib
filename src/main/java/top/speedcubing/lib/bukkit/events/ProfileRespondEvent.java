@@ -1,4 +1,4 @@
-package top.speedcubing.lib.api.event;
+package top.speedcubing.lib.bukkit.events;
 
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.eventbus.CubingEvent;

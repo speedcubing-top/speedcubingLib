@@ -32,17 +32,17 @@ public class TextBuilder {
         return this;
     }
 
-    public TextBuilder click(String s, ClickEvent c) {
+    public TextBuilder click(String s, TextClickEvent c) {
         serial.append(s).append(c.b).append(c.getString()).append((char) 1);
         return this;
     }
 
-    public TextBuilder hover(String s, HoverEvent h) {
+    public TextBuilder hover(String s, TextHoverEvent h) {
         serial.append(s).append(h.b).append(h.getString()).append((char) 2);
         return this;
     }
 
-    public TextBuilder both(String s, ClickEvent c, HoverEvent h) {
+    public TextBuilder both(String s, TextClickEvent c, TextHoverEvent h) {
         serial.append(s).append(c.b).append(c.getString()).append(h.b).append(h.getString()).append((char) 3);
         return this;
     }
@@ -62,17 +62,17 @@ public class TextBuilder {
                     s = new StringBuilder();
                     break;
                 case 1:
-                    builder.click(s2, new ClickEvent(s.toString(), lastclick));
+                    builder.click(s2, new TextClickEvent(s.toString(), lastclick));
                     s = new StringBuilder();
                     s2 = "";
                     break;
                 case 2:
-                    builder.hover(s3, new HoverEvent(s.toString(), lasthover));
+                    builder.hover(s3, new TextHoverEvent(s.toString(), lasthover));
                     s = new StringBuilder();
                     s3 = "";
                     break;
                 case 3:
-                    builder.both(s2, new ClickEvent(s3, lastclick), new HoverEvent(s.toString(), lasthover));
+                    builder.both(s2, new TextClickEvent(s3, lastclick), new TextHoverEvent(s.toString(), lasthover));
                     s = new StringBuilder();
                     s2 = "";
                     s3 = "";
@@ -105,7 +105,7 @@ public class TextBuilder {
             return builder.toArray(new BaseComponent[0]);
         }
 
-        private net.md_5.bungee.api.chat.ClickEvent a(ClickEvent c) {
+        private net.md_5.bungee.api.chat.ClickEvent a(TextClickEvent c) {
             switch (c.b) {
                 case 4:
                     return new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL, c.getString());
@@ -117,7 +117,7 @@ public class TextBuilder {
             return null;
         }
 
-        private net.md_5.bungee.api.chat.HoverEvent a(HoverEvent h) {
+        private net.md_5.bungee.api.chat.HoverEvent a(TextHoverEvent h) {
             switch (h.b) {
                 case 7:
                     return new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new TextBuilder().str(h.getString()).toBungee());
@@ -129,7 +129,7 @@ public class TextBuilder {
             this.builder.addAll(Arrays.asList(TextComponent.fromLegacyText(s)));
         }
 
-        private void click(String s, ClickEvent c) {
+        private void click(String s, TextClickEvent c) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
             for (BaseComponent a : b) {
@@ -138,7 +138,7 @@ public class TextBuilder {
             }
         }
 
-        private void hover(String s, HoverEvent h) {
+        private void hover(String s, TextHoverEvent h) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
             for (BaseComponent a : b) {
@@ -147,7 +147,7 @@ public class TextBuilder {
             }
         }
 
-        private void both(String s, ClickEvent c, HoverEvent h) {
+        private void both(String s, TextClickEvent c, TextHoverEvent h) {
             BaseComponent[] b = TextComponent.fromLegacyText(s);
             net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
             net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
@@ -171,17 +171,17 @@ public class TextBuilder {
                         s = new StringBuilder();
                         break;
                     case 1:
-                        click(s2, new ClickEvent(s.toString(), lastclick));
+                        click(s2, new TextClickEvent(s.toString(), lastclick));
                         s = new StringBuilder();
                         s2 = "";
                         break;
                     case 2:
-                        hover(s3, new HoverEvent(s.toString(), lasthover));
+                        hover(s3, new TextHoverEvent(s.toString(), lasthover));
                         s = new StringBuilder();
                         s3 = "";
                         break;
                     case 3:
-                        both(s2, new ClickEvent(s3, lastclick), new HoverEvent(s.toString(), lasthover));
+                        both(s2, new TextClickEvent(s3, lastclick), new TextHoverEvent(s.toString(), lasthover));
                         s = new StringBuilder();
                         s2 = "";
                         s3 = "";
@@ -214,7 +214,7 @@ public class TextBuilder {
             return builder;
         }
 
-        private net.kyori.adventure.text.event.ClickEvent a(ClickEvent c) {
+        private net.kyori.adventure.text.event.ClickEvent a(TextClickEvent c) {
             switch (c.b) {
                 case 4:
                     return net.kyori.adventure.text.event.ClickEvent.openUrl(c.getString());
@@ -226,7 +226,7 @@ public class TextBuilder {
             return null;
         }
 
-        private net.kyori.adventure.text.event.HoverEvent<?> a(HoverEvent h) {
+        private net.kyori.adventure.text.event.HoverEvent<?> a(TextHoverEvent h) {
             switch (h.b) {
                 case 7:
                     return net.kyori.adventure.text.event.HoverEvent.showText(new TextBuilder().str(h.getString()).toVelo());
@@ -245,17 +245,17 @@ public class TextBuilder {
             checkLastColor(s);
         }
 
-        private void click(String s, ClickEvent c) {
+        private void click(String s, TextClickEvent c) {
             builder = builder.append(legacy("§" + lastcolor + s).clickEvent(a(c)));
             checkLastColor(s);
         }
 
-        private void hover(String s, HoverEvent h) {
+        private void hover(String s, TextHoverEvent h) {
             builder = builder.append(legacy("§" + lastcolor + s).hoverEvent(a(h)));
             checkLastColor(s);
         }
 
-        private void both(String s, ClickEvent c, HoverEvent h) {
+        private void both(String s, TextClickEvent c, TextHoverEvent h) {
             builder = builder.append(legacy("§" + lastcolor + s).clickEvent(a(c)).hoverEvent(a(h)));
             checkLastColor(s);
         }
@@ -278,17 +278,17 @@ public class TextBuilder {
                         s = new StringBuilder();
                         break;
                     case 1:
-                        click(s2, new ClickEvent(s.toString(), lastclick));
+                        click(s2, new TextClickEvent(s.toString(), lastclick));
                         s = new StringBuilder();
                         s2 = "";
                         break;
                     case 2:
-                        hover(s3, new HoverEvent(s.toString(), lasthover));
+                        hover(s3, new TextHoverEvent(s.toString(), lasthover));
                         s = new StringBuilder();
                         s3 = "";
                         break;
                     case 3:
-                        both(s2, new ClickEvent(s3, lastclick), new HoverEvent(s.toString(), lasthover));
+                        both(s2, new TextClickEvent(s3, lastclick), new TextHoverEvent(s.toString(), lasthover));
                         s = new StringBuilder();
                         s2 = "";
                         s3 = "";

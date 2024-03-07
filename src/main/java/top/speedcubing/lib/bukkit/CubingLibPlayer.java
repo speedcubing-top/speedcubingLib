@@ -7,12 +7,10 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.server.v1_8_R3.EntityWither;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayInUpdateSign;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Bukkit;
@@ -20,13 +18,24 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
-import top.speedcubing.lib.bukkit.event.PlayInByteEvent;
-import top.speedcubing.lib.bukkit.event.PlayInEvent;
-import top.speedcubing.lib.bukkit.event.PlayOutByteEvent;
-import top.speedcubing.lib.bukkit.event.PlayOutEvent;
+import top.speedcubing.lib.bukkit.events.packet.PlayInByteEvent;
+import top.speedcubing.lib.bukkit.events.packet.PlayInEvent;
+import top.speedcubing.lib.bukkit.events.packet.PlayOutByteEvent;
+import top.speedcubing.lib.bukkit.events.packet.PlayOutEvent;
+import top.speedcubing.lib.bukkit.inventory.SignBuilder;
+import top.speedcubing.lib.bukkit.events.SignUpdateEvent;
 import top.speedcubing.lib.utils.Reflections;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CubingLibPlayer {
     public static void init() {
@@ -98,16 +107,29 @@ public class CubingLibPlayer {
                                 int id = (int) Reflections.getField(packet, "a");
                                 for (NPC npc : NPC.all) {
                                     if (npc.entityPlayer.getId() == id && npc.getClickEvent() != null) {
-                                        npc.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
+                                        npc.getClickEvent().accept(new ClickEvent(player, ((PacketPlayInUseEntity) packet).a()));
                                         break;
                                     }
                                 }
                                 for (Hologram hologram : Hologram.all) {
                                     if (hologram.armorStand.getId() == id && hologram.getClickEvent() != null) {
-                                        hologram.getClickEvent().run(player, ((PacketPlayInUseEntity) packet).a());
+                                        hologram.getClickEvent().accept(new ClickEvent(player, ((PacketPlayInUseEntity) packet).a()));
                                         break;
                                     }
                                 }
+                            } else if (packet instanceof PacketPlayInUpdateSign) {
+                                PacketPlayInUpdateSign p = (PacketPlayInUpdateSign) packet;
+                                Set<SignBuilder> toRemove = new HashSet<>();
+                                for (SignBuilder b : SignBuilder.signs) {
+                                    if (b.getPlayer() == player) {
+                                        List<String> s = new ArrayList<>();
+                                        for (IChatBaseComponent i : p.b())
+                                            s.add(i.getText());
+                                        b.getEvent().accept(new SignUpdateEvent(player, s));
+                                    }
+                                    toRemove.add(b);
+                                }
+                                SignBuilder.signs.removeAll(toRemove);
                             }
                         }
                     } catch (Exception e) {
