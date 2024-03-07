@@ -1,4 +1,4 @@
-package top.speedcubing.lib.bukkit.events;
+package top.speedcubing.lib.events;
 
 import org.bukkit.entity.Player;
 

@@ -14,7 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
+import top.speedcubing.lib.events.entity.ClickEvent;
 import top.speedcubing.lib.utils.collection.Sets;
 
 public class Hologram {

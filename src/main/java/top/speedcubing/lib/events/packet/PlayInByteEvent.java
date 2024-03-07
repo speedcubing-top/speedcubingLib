@@ -1,4 +1,4 @@
-package top.speedcubing.lib.bukkit.events.packet;
+package top.speedcubing.lib.events.packet;
 
 import io.netty.buffer.ByteBuf;
 import org.bukkit.entity.Player;

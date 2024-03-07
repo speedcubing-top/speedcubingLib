@@ -1,4 +1,4 @@
-package top.speedcubing.lib.bukkit.events.packet;
+package top.speedcubing.lib.events.packet;
 
 import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.entity.Player;

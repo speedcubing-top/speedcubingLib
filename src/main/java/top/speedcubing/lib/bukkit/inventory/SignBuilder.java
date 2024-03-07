@@ -10,7 +10,7 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import top.speedcubing.lib.bukkit.events.SignUpdateEvent;
+import top.speedcubing.lib.events.SignUpdateEvent;
 import top.speedcubing.lib.speedcubingLibBukkit;
 
 import java.util.HashSet;

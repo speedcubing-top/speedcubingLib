@@ -1,4 +1,4 @@
-package top.speedcubing.lib.bukkit.events.entity;
+package top.speedcubing.lib.events.entity;
 
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import org.bukkit.entity.Player;

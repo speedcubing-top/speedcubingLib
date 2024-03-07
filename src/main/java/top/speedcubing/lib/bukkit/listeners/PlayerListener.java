@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
-import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
+import top.speedcubing.lib.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
 
 import java.util.function.Consumer;

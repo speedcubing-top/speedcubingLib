@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
-import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
+import top.speedcubing.lib.events.entity.ClickEvent;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.Reflections;

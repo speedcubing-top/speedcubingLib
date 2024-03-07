@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import top.speedcubing.lib.bukkit.events.ProfileRespondEvent;
+import top.speedcubing.lib.events.ProfileRespondEvent;
 import top.speedcubing.lib.api.mojang.Profile;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.api.mojang.ProfileTexture;
