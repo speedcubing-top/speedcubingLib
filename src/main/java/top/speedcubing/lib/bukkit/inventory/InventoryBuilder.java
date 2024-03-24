@@ -1,17 +1,16 @@
 package top.speedcubing.lib.bukkit.inventory;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.events.inventory.CloseInventoryEvent;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 
 public class InventoryBuilder {
     public static final Set<InventoryBuilder> builderSet = new HashSet<>();
@@ -26,7 +25,7 @@ public class InventoryBuilder {
             return inventory;
         }
     };
-    public final Inventory inventory;
+    private final Inventory inventory;
 
     public InventoryBuilder(int size, String title) {
         inventory = Bukkit.createInventory(holder, size, title);
@@ -34,22 +33,17 @@ public class InventoryBuilder {
         builderSet.add(this);
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     public InventoryBuilder deleteOnClose(boolean flag) {
         deleteOnClose = flag;
         return this;
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     public InventoryBuilder setCloseInventory(Consumer<CloseInventoryEvent> e) {
         this.closeInventoryEvent = e;
-        return this;
-    }
-
-    public InventoryBuilder setItem(ItemStack stack, int slot) {
-        inventory.setItem(slot, stack);
         return this;
     }
 
@@ -62,12 +56,6 @@ public class InventoryBuilder {
     public InventoryBuilder setItem(ItemStack stack, int start, int end) {
         for (; start <= end; start++)
             inventory.setItem(start, stack);
-        return this;
-    }
-
-    public InventoryBuilder setItem(ItemStack stack, Consumer<ClickInventoryEvent> event, int slot) {
-        inventory.setItem(slot, stack);
-        clickInventoryEventMap.put(slot, event);
         return this;
     }
 
@@ -87,11 +75,6 @@ public class InventoryBuilder {
         return this;
     }
 
-    public InventoryBuilder setClickEvent(Consumer<ClickInventoryEvent> event, int slot) {
-        clickInventoryEventMap.put(slot, event);
-        return this;
-    }
-
     public InventoryBuilder setClickEvent(Consumer<ClickInventoryEvent> event, int... slots) {
         for (int i : slots)
             clickInventoryEventMap.put(i, event);
@@ -106,11 +89,6 @@ public class InventoryBuilder {
 
     public InventoryBuilder setAllClickEvent(Consumer<ClickInventoryEvent> event) {
         this.allClickEvent = event;
-        return this;
-    }
-
-    public InventoryBuilder setClickable(boolean flag, int slot) {
-        clickable[slot] = flag;
         return this;
     }
 

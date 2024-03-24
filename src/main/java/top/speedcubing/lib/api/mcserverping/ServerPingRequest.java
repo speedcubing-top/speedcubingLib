@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import top.speedcubing.lib.utils.ByteArrayDataBuilder;
 import top.speedcubing.lib.utils.IOUtils;
@@ -22,9 +23,16 @@ public class ServerPingRequest {
     private boolean srvLookup = true;
     private int timeout = 1000;
 
-    public ServerPingRequest() {
+    public static void main(String[] args) {
+        try {
+            ServerPingRequest r = new ServerPingRequest();
+            r.hostname("speedcubing.top");
+            r.port(25565);
+            r.ping();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
     public ServerPingRequest hostname(String hostname) {
         String[] s = hostname.split(":");
         this.hostname = s[0];
@@ -101,6 +109,8 @@ public class ServerPingRequest {
                 .write(hostname.getBytes())
                 .writeShort((short) 25565)
                 .writeVarInt(1);
+
+        System.out.println(Arrays.toString(data.toByteArray()));
         ByteArrayDataBuilder handshake = new ByteArrayDataBuilder()
                 .writeVarInt(data.toByteArray().length)
                 .write(data.toByteArray())
@@ -108,9 +118,10 @@ public class ServerPingRequest {
                 .writeVarInt(0);
         out.write(handshake.toByteArray());
 
+        System.out.println(Arrays.toString(handshake.toByteArray()));
         IOUtils.readVarInt(in);
         int id = IOUtils.readVarInt(in);
-
+        System.out.println(id);
         io(id == -1, "Server prematurely ended stream.");
         io(id != 0x00, "Server returned invalid packet.");
 
@@ -128,7 +139,8 @@ public class ServerPingRequest {
         id = IOUtils.readVarInt(in);
         io(id == -1, "Server prematurely ended stream.");
         io(id != 0x01, "Server returned invalid packet.");
-        return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
+        return null;
+     //   return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
     }
 
     private static void io(boolean f, String s) throws Exception {
