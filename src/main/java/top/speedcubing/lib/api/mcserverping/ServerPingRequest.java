@@ -22,17 +22,6 @@ public class ServerPingRequest {
     private boolean dnsLookup = true;
     private boolean srvLookup = true;
     private int timeout = 1000;
-
-    public static void main(String[] args) {
-        try {
-            ServerPingRequest r = new ServerPingRequest();
-            r.hostname("speedcubing.top");
-            r.port(25565);
-            r.ping();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public ServerPingRequest hostname(String hostname) {
         String[] s = hostname.split(":");
         this.hostname = s[0];

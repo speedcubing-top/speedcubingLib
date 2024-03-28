@@ -75,9 +75,6 @@ public class MojangAPI {
         return null;
     }
 
-    public static void main(String[] args) {
-    }
-
     public static Profile getByName(String name) throws IOException {
         return t(name, true);
     }
