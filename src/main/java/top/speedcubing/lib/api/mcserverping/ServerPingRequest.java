@@ -128,8 +128,7 @@ public class ServerPingRequest {
         id = IOUtils.readVarInt(in);
         io(id == -1, "Server prematurely ended stream.");
         io(id != 0x01, "Server returned invalid packet.");
-        return null;
-     //   return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
+        return new ServerPingResponse(hostname, port, srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
     }
 
     private static void io(boolean f, String s) throws Exception {
