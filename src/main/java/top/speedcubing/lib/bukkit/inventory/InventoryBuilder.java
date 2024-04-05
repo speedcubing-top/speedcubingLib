@@ -47,9 +47,14 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setItem(ItemStack stack, int slot) {
+        inventory.setItem(slot, stack);
+        return this;
+    }
+
     public InventoryBuilder setItem(ItemStack stack, int... slots) {
         for (int i : slots)
-            inventory.setItem(i, stack);
+            setItem(stack, i);
         return this;
     }
 
@@ -59,10 +64,15 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setItem(ItemStack stack, Consumer<ClickInventoryEvent> event, int slot) {
+        inventory.setItem(slot, stack);
+        clickInventoryEventMap.put(slot, event);
+        return this;
+    }
+
     public InventoryBuilder setItem(ItemStack stack, Consumer<ClickInventoryEvent> event, int... slots) {
         for (int i : slots) {
-            inventory.setItem(i, stack);
-            clickInventoryEventMap.put(i, event);
+            setItem(stack, event, i);
         }
         return this;
     }
@@ -75,9 +85,14 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setClickEvent(Consumer<ClickInventoryEvent> event, int slot) {
+        clickInventoryEventMap.put(slot, event);
+        return this;
+    }
+
     public InventoryBuilder setClickEvent(Consumer<ClickInventoryEvent> event, int... slots) {
         for (int i : slots)
-            clickInventoryEventMap.put(i, event);
+            setClickEvent(event, i);
         return this;
     }
 
@@ -92,9 +107,14 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setClickable(boolean flag, int slot) {
+        clickable[slot] = flag;
+        return this;
+    }
+
     public InventoryBuilder setClickable(boolean flag, int... slots) {
         for (int i : slots)
-            clickable[i] = flag;
+            setClickable(flag, i);
         return this;
     }
 

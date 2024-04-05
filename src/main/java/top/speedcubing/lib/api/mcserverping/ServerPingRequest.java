@@ -98,19 +98,14 @@ public class ServerPingRequest {
                 .write(hostname.getBytes())
                 .writeShort((short) 25565)
                 .writeVarInt(1);
-
-        System.out.println(Arrays.toString(data.toByteArray()));
         ByteArrayDataBuilder handshake = new ByteArrayDataBuilder()
                 .writeVarInt(data.toByteArray().length)
                 .write(data.toByteArray())
                 .writeVarInt(1)
                 .writeVarInt(0);
         out.write(handshake.toByteArray());
-
-        System.out.println(Arrays.toString(handshake.toByteArray()));
         IOUtils.readVarInt(in);
         int id = IOUtils.readVarInt(in);
-        System.out.println(id);
         io(id == -1, "Server prematurely ended stream.");
         io(id != 0x00, "Server returned invalid packet.");
 
