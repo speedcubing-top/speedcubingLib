@@ -1,8 +1,10 @@
 package top.speedcubing.lib.bukkit.inventory;
 
+import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Material;
@@ -111,13 +113,30 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder url(String url) {
+    /*
+    {"textures":{"SKIN":{"url":"http://textures.minecraft.net/texture/..."}}} in base64
+    */
+    public ItemBuilder skullBase64(String textureBase64) {
         SkullMeta skull = (SkullMeta) meta;
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
-        gameProfile.getProperties().put("textures", new Property("textures", url));
+        gameProfile.getProperties().put("textures", new Property("textures", textureBase64));
         Reflections.setField(skull, "profile", gameProfile);
         itemStack.setItemMeta(skull);
         return this;
+    }
+
+    //http://textures.minecraft.net/texture/...
+    public ItemBuilder skullFromURL(String url) {
+        String json = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
+        return skullBase64(Base64.getEncoder().encodeToString(json.getBytes()));
+    }
+
+    public ItemBuilder skullFromProfileValue(String profileValueBase64) {
+        return skullFromURL(
+                new JsonParser().parse(new String(Base64.getDecoder().decode(profileValueBase64))).getAsJsonObject()
+                .getAsJsonObject("textures")
+                        .getAsJsonObject("SKIN")
+                        .get("url").getAsString());
     }
 
     public ItemBuilder addPotion(PotionEffect effect) {
