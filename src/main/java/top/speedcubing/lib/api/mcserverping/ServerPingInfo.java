@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
-import top.speedcubing.lib.utils.minecraft.TextUtils;
+import top.speedcubing.lib.minecraft.text.MinecraftTextUtils;
 
 public class ServerPingInfo {
     private final String json;
@@ -39,7 +39,7 @@ public class ServerPingInfo {
         if (data.get("description").isJsonPrimitive())
             description = data.get("description").getAsString();
         else
-            description = TextUtils.componentToText(data.getAsJsonObject("description"));
+            description = MinecraftTextUtils.componentToText(data.getAsJsonObject("description"));
 
         //forge
         if (data.has("modinfo")) {

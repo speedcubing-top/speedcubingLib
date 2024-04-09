@@ -1,14 +1,23 @@
-package top.speedcubing.lib.utils.minecraft;
+package top.speedcubing.lib.minecraft.text;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.regex.Pattern;
 
-public class TextUtils {
+public class MinecraftTextUtils {
 
-    //translate
+    //from net.md_5.bungee.api.ChatColor
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+
+
+    //from net.md_5.bungee.api.ChatColor
+    public static String removeColorCode(String input) {
+        return input == null ? null : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+    }
+
+    //from net.md_5.bungee.api.ChatColor.translateAlternateColorCodes
     public static String colorCode(char altColorChar, String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
-
         for (int i = 0; i < b.length - 1; ++i) {
             if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
                 b[i] = 167;

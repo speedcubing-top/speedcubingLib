@@ -1,10 +1,24 @@
-package top.speedcubing.lib.bungee;
+package top.speedcubing.lib.minecraft.text;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import top.speedcubing.lib.utils.StringUtils;
 
-public class TextComponentUtils {
+public class BungeeTextUtils {
+
+    public static TextComponent parse(String json) {
+        BaseComponent[] b = ComponentSerializer.parse(json);
+        if (b.length == 1)
+            return (TextComponent) b[0];
+        return new TextComponent(b);
+    }
+
+    public static String serialize(TextComponent component) {
+        return ComponentSerializer.toString(component);
+    }
+
     public static void reApplyURL(BaseComponent[] components) {
         for (BaseComponent c : components) {
             String s = c.toPlainText();
