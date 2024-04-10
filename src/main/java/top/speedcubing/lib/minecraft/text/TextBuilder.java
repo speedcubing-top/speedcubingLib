@@ -1,7 +1,6 @@
 package top.speedcubing.lib.minecraft.text;
 
 
-import java.util.Arrays;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -118,9 +117,8 @@ public class TextBuilder {
 }
 
 
-
 class BungeeText {
-    TextComponent builder = new TextComponent();
+    TextComponent builder = new TextComponent("");
 
     private net.md_5.bungee.api.chat.ClickEvent a(TextClickEvent c) {
         switch (c.b) {
@@ -143,35 +141,34 @@ class BungeeText {
     }
 
     public void str(String s) {
-        this.builder.getExtra().addAll(Arrays.asList(TextComponent.fromLegacyText(s)));
+        for (BaseComponent b : TextComponent.fromLegacyText(s)) {
+            this.builder.addExtra(b);
+        }
     }
 
     private void click(String s, TextClickEvent c) {
-        BaseComponent[] b = TextComponent.fromLegacyText(s);
         net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
-        for (BaseComponent a : b) {
+        for (BaseComponent a : TextComponent.fromLegacyText(s)) {
             a.setClickEvent(clickEvent);
-            builder.getExtra().add(a);
+            builder.addExtra(a);
         }
     }
 
     private void hover(String s, TextHoverEvent h) {
-        BaseComponent[] b = TextComponent.fromLegacyText(s);
         net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
-        for (BaseComponent a : b) {
+        for (BaseComponent a : TextComponent.fromLegacyText(s)) {
             a.setHoverEvent(hoverEvent);
-            builder.getExtra().add(a);
+            builder.addExtra(a);
         }
     }
 
     private void both(String s, TextClickEvent c, TextHoverEvent h) {
-        BaseComponent[] b = TextComponent.fromLegacyText(s);
         net.md_5.bungee.api.chat.ClickEvent clickEvent = a(c);
         net.md_5.bungee.api.chat.HoverEvent hoverEvent = a(h);
-        for (BaseComponent a : b) {
+        for (BaseComponent a : TextComponent.fromLegacyText(s)) {
             a.setClickEvent(clickEvent);
             a.setHoverEvent(hoverEvent);
-            builder.getExtra().add(a);
+            builder.addExtra(a);
         }
     }
 
