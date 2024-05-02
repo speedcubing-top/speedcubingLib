@@ -3,21 +3,36 @@ package top.speedcubing.lib.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
-// new ByteArrayDataBuilder().write...write...write....toByteArray();
 public class ByteArrayDataBuilder {
-    public final ByteArrayOutputStream byteArrayOutputSteam;
-    public final DataOutputStream dataOutputStream;
+    private final OutputStream outputStream;
+    private final DataOutputStream dataOutputStream;
 
     public ByteArrayDataBuilder() {
-        byteArrayOutputSteam = new ByteArrayOutputStream();
-        dataOutputStream = new DataOutputStream(byteArrayOutputSteam);
+        this(32);
+    }
+
+    public ByteArrayDataBuilder(int size) {
+        this(new ByteArrayOutputStream(size));
+    }
+
+    public ByteArrayDataBuilder(OutputStream outputStream) {
+        this.outputStream = outputStream;
+        dataOutputStream = new DataOutputStream(outputStream);
+    }
+
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
     public byte[] toByteArray() {
-        return byteArrayOutputSteam.toByteArray();
+        if (outputStream instanceof ByteArrayOutputStream)
+            return ((ByteArrayOutputStream) outputStream).toByteArray();
+        throw new IllegalStateException();
     }
 
+    //default
     public ByteArrayDataBuilder write(int b) {
         try {
             dataOutputStream.write(b);
@@ -144,13 +159,19 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    //?
+    //self implementation
     public ByteArrayDataBuilder writeVarInt(int i) {
         try {
             IOUtils.writeVarInt(dataOutputStream, i);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public ByteArrayDataBuilder writeString(String s) {
+        writeVarInt(s.length());
+        write(s.getBytes());
         return this;
     }
 }
