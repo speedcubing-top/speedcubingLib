@@ -55,4 +55,9 @@ public class HandshakePacket {
                 .writeShort((short) serverPort)
                 .writeVarInt(nextState).toByteArray();
     }
+
+    @Override
+    public String toString() {
+        return "HandshakePacket[" + protocolVersion + "," + serverAddress + "," + serverPort + "," + nextState + "]";
+    }
 }
