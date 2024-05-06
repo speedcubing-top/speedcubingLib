@@ -8,17 +8,29 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class TimeFormatter {
-    public final long w;
-    public final long D;
-    public final long d;
-    public final long H;
-    public final long h;
-    public final long m;
-    public final long s;
-    public final long ms;
+    public long w;
+    public long D;
+    public long d;
+    public long H;
+    public long h;
+    public long m;
+    public long s;
+    public long ms;
     String format = "";
 
+    public TimeFormatter() {
+    }
+
+    public TimeFormatter(String format, long t) {
+        this.setTime(t, TimeUnit.MILLISECONDS);
+        this.format(format, false);
+    }
+
     public TimeFormatter(long t, TimeUnit timeUnit) {
+        setTime(t, timeUnit);
+    }
+
+    public void setTime(long t, TimeUnit timeUnit) {
         switch (timeUnit) {
             case SECONDS:
                 ms = 0;
