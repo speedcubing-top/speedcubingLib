@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class ItemBuilder {
 
@@ -120,7 +120,7 @@ public class ItemBuilder {
         SkullMeta skull = (SkullMeta) meta;
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile.getProperties().put("textures", new Property("textures", textureBase64));
-        Reflections.setField(skull, "profile", gameProfile);
+        ReflectionUtils.setField(skull, "profile", gameProfile);
         itemStack.setItemMeta(skull);
         return this;
     }

@@ -27,7 +27,7 @@ import top.speedcubing.lib.events.packet.PlayOutByteEvent;
 import top.speedcubing.lib.events.packet.PlayOutEvent;
 import top.speedcubing.lib.bukkit.inventory.SignBuilder;
 import top.speedcubing.lib.events.SignUpdateEvent;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -104,7 +104,7 @@ public class CubingLibPlayer {
                         if (!((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled) {
                             super.channelRead(channel, packet);
                             if (packet instanceof PacketPlayInUseEntity) {
-                                int id = (int) Reflections.getField(packet, "a");
+                                int id = (int) ReflectionUtils.getField(packet, "a");
                                 for (NPC npc : NPC.all) {
                                     if (npc.entityPlayer.getId() == id && npc.getClickEvent() != null) {
                                         npc.getClickEvent().accept(new ClickEvent(player, ((PacketPlayInUseEntity) packet).a()));

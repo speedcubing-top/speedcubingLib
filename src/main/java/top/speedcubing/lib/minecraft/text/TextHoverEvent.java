@@ -7,7 +7,7 @@ public class TextHoverEvent {
     }
 
     private final String s;
-    public final char b;
+    final char b;
 
     public String getString() {
         return s;

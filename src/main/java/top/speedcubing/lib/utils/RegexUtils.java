@@ -4,11 +4,11 @@ import java.util.regex.Pattern;
 
 public class RegexUtils {
 
-    public static String replaceAll(String input, String pattern, String replace) {
-        return replaceAll(input, Pattern.compile(pattern), replace);
+    public static String replaceAll(String pattern, String input, String replace) {
+        return replaceAll(Pattern.compile(pattern), input, replace);
     }
 
-    public static String replaceAll(String input, Pattern pattern, String replace) {
+    public static String replaceAll(Pattern pattern, String input, String replace) {
         return pattern.matcher(input).replaceAll(replace);
     }
 }

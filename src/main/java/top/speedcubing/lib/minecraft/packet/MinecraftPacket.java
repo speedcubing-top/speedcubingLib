@@ -1,6 +1,6 @@
 package top.speedcubing.lib.minecraft.packet;
 
-import top.speedcubing.lib.utils.ByteArrayDataBuilder;
+import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
 
 public class MinecraftPacket {
     private int length;
@@ -10,7 +10,7 @@ public class MinecraftPacket {
     public MinecraftPacket(int packetID, byte[] data) {
         this.packetID = packetID;
         this.data = data;
-        this.length = new ByteArrayDataBuilder().writeVarInt(packetID).write(data).toByteArray().length;
+        this.length = new ByteArayBuffer().writeVarInt(packetID).write(data).toByteArray().length;
     }
 
     public MinecraftPacket(int length, int packetID, byte[] data) {
@@ -45,7 +45,7 @@ public class MinecraftPacket {
     }
 
     public byte[] toByteArray() {
-        return new ByteArrayDataBuilder()
+        return new ByteArayBuffer()
                 .writeVarInt(length)
                 .writeVarInt(packetID)
                 .write(data)

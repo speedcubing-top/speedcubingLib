@@ -8,12 +8,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class WorldUtils {
     public static void clearGameRules(World world) {
         GameRules m = new GameRules();
-        TreeMap<String, ?> map = (TreeMap<String, ?>) Reflections.getField(((CraftWorld) world).getHandle().getGameRules(), "a");
+        TreeMap<String, ?> map = (TreeMap<String, ?>) ReflectionUtils.getField(((CraftWorld) world).getHandle().getGameRules(), "a");
         Set<String> remove = new HashSet<>();
         map.keySet().forEach(a -> {
             if (!m.contains(a)) remove.add(a);
@@ -22,7 +22,7 @@ public class WorldUtils {
     }
 
     public static void resetGameRules(World world) {
-        Reflections.setField(((CraftWorld) world).getHandle().worldData, "K", new GameRules());
+        ReflectionUtils.setField(((CraftWorld) world).getHandle().worldData, "K", new GameRules());
     }
 
     public static void fillAir(int x1, int y1, int z1, int x2, int y2, int z2, World world) {

@@ -8,8 +8,8 @@ import java.net.URL;
 public class HTTPUtils {
     public static HTTPResponse get(String url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
         StringBuilder b = new StringBuilder();
-//        InputStream in = connection.getInputStream();
         InputStream in = connection.getResponseCode() == 200 ? connection.getInputStream() : connection.getErrorStream();
         int i;
         while ((i = in.read()) != -1)

@@ -11,7 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.events.inventory.CloseInventoryEvent;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class InventoryBuilder {
     public static final Set<InventoryBuilder> builderSet = new HashSet<>();
@@ -35,7 +35,7 @@ public class InventoryBuilder {
     }
 
     public void setTitle(String title) {
-        Reflections.setField(Reflections.getSuperField(inventory, "inventory"), "title", title);
+        ReflectionUtils.setField(ReflectionUtils.getSuperField(inventory, "inventory"), "title", title);
     }
 
     public Inventory getInventory() {

@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
+import top.speedcubing.lib.api.mcserverping.ServerPingRequest;
 
 public class ARecord extends DNSRecord {
     private final String name;
@@ -31,19 +33,15 @@ public class ARecord extends DNSRecord {
         return "A{name:\"" + name + "\",IPv4:\"" + IPv4 + "\"}";
     }
 
-    public static List<ARecord> lookup(String name) throws Exception {
+    public static List<ARecord> lookup(String name) {
         try {
-            Properties env = new Properties();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
-            InitialDirContext idc = new InitialDirContext(env);
-            Attributes attrs = idc.getAttributes(name, new String[]{"A"});
-            Attribute attr = attrs.get("A");
+            Attribute attr = lookup(name,"A");
             List<ARecord> records = new ArrayList<>();
             if (attr != null)
                 for (String s : attr.toString().substring(3).split(", "))
                     records.add(new ARecord(name, s));
             return records;
-        } catch (NameNotFoundException e) {
+        } catch (NamingException e) {
             return null;
         }
     }

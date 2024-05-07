@@ -1,4 +1,4 @@
-package top.speedcubing.lib.utils;
+package top.speedcubing.lib.utils.bytes;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;

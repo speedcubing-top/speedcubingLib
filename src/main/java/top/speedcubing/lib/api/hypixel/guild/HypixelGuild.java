@@ -35,7 +35,7 @@ public class HypixelGuild {
     public List<String> getMembers() {
         List<String> uuids = new ArrayList<>();
         for (JsonElement o : guild.getAsJsonArray("members"))
-            uuids.add(UUIDUtils.addDash(o.getAsJsonObject().get("uuid").getAsString()));
+            uuids.add(UUIDUtils.dash(o.getAsJsonObject().get("uuid").getAsString()));
         return uuids;
     }
 }

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import top.speedcubing.lib.minecraft.packet.HandshakePacket;
 import top.speedcubing.lib.minecraft.packet.MinecraftPacket;
-import top.speedcubing.lib.utils.ByteArrayDataBuilder;
-import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
+import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.internet.dnsrecords.ARecord;
 import top.speedcubing.lib.utils.internet.dnsrecords.CNAMERecord;
 import top.speedcubing.lib.utils.internet.dnsrecords.DNSRecord;
@@ -91,19 +91,24 @@ public class ServerPingRequest {
         DataInputStream sokcetIn = new DataInputStream(socket.getInputStream());
         DataOutputStream socketOut = new DataOutputStream(socket.getOutputStream());
 
+        //Handshake Request
         MinecraftPacket handshakePacket = new MinecraftPacket(0x00, handshake.toByteArray());
         socketOut.write(handshakePacket.toByteArray());
 
+        //Staus Request
         MinecraftPacket statusRequestPacket = new MinecraftPacket(0x00, new byte[0]);
         socketOut.write(statusRequestPacket.toByteArray());
 
+        //Status Response
         int packetLength = IOUtils.readVarInt(sokcetIn);
         int packetID = IOUtils.readVarInt(sokcetIn);
         String jsonResponse = IOUtils.readString(sokcetIn);
 
-        MinecraftPacket pingRequestPacket = new MinecraftPacket(0x01, new ByteArrayDataBuilder().writeLong(System.currentTimeMillis()).toByteArray());
+        //Ping Request
+        MinecraftPacket pingRequestPacket = new MinecraftPacket(0x01, new ByteArayBuffer().writeLong(System.currentTimeMillis()).toByteArray());
         socketOut.write(pingRequestPacket.toByteArray());
 
+        //Ping Response
         packetLength = IOUtils.readVarInt(sokcetIn);
         packetID = IOUtils.readVarInt(sokcetIn);
         long response = sokcetIn.readLong();

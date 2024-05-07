@@ -3,41 +3,30 @@ package top.speedcubing.lib.utils.bytes;
 import io.netty.buffer.ByteBuf;
 
 public class ByteBufUtils {
-    private static final int SEGMENT_BITS = 0x7F;
-    private static final int CONTINUE_BIT = 0x80;
 
     //https://wiki.vg/Protocol#Type:VarInt
     public static int readVarInt(ByteBuf buf) {
-        int value = 0;
-        int position = 0;
-        byte currentByte;
-
-        while (true) {
-            currentByte = buf.readByte();
-            value |= (currentByte & SEGMENT_BITS) << position;
-
-            if ((currentByte & CONTINUE_BIT) == 0) break;
-
-            position += 7;
-
-            if (position >= 32) throw new RuntimeException("VarInt is too big");
-        }
-
-        return value;
+        int out = 0;
+        int bytes = 0;
+        int in;
+        do {
+            in = buf.readByte();
+            out |= (in & 0x7F) << bytes++ * 7;
+            if (bytes > 5)
+                throw new RuntimeException("VarInt too big");
+        } while ((in & 0x80) == 0x80);
+        return out;
     }
 
-    public static void writeVarInt(ByteBuf buf, int value) {
-        while (true) {
-            if ((value & ~SEGMENT_BITS) == 0) {
-                buf.writeByte(value);
-                return;
-            }
-
-            buf.writeByte((value & SEGMENT_BITS) | CONTINUE_BIT);
-
-            // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
-            value >>>= 7;
-        }
+    public static void writeVarInt(ByteBuf buf, int i) {
+        int part;
+        do {
+            part = i & 0x7F;
+            i >>>= 7;
+            if (i != 0)
+                part |= 0x80;
+            buf.writeByte(part);
+        } while (i != 0);
     }
 
     public static String readString(ByteBuf buf) {

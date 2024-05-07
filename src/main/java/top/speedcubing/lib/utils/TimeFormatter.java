@@ -47,19 +47,19 @@ public class TimeFormatter {
 
         //second
         S = t;
-        t = t / 60;
+        t /= 60;
 
         //minute
         M = t;
-        t = t / 60;
+        t /= 60;
 
         //hour
         H = t;
-        t = t / 24;
+        t /= 24;
 
         //day
         D = t;
-        t = t / 7;
+        t /= 7;
 
         //week
         w = t;

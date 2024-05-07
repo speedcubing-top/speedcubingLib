@@ -3,6 +3,7 @@ package top.speedcubing.lib.utils.internet.dnsrecords;
 import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
@@ -49,17 +50,14 @@ public class SRVRecord extends DNSRecord {
 
     public static SRVRecord lookup(String address) throws Exception {
         try {
-            Properties env = new Properties();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
-            Attributes attrs = new InitialDirContext(env).getAttributes(address, new String[]{"SRV"});
-            Attribute attr = attrs.get("srv");
+            Attribute attr = lookup(address,"SRV");
             if (attr == null)
                 return null;
             else {
                 String[] srvRecord = ((String) attr.get(0)).split(" ");
                 return new SRVRecord(address, Integer.parseInt(srvRecord[0]), Integer.parseInt(srvRecord[1]), Integer.parseInt(srvRecord[2]), srvRecord[3].replaceFirst("\\.$", ""));
             }
-        } catch (NameNotFoundException e) {
+        } catch (NamingException e) {
             return null;
         }
     }

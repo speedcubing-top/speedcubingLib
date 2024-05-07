@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.bytes.IOUtils;
 
 public class TCPClient {
     private final String host;
@@ -28,17 +28,5 @@ public class TCPClient {
         client.connect(new InetSocketAddress(host, port), timeout);
         client.getOutputStream().write(data);
         IOUtils.closeQuietly(client);
-    }
-
-    public byte[] sendAndRead(int port, byte[] data, int buffer) throws IOException {
-        Socket client = new Socket();
-        client.connect(new InetSocketAddress(host, port), timeout);
-        InputStream in = client.getInputStream();
-        OutputStream out = client.getOutputStream();
-        out.write(data);
-        out.flush();
-        byte[] b = IOUtils.readOnce(in, buffer);
-        IOUtils.closeQuietly(out, in, client);
-        return b;
     }
 }

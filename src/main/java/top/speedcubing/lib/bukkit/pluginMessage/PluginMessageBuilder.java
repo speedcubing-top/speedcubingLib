@@ -1,11 +1,11 @@
 package top.speedcubing.lib.bukkit.pluginMessage;
 
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.utils.ByteArrayDataBuilder;
+import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
 
 //new PluginMessageBuilder(...).write...write...send();
 class PluginMessageBuilder {
-    private final ByteArrayDataBuilder bytes = new ByteArrayDataBuilder();
+    private final ByteArayBuffer bytes = new ByteArayBuffer();
     private final Player player;
     private final String channel;
 
