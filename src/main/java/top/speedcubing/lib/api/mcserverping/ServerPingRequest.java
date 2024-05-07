@@ -2,6 +2,7 @@ package top.speedcubing.lib.api.mcserverping;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ServerPingRequest {
         return this;
     }
 
-    public ServerPingResponse ping() throws Exception {
+    public ServerPingResponse ping() throws IOException {
         String srvHostname = handshake.getServerAddress();
         int srvPort = handshake.getServerPort();
         boolean srv = false;
@@ -90,40 +91,31 @@ public class ServerPingRequest {
         DataInputStream sokcetIn = new DataInputStream(socket.getInputStream());
         DataOutputStream socketOut = new DataOutputStream(socket.getOutputStream());
 
-        MinecraftPacket packet = new MinecraftPacket(0, handshake.toByteArray());
+        MinecraftPacket handshakePacket = new MinecraftPacket(0x00, handshake.toByteArray());
+        socketOut.write(handshakePacket.toByteArray());
 
-        ByteArrayDataBuilder buffer = new ByteArrayDataBuilder()
-                .write(packet.toByteArray())
-                .writeVarInt(1)
-                .writeVarInt(0);
+        MinecraftPacket statusRequestPacket = new MinecraftPacket(0x00, new byte[0]);
+        socketOut.write(statusRequestPacket.toByteArray());
 
-        socketOut.write(buffer.toByteArray());
+        int packetLength = IOUtils.readVarInt(sokcetIn);
+        int packetID = IOUtils.readVarInt(sokcetIn);
+        String jsonResponse = IOUtils.readString(sokcetIn);
 
-        IOUtils.readVarInt(sokcetIn);
+        MinecraftPacket pingRequestPacket = new MinecraftPacket(0x01, new ByteArrayDataBuilder().writeLong(System.currentTimeMillis()).toByteArray());
+        socketOut.write(pingRequestPacket.toByteArray());
 
-        int id = IOUtils.readVarInt(sokcetIn);
-        io(id == -1, "Server prematurely ended stream.");
-        io(id != 0, "Server returned invalid packet.");
+        packetLength = IOUtils.readVarInt(sokcetIn);
+        packetID = IOUtils.readVarInt(sokcetIn);
+        long response = sokcetIn.readLong();
 
-        int length = IOUtils.readVarInt(sokcetIn);
-        io(length == -1, "Server prematurely ended stream.");
-        io(length == 0, "Server returned unexpected value.");
-
-        byte[] dt = new byte[length];
-        sokcetIn.readFully(dt);
-        socketOut.writeByte(0x09);
-        socketOut.writeByte(0x01);
-        socketOut.writeLong(System.currentTimeMillis());
-
-        IOUtils.readVarInt(sokcetIn);
-        id = IOUtils.readVarInt(sokcetIn);
-        io(id == -1, "Server prematurely ended stream.");
-        io(id != 0x01, "Server returned invalid packet.");
-        return new ServerPingResponse(this.handshake.getServerAddress(), this.handshake.getServerPort(), srvHostname, srvPort, ping, srv, new ServerPingInfo(new String(dt)), records);
+        return new ServerPingResponse(this.handshake.getServerAddress(), this.handshake.getServerPort(), srvHostname, srvPort, ping, srv, new ServerPingJSONResponse(jsonResponse), records);
     }
 
-    private static void io(boolean f, String s) throws Exception {
-        if (f)
-            throw new Exception(s);
+    public static void main(String[] args) {
+        try {
+            System.out.println(new ServerPingRequest().serverAddress("speedcubing.top").ping());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

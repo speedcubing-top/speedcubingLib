@@ -3,6 +3,7 @@ package top.speedcubing.lib.utils;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +32,26 @@ public class IOUtils {
                 part |= 0x80;
             out.write(part);
         } while (i != 0);
+    }
+
+
+    public static String readString(InputStream in) throws IOException {
+        int len = readVarInt(in);
+        byte[] b = new byte[len];
+        readFully(in, b, 0, b.length);
+        return new String(b);
+    }
+
+    public static void readFully(InputStream in, byte[] b, int off, int len) throws IOException {
+        if (len < 0)
+            throw new IndexOutOfBoundsException();
+        int n = 0;
+        while (n < len) {
+            int count = in.read(b, off + n, len - n);
+            if (count < 0)
+                throw new EOFException();
+            n += count;
+        }
     }
 
     public static DataInputStream toDataInputStream(byte[] b) {

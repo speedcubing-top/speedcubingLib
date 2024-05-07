@@ -10,10 +10,10 @@ public class ServerPingResponse {
     private final String hostname;
     private final int port;
     private final boolean srv;
-    private final ServerPingInfo response;
+    private final ServerPingJSONResponse response;
     private final List<DNSRecord> records;
 
-    ServerPingResponse(String hostname, int port, String SRVHostname, int SRVPort, long ping, boolean srv, ServerPingInfo response, List<DNSRecord> records) {
+    ServerPingResponse(String hostname, int port, String SRVHostname, int SRVPort, long ping, boolean srv, ServerPingJSONResponse response, List<DNSRecord> records) {
         this.SRVHostname = SRVHostname;
         this.SRVPort = SRVPort;
         this.hostname = hostname;
@@ -48,7 +48,7 @@ public class ServerPingResponse {
         return srv;
     }
 
-    public ServerPingInfo getServerInfo() {
+    public ServerPingJSONResponse getServerInfo() {
         return response;
     }
 
