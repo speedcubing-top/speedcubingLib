@@ -1,12 +1,12 @@
 package top.speedcubing.lib.utils.internet.protocol;
 
 import java.net.StandardProtocolFamily;
-import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
+import top.speedcubing.lib.utils.bytes.ByteArrayBuffer;
 
 public class HAProxyProtocol {
 
     public static byte[] v1(StandardProtocolFamily protocolFamily, String sourceAddr, String destAddr, int sourcePort, int destPort) {
-        ByteArayBuffer builder = new ByteArayBuffer();
+        ByteArrayBuffer builder = new ByteArrayBuffer();
         builder.write(new byte[]{80, 82, 79, 88, 89, 32, 84, 67, 80});
         if (protocolFamily == StandardProtocolFamily.INET)
             builder.write(52);
@@ -26,7 +26,7 @@ public class HAProxyProtocol {
     }
 
     public static byte[] v2(String sourceIPV4, String destIPV4, int sourcePort, int destPort) {
-        ByteArayBuffer builder = new ByteArayBuffer();
+        ByteArrayBuffer builder = new ByteArrayBuffer();
         builder.write(new byte[]{13, 10, 13, 10, 0, 13, 10, 81, 85, 73, 84, 10, 33, 17, 0, 12});
         String[] s = sourceIPV4.split("\\.");
         builder.writeByte(Integer.parseInt(s[0]));

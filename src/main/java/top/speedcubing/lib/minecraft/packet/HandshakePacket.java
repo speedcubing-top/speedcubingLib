@@ -1,6 +1,6 @@
 package top.speedcubing.lib.minecraft.packet;
 
-import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
+import top.speedcubing.lib.utils.bytes.ByteArrayBuffer;
 
 public class HandshakePacket {
 
@@ -49,7 +49,7 @@ public class HandshakePacket {
     }
 
     public byte[] toByteArray() {
-        return new ByteArayBuffer()
+        return new ByteArrayBuffer()
                 .writeVarInt(protocolVersion)
                 .writeString(serverAddress)
                 .writeShort((short) serverPort)

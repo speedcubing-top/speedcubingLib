@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import top.speedcubing.lib.minecraft.packet.HandshakePacket;
 import top.speedcubing.lib.minecraft.packet.MinecraftPacket;
-import top.speedcubing.lib.utils.bytes.ByteArayBuffer;
+import top.speedcubing.lib.utils.bytes.ByteArrayBuffer;
 import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.internet.dnsrecords.ARecord;
 import top.speedcubing.lib.utils.internet.dnsrecords.CNAMERecord;
@@ -105,7 +105,7 @@ public class ServerPingRequest {
         String jsonResponse = IOUtils.readString(sokcetIn);
 
         //Ping Request
-        MinecraftPacket pingRequestPacket = new MinecraftPacket(0x01, new ByteArayBuffer().writeLong(System.currentTimeMillis()).toByteArray());
+        MinecraftPacket pingRequestPacket = new MinecraftPacket(0x01, new ByteArrayBuffer().writeLong(System.currentTimeMillis()).toByteArray());
         socketOut.write(pingRequestPacket.toByteArray());
 
         //Ping Response

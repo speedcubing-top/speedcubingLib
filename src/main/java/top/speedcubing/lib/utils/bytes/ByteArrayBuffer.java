@@ -5,19 +5,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class ByteArayBuffer {
+public class ByteArrayBuffer {
     private final OutputStream outputStream;
     private final DataOutputStream dataOutputStream;
 
-    public ByteArayBuffer() {
+    public ByteArrayBuffer() {
         this(32);
     }
 
-    public ByteArayBuffer(int size) {
+    public ByteArrayBuffer(int size) {
         this(new ByteArrayOutputStream(size));
     }
 
-    public ByteArayBuffer(OutputStream outputStream) {
+    public ByteArrayBuffer(OutputStream outputStream) {
         this.outputStream = outputStream;
         dataOutputStream = new DataOutputStream(outputStream);
     }
@@ -33,7 +33,7 @@ public class ByteArayBuffer {
     }
 
     //default
-    public ByteArayBuffer write(int b) {
+    public ByteArrayBuffer write(int b) {
         try {
             dataOutputStream.write(b);
         } catch (IOException e) {
@@ -42,7 +42,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer write(byte[] b, int off, int len) {
+    public ByteArrayBuffer write(byte[] b, int off, int len) {
         try {
             dataOutputStream.write(b, off, len);
         } catch (IOException e) {
@@ -51,7 +51,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer write(byte[] b) {
+    public ByteArrayBuffer write(byte[] b) {
         try {
             dataOutputStream.write(b);
         } catch (IOException e) {
@@ -60,7 +60,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeInt(int v) {
+    public ByteArrayBuffer writeInt(int v) {
         try {
             dataOutputStream.writeInt(v);
         } catch (IOException e) {
@@ -69,7 +69,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeUTF(String str) {
+    public ByteArrayBuffer writeUTF(String str) {
         try {
             dataOutputStream.writeUTF(str);
         } catch (IOException e) {
@@ -78,7 +78,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeChar(int v) {
+    public ByteArrayBuffer writeChar(int v) {
         try {
             dataOutputStream.writeChar(v);
         } catch (IOException e) {
@@ -87,7 +87,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeByte(int v) {
+    public ByteArrayBuffer writeByte(int v) {
         try {
             dataOutputStream.writeByte(v);
         } catch (IOException e) {
@@ -96,7 +96,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeBytes(String s) {
+    public ByteArrayBuffer writeBytes(String s) {
         try {
             dataOutputStream.writeBytes(s);
         } catch (IOException e) {
@@ -105,7 +105,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeChars(String s) {
+    public ByteArrayBuffer writeChars(String s) {
         try {
             dataOutputStream.writeChars(s);
         } catch (IOException e) {
@@ -114,7 +114,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeLong(long v) {
+    public ByteArrayBuffer writeLong(long v) {
         try {
             dataOutputStream.writeLong(v);
         } catch (IOException e) {
@@ -123,7 +123,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeFloat(float v) {
+    public ByteArrayBuffer writeFloat(float v) {
         try {
             dataOutputStream.writeFloat(v);
         } catch (IOException e) {
@@ -132,7 +132,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeDouble(double v) {
+    public ByteArrayBuffer writeDouble(double v) {
         try {
             dataOutputStream.writeDouble(v);
         } catch (IOException e) {
@@ -141,7 +141,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeShort(short v) {
+    public ByteArrayBuffer writeShort(short v) {
         try {
             dataOutputStream.writeShort(v);
         } catch (IOException e) {
@@ -150,7 +150,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeBoolean(boolean v) {
+    public ByteArrayBuffer writeBoolean(boolean v) {
         try {
             dataOutputStream.writeBoolean(v);
         } catch (IOException e) {
@@ -160,7 +160,7 @@ public class ByteArayBuffer {
     }
 
     //self implementation
-    public ByteArayBuffer writeVarInt(int i) {
+    public ByteArrayBuffer writeVarInt(int i) {
         try {
             IOUtils.writeVarInt(dataOutputStream, i);
         } catch (IOException e) {
@@ -169,7 +169,7 @@ public class ByteArayBuffer {
         return this;
     }
 
-    public ByteArayBuffer writeString(String s) {
+    public ByteArrayBuffer writeString(String s) {
         writeVarInt(s.length());
         write(s.getBytes());
         return this;
