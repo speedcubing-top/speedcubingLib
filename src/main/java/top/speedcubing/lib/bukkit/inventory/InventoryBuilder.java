@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import top.speedcubing.lib.events.inventory.ClickInventoryEvent;
-import top.speedcubing.lib.events.inventory.CloseInventoryEvent;
+import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
+import top.speedcubing.lib.bukkit.events.inventory.CloseInventoryEvent;
 import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class InventoryBuilder {

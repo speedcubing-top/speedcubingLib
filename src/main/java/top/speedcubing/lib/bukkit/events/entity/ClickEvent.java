@@ -1,4 +1,4 @@
-package top.speedcubing.lib.events.entity;
+package top.speedcubing.lib.bukkit.events.entity;
 
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import org.bukkit.entity.Player;
@@ -7,11 +7,11 @@ public class ClickEvent {
 
     private final Player player;
 
+    private final PacketPlayInUseEntity.EnumEntityUseAction action;
+
     public Player getPlayer() {
         return player;
     }
-
-    private final PacketPlayInUseEntity.EnumEntityUseAction action;
 
     public PacketPlayInUseEntity.EnumEntityUseAction getAction() {
         return action;

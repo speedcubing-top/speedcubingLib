@@ -133,7 +133,7 @@ public class ItemBuilder {
 
     public ItemBuilder skullFromProfileValue(String profileValueBase64) {
         return skullFromURL(
-                new JsonParser().parse(new String(Base64.getDecoder().decode(profileValueBase64))).getAsJsonObject()
+                JsonParser.parseString(new String(Base64.getDecoder().decode(profileValueBase64))).getAsJsonObject()
                 .getAsJsonObject("textures")
                         .getAsJsonObject("SKIN")
                         .get("url").getAsString());

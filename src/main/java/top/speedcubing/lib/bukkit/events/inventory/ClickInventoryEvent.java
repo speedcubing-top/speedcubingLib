@@ -1,4 +1,4 @@
-package top.speedcubing.lib.events.inventory;
+package top.speedcubing.lib.bukkit.events.inventory;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

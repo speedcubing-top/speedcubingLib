@@ -43,4 +43,13 @@ public class StringUtils {
             b.append(s);
         return b.toString();
     }
+
+    public static boolean isInt(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
 }

@@ -37,9 +37,16 @@ public class IOUtils {
 
     public static String readString(InputStream in) throws IOException {
         int len = readVarInt(in);
-        byte[] b = new byte[len];
-        readFully(in, b, 0, b.length);
+        byte[] b = readFully(in, len);
         return new String(b);
+    }
+
+    public static byte[] readFully(InputStream in, int len) throws IOException {
+        if (len < 0)
+            throw new IndexOutOfBoundsException();
+        byte[] b = new byte[len];
+        readFully(in, b, 0, len);
+        return b;
     }
 
     public static void readFully(InputStream in, byte[] b, int off, int len) throws IOException {
@@ -66,17 +73,6 @@ public class IOUtils {
                 } catch (IOException ignored) {
                 }
             }
-        }
-    }
-
-    public static byte[] readOnce(InputStream in, int bufferSize) {
-        try {
-            byte[] b = new byte[bufferSize];
-            in.read(b);
-            return b;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import top.speedcubing.lib.utils.Preconditions;
 
 public class ByteArrayBuffer {
     private final OutputStream outputStream;
@@ -27,9 +28,9 @@ public class ByteArrayBuffer {
     }
 
     public byte[] toByteArray() {
-        if (outputStream instanceof ByteArrayOutputStream)
-            return ((ByteArrayOutputStream) outputStream).toByteArray();
-        throw new IllegalStateException();
+        Preconditions.checkArgument(outputStream instanceof ByteArrayOutputStream);
+
+        return ((ByteArrayOutputStream) outputStream).toByteArray();
     }
 
     //default

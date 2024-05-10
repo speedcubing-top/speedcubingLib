@@ -1,32 +1,67 @@
 package top.speedcubing.lib.utils.sockets;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import top.speedcubing.lib.utils.bytes.IOUtils;
+import top.speedcubing.lib.utils.internet.HostAndPort;
 
 public class TCPClient {
-    private final String host;
-    private final int timeout;
 
-    public TCPClient(String host, int timeout) {
-        this.host = host;
-        this.timeout = timeout;
+    public static void write(HostAndPort hostAndPort, byte[] data) {
+        write(hostAndPort, data, 1000);
     }
 
-    public void send(int port, byte[] data) {
+    public static void write(HostAndPort hostAndPort, byte[] data, int timeout) {
         try {
-            sendUnsafe(port, data);
-        } catch (IOException e) {
+            Socket client = new Socket();
+            client.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), timeout);
+            client.getOutputStream().write(data);
+            IOUtils.closeQuietly(client);
+        } catch (IOException ex) {
+
         }
     }
 
-    public void sendUnsafe(int port, byte[] data) throws IOException {
+    public static byte[] writeAndReadAll(HostAndPort hostAndPort, byte[] data) {
+        return writeAndReadAll(hostAndPort, data, 1000);
+    }
+
+    public static byte[] writeAndReadAll(HostAndPort hostAndPort, byte[] data, int timeout) {
+        try {
+            Socket client = new Socket();
+            client.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), timeout);
+            client.getOutputStream().write(data);
+            byte[] b = client.getInputStream().readAllBytes();
+            IOUtils.closeQuietly(client);
+            return b;
+        } catch (IOException ex) {
+
+        }
+        return null;
+    }
+
+    public static void tryWrite(HostAndPort hostAndPort, byte[] data) throws IOException {
+        tryWrite(hostAndPort, data, 1000);
+    }
+
+    public static void tryWrite(HostAndPort hostAndPort, byte[] data, int timeout) throws IOException {
         Socket client = new Socket();
-        client.connect(new InetSocketAddress(host, port), timeout);
+        client.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), timeout);
         client.getOutputStream().write(data);
         IOUtils.closeQuietly(client);
+    }
+
+    public static byte[] tryWriteAndReadAll(HostAndPort hostAndPort, byte[] data) throws IOException {
+        return tryWriteAndReadAll(hostAndPort, data, 1000);
+    }
+
+    public static byte[] tryWriteAndReadAll(HostAndPort hostAndPort, byte[] data, int timeout) throws IOException {
+        Socket client = new Socket();
+        client.connect(new InetSocketAddress(hostAndPort.getHost(), hostAndPort.getPort()), timeout);
+        client.getOutputStream().write(data);
+        byte[] b = client.getInputStream().readAllBytes();
+        IOUtils.closeQuietly(client);
+        return b;
     }
 }
