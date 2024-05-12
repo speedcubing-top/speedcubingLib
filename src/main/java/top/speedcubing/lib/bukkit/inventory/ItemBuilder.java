@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class ItemBuilder {
 
@@ -121,7 +121,7 @@ public class ItemBuilder {
         SkullMeta skull = (SkullMeta) meta;
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile.getProperties().put("textures", new Property("textures", textureBase64));
-        Reflections.setField(skull, "profile", gameProfile);
+        ReflectionUtils.setField(skull, "profile", gameProfile);
         itemStack.setItemMeta(skull);
         return this;
     }
@@ -134,7 +134,7 @@ public class ItemBuilder {
 
     public ItemBuilder skullFromProfileValue(String profileValueBase64) {
         return skullFromURL(
-                new JsonParser().parse(new String(Base64.getDecoder().decode(profileValueBase64))).getAsJsonObject()
+                JsonParser.parseString(new String(Base64.getDecoder().decode(profileValueBase64))).getAsJsonObject()
                 .getAsJsonObject("textures")
                         .getAsJsonObject("SKIN")
                         .get("url").getAsString());

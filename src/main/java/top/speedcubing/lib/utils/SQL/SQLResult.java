@@ -19,11 +19,11 @@ public class SQLResult {
         }
     }
 
-    public SQLRow get(int i){
+    public SQLRow get(int i) {
         return rows.get(i);
     }
 
-    public ResultSet getResultSet(){
+    public ResultSet getResultSet() {
         return result;
     }
 }

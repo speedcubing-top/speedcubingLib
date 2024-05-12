@@ -21,7 +21,7 @@ public class HypixelPlayer {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.hypixel.net/player?key=" + HypixelLib.key + "&uuid=" + uuid).openConnection();
             if (connection.getResponseCode() == 200) {
-                JsonObject object = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+                JsonObject object = JsonParser.parseReader(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
                 return object == null ? null : new HypixelPlayer(object);
             }
         } catch (IOException e) {

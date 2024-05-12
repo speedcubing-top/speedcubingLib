@@ -2,7 +2,7 @@ package top.speedcubing.lib.utils;
 
 import java.lang.reflect.Field;
 
-public class Reflections {
+public class ReflectionUtils {
 
     public static void setClassField(Class<?> c, String name, Object value) {
         try {

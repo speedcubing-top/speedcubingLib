@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class MinecraftTextUtils {
 
     //from net.md_5.bungee.api.ChatColor
-    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
 
 
     //from net.md_5.bungee.api.ChatColor

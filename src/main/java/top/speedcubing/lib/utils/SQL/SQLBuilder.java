@@ -12,9 +12,6 @@ public class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder() {
-    }
-
     public SQLBuilder select(String field) {
         return append("SELECT " + field);
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import top.speedcubing.lib.minecraft.text.MinecraftTextUtils;
 
-public class ServerPingInfo {
+public class ServerPingJSONResponse {
     private final String json;
     private final String versionName;
     private final int versionProtocol;
@@ -20,9 +20,9 @@ public class ServerPingInfo {
     private final String favicon;
     private final String modType;
 
-    public ServerPingInfo(String s) {
+    public ServerPingJSONResponse(String s) {
         this.json = s;
-        JsonObject data = new JsonParser().parse(s).getAsJsonObject();
+        JsonObject data = JsonParser.parseString(s).getAsJsonObject();
         JsonObject object = data.getAsJsonObject("version");
         versionName = object.get("name").getAsString();
         versionProtocol = object.get("protocol").getAsInt();
@@ -52,7 +52,7 @@ public class ServerPingInfo {
     @Override
     public String toString() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonElement jsonElement = new JsonParser().parse(getJson());
+        JsonElement jsonElement = JsonParser.parseString(getJson());
         return gson.toJson(jsonElement);
     }
 

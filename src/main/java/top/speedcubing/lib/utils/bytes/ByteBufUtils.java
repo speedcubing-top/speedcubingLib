@@ -4,48 +4,29 @@ import io.netty.buffer.ByteBuf;
 
 public class ByteBufUtils {
 
-    public static int readVarInt(ByteBuf input) {
+    //https://wiki.vg/Protocol#Type:VarInt
+    public static int readVarInt(ByteBuf buf) {
         int out = 0;
         int bytes = 0;
-        byte in;
+        int in;
         do {
-            in = input.readByte();
-            out |= (in & 0x7F) << (bytes++ * 7);
+            in = buf.readByte();
+            out |= (in & 0x7F) << bytes++ * 7;
             if (bytes > 5)
                 throw new RuntimeException("VarInt too big");
         } while ((in & 0x80) == 0x80);
         return out;
     }
 
-    public static void writeVarInt(ByteBuf out, int i) {
+    public static void writeVarInt(ByteBuf buf, int i) {
         int part;
         do {
             part = i & 0x7F;
             i >>>= 7;
             if (i != 0)
                 part |= 0x80;
-            out.writeByte(part);
+            buf.writeByte(part);
         } while (i != 0);
-    }
-
-    public static int readVarShort(ByteBuf buf) {
-        int low = buf.readUnsignedShort();
-        int high = 0;
-        if ((low & 0x8000) != 0) {
-            low = low & 0x7FFF;
-            high = buf.readUnsignedByte();
-        }
-        return ((high & 0xFF) << 15) | low;
-    }
-
-    public static void writeVarShort(ByteBuf buf, int i) {
-        int low = i & 0x7FFF;
-        int high = (i & 0x7F8000) >> 15;
-        if (high != 0)
-            low |= 0x8000;
-        buf.writeShort(low);
-        if (high != 0)
-            buf.writeByte(high);
     }
 
     public static String readString(ByteBuf buf) {

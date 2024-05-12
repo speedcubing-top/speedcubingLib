@@ -12,6 +12,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import top.speedcubing.lib.utils.Preconditions;
 import top.speedcubing.lib.utils.collection.Sets;
 
 public class SideBar implements Listener {
@@ -60,8 +61,7 @@ public class SideBar implements Listener {
     }
 
     public SideBar staticLine(String str, int score) {
-        if (str.matches("^\\w{1,16}$"))
-            throw new IllegalArgumentException();
+        Preconditions.checkArgument(!str.matches("^\\w{1,16}$"));
         return add(str, score, true);
     }
 

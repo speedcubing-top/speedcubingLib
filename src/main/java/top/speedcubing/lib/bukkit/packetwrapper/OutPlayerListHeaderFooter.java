@@ -3,7 +3,7 @@ package top.speedcubing.lib.bukkit.packetwrapper;
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 public class OutPlayerListHeaderFooter {
     public final PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
@@ -12,12 +12,12 @@ public class OutPlayerListHeaderFooter {
     }
 
     public OutPlayerListHeaderFooter a(IChatBaseComponent header) {
-        Reflections.setField(packet, "a", header);
+        ReflectionUtils.setField(packet, "a", header);
         return this;
     }
 
     public OutPlayerListHeaderFooter b(IChatBaseComponent footer) {
-        Reflections.setField(packet, "b", footer);
+        ReflectionUtils.setField(packet, "b", footer);
         return this;
     }
 

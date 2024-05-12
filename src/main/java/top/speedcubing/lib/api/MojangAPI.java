@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import top.speedcubing.lib.events.ProfileRespondEvent;
+import top.speedcubing.lib.bukkit.events.packet.ProfileRespondEvent;
 import top.speedcubing.lib.api.mojang.Profile;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.api.mojang.ProfileTexture;
-import top.speedcubing.lib.utils.IOUtils;
+import top.speedcubing.lib.utils.Preconditions;
+import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.UUIDUtils;
 import top.speedcubing.lib.utils.http.HTTPResponse;
 import top.speedcubing.lib.utils.http.HTTPUtils;
@@ -28,9 +29,9 @@ public class MojangAPI {
         if (http.getResponseCode() != 200) {
             return null;
         }
-        JsonObject object = new JsonParser().parse(http.getData()).getAsJsonObject();
+        JsonObject object = JsonParser.parseString(http.getData()).getAsJsonObject();
         String fixedName = object.get("name").getAsString();
-        String uuid = UUIDUtils.addDash(object.get("id").getAsString());
+        String uuid = UUIDUtils.dash(object.get("id").getAsString());
         if (call)
             new ProfileRespondEvent(new ProfileSkin(fixedName, uuid, null, null)).call();
         return new Profile(fixedName, uuid);
@@ -42,8 +43,8 @@ public class MojangAPI {
     }
 
     public static List<Profile> getByNames(String... names) throws IOException {
-        if (names.length > 10)
-            throw new IllegalArgumentException();
+        Preconditions.checkArgument(names.length <= 10);
+
         StringBuilder payload = new StringBuilder("[");
         for (int i = 0; i < names.length; i++)
             payload.append("\"").append(names[i]).append(i == names.length - 1 ? "\"" : "\",");
@@ -63,9 +64,9 @@ public class MojangAPI {
             while ((b = in.read()) != -1)
                 textBuilder.append((char) b);
             List<Profile> result = new ArrayList<>();
-            for (JsonElement e : new JsonParser().parse(textBuilder.toString()).getAsJsonArray()) {
+            for (JsonElement e : JsonParser.parseString(textBuilder.toString()).getAsJsonArray()) {
                 String fixedName = e.getAsJsonObject().get("name").getAsString();
-                String uuid = UUIDUtils.addDash(e.getAsJsonObject().get("id").getAsString());
+                String uuid = UUIDUtils.dash(e.getAsJsonObject().get("id").getAsString());
                 result.add(new Profile(fixedName, uuid));
 
                 new ProfileRespondEvent(new ProfileSkin(fixedName, uuid, null, null)).call();
@@ -95,7 +96,7 @@ public class MojangAPI {
         HTTPResponse http = HTTPUtils.get("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
         if (http.getResponseCode() != 200)
             return null;
-        JsonObject object = new JsonParser().parse(http.getData()).getAsJsonObject();
+        JsonObject object = JsonParser.parseString(http.getData()).getAsJsonObject();
         JsonObject object2 = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
         ProfileSkin profile = new ProfileSkin(object.get("name").getAsString(), uuid, object2.get("value").getAsString(), object2.get("signature").getAsString());
         new ProfileRespondEvent(profile).call();

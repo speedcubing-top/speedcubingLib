@@ -30,10 +30,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import top.speedcubing.lib.api.MojangAPI;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
-import top.speedcubing.lib.events.entity.ClickEvent;
+import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.speedcubingLibBukkit;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 import top.speedcubing.lib.utils.collection.Sets;
 
 import java.util.Collection;
@@ -168,8 +168,8 @@ public class NPC {
 
     public NPC animation(int animation) {
         PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
-        Reflections.setField(packet, "a", entityPlayer.getId());
-        Reflections.setField(packet, "b", (byte) animation);
+        ReflectionUtils.setField(packet, "a", entityPlayer.getId());
+        ReflectionUtils.setField(packet, "b", (byte) animation);
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
@@ -177,8 +177,8 @@ public class NPC {
 
     public NPC status(int status) {
         PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus();
-        Reflections.setField(packet, "a", entityPlayer.getId());
-        Reflections.setField(packet, "b", (byte) status);
+        ReflectionUtils.setField(packet, "a", entityPlayer.getId());
+        ReflectionUtils.setField(packet, "b", (byte) status);
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }

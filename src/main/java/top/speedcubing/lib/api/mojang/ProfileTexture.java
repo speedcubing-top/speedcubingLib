@@ -10,7 +10,7 @@ public class ProfileTexture {
 
     public ProfileTexture(String value) {
         String decoded = new String(Base64.getDecoder().decode(value));
-        JsonObject object = new JsonParser().parse(decoded).getAsJsonObject();
+        JsonObject object = JsonParser.parseString(decoded).getAsJsonObject();
         timeStamp = object.get("timestamp").getAsLong();
         url = object.getAsJsonObject("textures").getAsJsonObject("SKIN").get("url").getAsString();
     }

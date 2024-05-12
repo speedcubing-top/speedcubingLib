@@ -1,11 +1,11 @@
 package top.speedcubing.lib.bukkit.pluginMessage;
 
 import org.bukkit.entity.Player;
-import top.speedcubing.lib.utils.ByteArrayDataBuilder;
+import top.speedcubing.lib.utils.bytes.ByteArrayBuffer;
 
 //new PluginMessageBuilder(...).write...write...send();
 class PluginMessageBuilder {
-    private final ByteArrayDataBuilder byteArrayDataBuilder = new ByteArrayDataBuilder();
+    private final ByteArrayBuffer bytes = new ByteArrayBuffer();
     private final Player player;
     private final String channel;
 
@@ -27,76 +27,76 @@ class PluginMessageBuilder {
     }
 
     public void send() {
-        BungeePluginMessage.sendPluginMessage(player, channel, byteArrayDataBuilder.toByteArray());
+        BungeePluginMessage.sendPluginMessage(player, channel, bytes.toByteArray());
     }
 
     public PluginMessageBuilder write(int b) {
-        byteArrayDataBuilder.write(b);
+        bytes.write(b);
         return this;
     }
 
     public PluginMessageBuilder write(byte[] b, int off, int len) {
-        byteArrayDataBuilder.write(b, off, len);
+        bytes.write(b, off, len);
         return this;
     }
 
     public PluginMessageBuilder write(byte[] b) {
-        byteArrayDataBuilder.write(b);
+        bytes.write(b);
         return this;
     }
 
     public PluginMessageBuilder writeInt(int v) {
-        byteArrayDataBuilder.writeInt(v);
+        bytes.writeInt(v);
         return this;
     }
 
     public PluginMessageBuilder writeUTF(String str) {
-        byteArrayDataBuilder.writeUTF(str);
+        bytes.writeUTF(str);
         return this;
     }
 
     public PluginMessageBuilder writeChar(int v) {
-        byteArrayDataBuilder.writeChar(v);
+        bytes.writeChar(v);
         return this;
     }
 
     public PluginMessageBuilder writeByte(int v) {
-        byteArrayDataBuilder.writeByte(v);
+        bytes.writeByte(v);
         return this;
     }
 
     public PluginMessageBuilder writeBytes(String s) {
-        byteArrayDataBuilder.writeBytes(s);
+        bytes.writeBytes(s);
         return this;
     }
 
     public PluginMessageBuilder writeChars(String s) {
-        byteArrayDataBuilder.writeChars(s);
+        bytes.writeChars(s);
         return this;
     }
 
     public PluginMessageBuilder writeLong(long v) {
-        byteArrayDataBuilder.writeLong(v);
+        bytes.writeLong(v);
         return this;
     }
 
     public PluginMessageBuilder writeFloat(float v) {
-        byteArrayDataBuilder.writeFloat(v);
+        bytes.writeFloat(v);
         return this;
     }
 
     public PluginMessageBuilder writeDouble(double v) {
-        byteArrayDataBuilder.writeDouble(v);
+        bytes.writeDouble(v);
         return this;
     }
 
     public PluginMessageBuilder writeShort(short v) {
-        byteArrayDataBuilder.writeShort(v);
+        bytes.writeShort(v);
         return this;
     }
 
     public PluginMessageBuilder writeBoolean(boolean v) {
-        byteArrayDataBuilder.writeBoolean(v);
+        bytes.writeBoolean(v);
         return this;
     }
 }

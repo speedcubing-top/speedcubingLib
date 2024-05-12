@@ -1,24 +1,40 @@
-package top.speedcubing.lib.utils;
+package top.speedcubing.lib.utils.bytes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import top.speedcubing.lib.utils.Preconditions;
 
-// new ByteArrayDataBuilder().write...write...write....toByteArray();
-public class ByteArrayDataBuilder {
-    public final ByteArrayOutputStream byteArrayOutputSteam;
-    public final DataOutputStream dataOutputStream;
+public class ByteArrayBuffer {
+    private final OutputStream outputStream;
+    private final DataOutputStream dataOutputStream;
 
-    public ByteArrayDataBuilder() {
-        byteArrayOutputSteam = new ByteArrayOutputStream();
-        dataOutputStream = new DataOutputStream(byteArrayOutputSteam);
+    public ByteArrayBuffer() {
+        this(32);
+    }
+
+    public ByteArrayBuffer(int size) {
+        this(new ByteArrayOutputStream(size));
+    }
+
+    public ByteArrayBuffer(OutputStream outputStream) {
+        this.outputStream = outputStream;
+        dataOutputStream = new DataOutputStream(outputStream);
+    }
+
+    public OutputStream getOutputStream() {
+        return outputStream;
     }
 
     public byte[] toByteArray() {
-        return byteArrayOutputSteam.toByteArray();
+        Preconditions.checkArgument(outputStream instanceof ByteArrayOutputStream);
+
+        return ((ByteArrayOutputStream) outputStream).toByteArray();
     }
 
-    public ByteArrayDataBuilder write(int b) {
+    //default
+    public ByteArrayBuffer write(int b) {
         try {
             dataOutputStream.write(b);
         } catch (IOException e) {
@@ -27,7 +43,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder write(byte[] b, int off, int len) {
+    public ByteArrayBuffer write(byte[] b, int off, int len) {
         try {
             dataOutputStream.write(b, off, len);
         } catch (IOException e) {
@@ -36,7 +52,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder write(byte[] b) {
+    public ByteArrayBuffer write(byte[] b) {
         try {
             dataOutputStream.write(b);
         } catch (IOException e) {
@@ -45,7 +61,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeInt(int v) {
+    public ByteArrayBuffer writeInt(int v) {
         try {
             dataOutputStream.writeInt(v);
         } catch (IOException e) {
@@ -54,7 +70,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeUTF(String str) {
+    public ByteArrayBuffer writeUTF(String str) {
         try {
             dataOutputStream.writeUTF(str);
         } catch (IOException e) {
@@ -63,7 +79,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeChar(int v) {
+    public ByteArrayBuffer writeChar(int v) {
         try {
             dataOutputStream.writeChar(v);
         } catch (IOException e) {
@@ -72,7 +88,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeByte(int v) {
+    public ByteArrayBuffer writeByte(int v) {
         try {
             dataOutputStream.writeByte(v);
         } catch (IOException e) {
@@ -81,7 +97,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeBytes(String s) {
+    public ByteArrayBuffer writeBytes(String s) {
         try {
             dataOutputStream.writeBytes(s);
         } catch (IOException e) {
@@ -90,7 +106,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeChars(String s) {
+    public ByteArrayBuffer writeChars(String s) {
         try {
             dataOutputStream.writeChars(s);
         } catch (IOException e) {
@@ -99,7 +115,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeLong(long v) {
+    public ByteArrayBuffer writeLong(long v) {
         try {
             dataOutputStream.writeLong(v);
         } catch (IOException e) {
@@ -108,7 +124,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeFloat(float v) {
+    public ByteArrayBuffer writeFloat(float v) {
         try {
             dataOutputStream.writeFloat(v);
         } catch (IOException e) {
@@ -117,7 +133,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeDouble(double v) {
+    public ByteArrayBuffer writeDouble(double v) {
         try {
             dataOutputStream.writeDouble(v);
         } catch (IOException e) {
@@ -126,7 +142,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeShort(short v) {
+    public ByteArrayBuffer writeShort(short v) {
         try {
             dataOutputStream.writeShort(v);
         } catch (IOException e) {
@@ -135,7 +151,7 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    public ByteArrayDataBuilder writeBoolean(boolean v) {
+    public ByteArrayBuffer writeBoolean(boolean v) {
         try {
             dataOutputStream.writeBoolean(v);
         } catch (IOException e) {
@@ -144,13 +160,19 @@ public class ByteArrayDataBuilder {
         return this;
     }
 
-    //?
-    public ByteArrayDataBuilder writeVarInt(int i) {
+    //self implementation
+    public ByteArrayBuffer writeVarInt(int i) {
         try {
             IOUtils.writeVarInt(dataOutputStream, i);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public ByteArrayBuffer writeString(String s) {
+        writeVarInt(s.length());
+        write(s.getBytes());
         return this;
     }
 }

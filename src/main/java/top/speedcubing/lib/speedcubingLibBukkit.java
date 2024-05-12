@@ -8,7 +8,7 @@ import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.inventory.Glow;
 import top.speedcubing.lib.bukkit.inventory.SignBuilder;
 import top.speedcubing.lib.bukkit.listeners.PlayerListener;
-import top.speedcubing.lib.utils.Reflections;
+import top.speedcubing.lib.utils.ReflectionUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ public class speedcubingLibBukkit extends JavaPlugin {
         if (is1_8_8) {
             CubingLibPlayer.init();
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-            Reflections.setClassField(Enchantment.class, "acceptingNew", true);
+            ReflectionUtils.setClassField(Enchantment.class, "acceptingNew", true);
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Glow.glow = new Glow(100);
