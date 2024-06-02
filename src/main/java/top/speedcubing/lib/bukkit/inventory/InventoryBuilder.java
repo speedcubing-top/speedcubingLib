@@ -132,4 +132,60 @@ public class InventoryBuilder {
     public void delete() {
         builderSet.remove(this);
     }
+
+//    @EventHandler
+//    public void onInventoryClick(InventoryClickEvent e) {
+//        if (e.getInventory().equals(inventory)) {
+//            Boolean isSlotCancelled = isSlotClickCancelled.get(e.getSlot());
+//            e.setCancelled(isSlotCancelled != null ? isSlotCancelled : isGlobalClickCancelled);
+//            Map<ClickType, Consumer<InventoryClickEvent>> slotEvents = clickEvents.get(e.getSlot());
+//            if (slotEvents != null) {
+//                Consumer<InventoryClickEvent> event = null;
+//                switch (e.getClick()) {
+//                    case LEFT:
+//                        event = slotEvents.get(ClickType.LEFT);
+//                        break;
+//                    case RIGHT:
+//                        event = slotEvents.get(ClickType.RIGHT);
+//                        break;
+//                    case MIDDLE:
+//                        event = slotEvents.get(ClickType.MIDDLE);
+//                        break;
+//                    case SHIFT_LEFT:
+//                        event = slotEvents.get(ClickType.SHIFT_LEFT);
+//                        break;
+//                    case SHIFT_RIGHT:
+//                        event = slotEvents.get(ClickType.SHIFT_RIGHT);
+//                        break;
+//                    case WINDOW_BORDER_LEFT:
+//                        event = slotEvents.get(ClickType.WINDOW_BORDER_LEFT);
+//                        break;
+//                    case WINDOW_BORDER_RIGHT:
+//                        event = slotEvents.get(ClickType.WINDOW_BORDER_RIGHT);
+//                        break;
+//                    case DOUBLE_CLICK:
+//                        event = slotEvents.get(ClickType.DOUBLE_CLICK);
+//                        break;
+//                    case NUMBER_KEY:
+//                        event = slotEvents.get(ClickType.NUMBER_KEY);
+//                        break;
+//                    case DROP:
+//                        event = slotEvents.get(ClickType.DROP);
+//                        break;
+//                    case CONTROL_DROP:
+//                        event = slotEvents.get(ClickType.CONTROL_DROP);
+//                        break;
+//                    case CREATIVE:
+//                        event = slotEvents.get(ClickType.CREATIVE);
+//                        break;
+//                    case UNKNOWN:
+//                        event = slotEvents.get(ClickType.UNKNOWN);
+//                        break;
+//                }
+//                if (event != null) {
+//                    event.accept(e);
+//                }
+//            }
+//        }
+//    }
 }
