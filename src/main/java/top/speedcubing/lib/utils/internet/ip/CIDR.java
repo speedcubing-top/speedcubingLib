@@ -2,11 +2,11 @@ package top.speedcubing.lib.utils.internet.ip;
 
 
 /**
- CIDR c = new CIDR("10.0.0.0/24");
- c.to // [10,0,0,255]
- c.from // [10,0,0,0]
- c.contains("10.0.0.1") // true
- c.contains("0.0.0.0") // false
+ * CIDR c = new CIDR("10.0.0.0/24");
+ * c.to // [10,0,0,255]
+ * c.from // [10,0,0,0]
+ * c.contains("10.0.0.1") // true
+ * c.contains("0.0.0.0") // false
  **/
 public class CIDR {
     int[] from = new int[4];
@@ -36,5 +36,22 @@ public class CIDR {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof CIDR) {
+            CIDR c = (CIDR) other;
+            for (int i = 0; i < 4; i++) {
+                if (c.from[i] != this.from[i]) {
+                    return false;
+                }
+                if (c.to[i] != this.to[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
