@@ -62,7 +62,10 @@ public class SQLConnection {
 
     public Boolean exist(String table, String where) {
         try {
-            return select("*").from(table).where(where).executeQuery().next();
+            ResultSet r = select("*").from(table).where(where).executeQuery();
+            boolean exist = r.next();
+            r.getStatement().close();
+            return exist;
         } catch (SQLException e) {
             e.printStackTrace();
         }
