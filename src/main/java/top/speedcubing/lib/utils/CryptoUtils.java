@@ -1,9 +1,6 @@
 package top.speedcubing.lib.utils;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -16,13 +13,22 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 public class CryptoUtils {
-    public static String toSHA256(File f) throws IOException, NoSuchAlgorithmException {
-        return new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(f.toPath()))).toString(16);
+    public static String toSHA256(byte[] data) throws NoSuchAlgorithmException {
+        return new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(data)).toString(16);
+    }
+
+    public static String toSHA1(byte[] data) throws NoSuchAlgorithmException {
+        return new BigInteger(1, MessageDigest.getInstance("SHA-1").digest(data)).toString(16);
+    }
+
+    public static String toMD5(byte[] data) throws NoSuchAlgorithmException {
+        return new BigInteger(1, MessageDigest.getInstance("MD5").digest(data)).toString(16);
     }
 
     public static byte[] decryptRsa(KeyPair keyPair, byte[] bytes) throws GeneralSecurityException {
-        return decryptRsa(keyPair.getPrivate(),bytes);
+        return decryptRsa(keyPair.getPrivate(), bytes);
     }
+
     public static byte[] decryptRsa(byte[] key, byte[] bytes) throws GeneralSecurityException {
         return decryptRsa(toPrivateRSA(key), bytes);
     }
@@ -34,8 +40,9 @@ public class CryptoUtils {
     }
 
     public static byte[] encryptRSA(KeyPair keyPair, byte[] bytes) throws GeneralSecurityException {
-        return encryptRSA(keyPair.getPublic(),bytes);
+        return encryptRSA(keyPair.getPublic(), bytes);
     }
+
     public static byte[] encryptRSA(byte[] key, byte[] bytes) throws GeneralSecurityException {
         return encryptRSA(toPublicKeyRSA(key), bytes);
     }
