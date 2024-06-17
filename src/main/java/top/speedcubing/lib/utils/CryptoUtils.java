@@ -11,18 +11,19 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
+import top.speedcubing.lib.utils.bytes.DataConversion;
 
 public class CryptoUtils {
     public static String toSHA256(byte[] data) throws NoSuchAlgorithmException {
-        return new BigInteger(1, MessageDigest.getInstance("SHA-256").digest(data)).toString(16);
+        return DataConversion.byteArrayToHexString(MessageDigest.getInstance("SHA-256").digest(data));
     }
 
     public static String toSHA1(byte[] data) throws NoSuchAlgorithmException {
-        return new BigInteger(1, MessageDigest.getInstance("SHA-1").digest(data)).toString(16);
+        return DataConversion.byteArrayToHexString(MessageDigest.getInstance("SHA-1").digest(data));
     }
 
     public static String toMD5(byte[] data) throws NoSuchAlgorithmException {
-        return new BigInteger(1, MessageDigest.getInstance("MD5").digest(data)).toString(16);
+        return DataConversion.byteArrayToHexString(MessageDigest.getInstance("MD5").digest(data));
     }
 
     public static byte[] decryptRsa(KeyPair keyPair, byte[] bytes) throws GeneralSecurityException {

@@ -22,8 +22,10 @@ public class DataConversion {
         StringBuilder s = new StringBuilder(data.length * 2);
         for (byte b : data) {
             String s2 = NumberConversion.toHex(b);
-            if (s2.length() == 1)
-                s.append('0');
+            int r = 2 - s2.length();
+            while (r-- > 0) {
+                s.append("0");
+            }
             s.append(s2);
         }
         return s.toString();
