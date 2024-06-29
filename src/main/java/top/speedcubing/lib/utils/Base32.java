@@ -30,6 +30,7 @@ public class Base32 {
         if (nBitsOut % 40 != 0) {
             builder.append("=".repeat((40 - nBitsOut % 40) / 5));
         }
+
         return builder.toString();
     }
 
@@ -52,7 +53,7 @@ public class Base32 {
             nBitsIn += 5;
             buffer |= (b << (32 - nBitsIn));
             if (nBitsIn >= 8) {
-                bytes[i++] = (byte) (buffer >> 24);
+                bytes[i++] = (byte) (buffer >>> 24);
                 nBitsIn -= 8;
                 buffer <<= 8;
             }
