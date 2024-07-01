@@ -82,24 +82,20 @@ public class SQLConnection {
     }
 
     public void execute(String... sqls) {
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             for (String sql : sqls)
                 statement.addBatch(sql);
             statement.executeBatch();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void execute(Collection<String> sqls) {
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             for (String sql : sqls)
                 statement.addBatch(sql);
             statement.executeBatch();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -253,7 +249,10 @@ public class SQLConnection {
 
         public ResultSet executeQuery() {
             try {
-                return prepared ? statement.executeQuery() : connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+                if (!prepared) {
+                    prepare();
+                }
+                return statement.executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
@@ -262,10 +261,11 @@ public class SQLConnection {
 
         public void execute() {
             try {
-                if (prepared)
-                    statement.execute();
-                else
-                    connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).execute();
+                if (!prepared) {
+                    prepare();
+                }
+                statement.execute();
+                statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -390,5 +390,4 @@ public class SQLConnection {
             return null;
         }
     }
-
 }
