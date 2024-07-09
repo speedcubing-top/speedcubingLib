@@ -1,5 +1,6 @@
 package top.speedcubing.lib.bukkit.listeners;
 
+import java.util.function.Consumer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -18,8 +19,6 @@ import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
-
-import java.util.function.Consumer;
 
 public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -120,7 +119,6 @@ public class PlayerListener implements Listener {
         double zDiffTo;
         double fromDiff;
         double toDiff;
-        long t = System.currentTimeMillis();
         for (NPC npc : NPC.all) {
             if (npc.world.contains(world)) {
                 if (npc.everyoneCanSee || npc.hasListener(player)) {

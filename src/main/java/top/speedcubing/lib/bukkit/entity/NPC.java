@@ -3,6 +3,12 @@ package top.speedcubing.lib.bukkit.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.MathHelper;
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation;
@@ -36,14 +42,37 @@ import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.ReflectionUtils;
 import top.speedcubing.lib.utils.collection.Sets;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
 public class NPC {
+    public static final Set<NPC> all = new java.util.HashSet<>();
+    Set<PlayerConnection> listener = new java.util.HashSet<>();
+    public final Set<String> world = new java.util.HashSet<>();
+    Consumer<ClickEvent> event;
+    public final boolean autoSpawn;
+    public final boolean everyoneCanSee;
+    public final EntityPlayer entityPlayer;
+
+    boolean nameTagHidden;
+    boolean gravity;
+    float spawnBodyYaw;
+    ItemStack itemInHand;
+    ItemStack[] armor = new ItemStack[4];
+    public int ms = 4000;
+
+    public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
+        if (everyoneCanSee)
+            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));        this.everyoneCanSee = everyoneCanSee;
+        this.autoSpawn = autoSpawn;
+        WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
+        entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
+        if (enableOuterLayerSkin)
+            entityPlayer.getDataWatcher().watch(10, (byte) 127);
+        all.add(this);
+    }
+
+    public void delete() {
+        all.remove(this);
+    }
+
     public NPC setClickEvent(Consumer<ClickEvent> e) {
         this.event = e;
         return this;
@@ -63,7 +92,9 @@ public class NPC {
     }
 
     public NPC addListener(Collection<Player> players) {
-        players.forEach(p -> listener.add(((CraftPlayer) p).getHandle().playerConnection));
+        for (Player p : players) {
+            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+        }
         return this;
     }
 
@@ -102,40 +133,9 @@ public class NPC {
         return this;
     }
 
-    public void delete() {
-        all.remove(this);
-    }
-
     public NPC world(String... world) {
         this.world.addAll(Sets.hashSet(world));
         return this;
-    }
-
-    public static final Set<NPC> all = new java.util.HashSet<>();
-    Set<PlayerConnection> listener = new java.util.HashSet<>();
-    public final Set<String> world = new java.util.HashSet<>();
-    Consumer<ClickEvent> event;
-    public final boolean autoSpawn;
-    public final boolean everyoneCanSee;
-    public final EntityPlayer entityPlayer;
-
-    boolean nameTagHidden;
-    boolean gravity;
-    float spawnBodyYaw;
-    ItemStack itemInHand;
-    ItemStack[] armor = new ItemStack[4];
-    public int ms = 4000;
-
-    public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
-        if (everyoneCanSee)
-            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
-        this.everyoneCanSee = everyoneCanSee;
-        this.autoSpawn = autoSpawn;
-        WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
-        entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
-        if (enableOuterLayerSkin)
-            entityPlayer.getDataWatcher().watch(10, (byte) 127);
-        all.add(this);
     }
 
     public NPC spawn() {
@@ -235,8 +235,8 @@ public class NPC {
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
         Set<PlayerConnection> copy = new java.util.HashSet<>(listener);
         speedcubingLibBukkit.scheduledThreadPool.schedule(() ->
-            copy.forEach(a -> a.sendPacket(packet))
-        , ms, TimeUnit.MILLISECONDS);
+                        copy.forEach(a -> a.sendPacket(packet))
+                , ms, TimeUnit.MILLISECONDS);
         return this;
     }
 
