@@ -59,8 +59,7 @@ public class NPC {
     public int ms = 4000;
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
-        if (everyoneCanSee)
-            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));        this.everyoneCanSee = everyoneCanSee;
+        this.everyoneCanSee = everyoneCanSee;
         this.autoSpawn = autoSpawn;
         WorldServer world = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
         entityPlayer = new EntityPlayer(((CraftServer) Bukkit.getServer()).getServer(), world, new GameProfile(uuid == null ? UUID.randomUUID() : uuid, name), new PlayerInteractManager(world));
@@ -133,8 +132,30 @@ public class NPC {
         return this;
     }
 
+
     public NPC world(String... world) {
+        this.world.clear();
         this.world.addAll(Sets.hashSet(world));
+        if (everyoneCanSee) {
+            this.listener.clear();
+            for (String s : world) {
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+            }
+        }
+        return this;
+    }
+
+    public NPC changeWorld(String... world) {
+        this.world.clear();
+        this.world.addAll(Sets.hashSet(world));
+        if (everyoneCanSee) {
+            despawn();
+            this.listener.clear();
+            for (String s : world) {
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+            }
+            spawn();
+        }
         return this;
     }
 
