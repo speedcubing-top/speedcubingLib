@@ -32,8 +32,6 @@ public class Hologram {
     public Vector followOffset;
 
     public Hologram(String name, boolean everyoneCanSee, boolean autoSpawn) {
-        if (everyoneCanSee)
-            Bukkit.getOnlinePlayers().forEach(a -> listener.add(((CraftPlayer) a).getHandle().playerConnection));
         this.everyoneCanSee = everyoneCanSee;
         this.autoSpawn = autoSpawn;
         armorStand = new EntityArmorStand(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
@@ -111,7 +109,28 @@ public class Hologram {
     }
 
     public Hologram world(String... world) {
+        this.world.clear();
         this.world.addAll(Sets.hashSet(world));
+        if (everyoneCanSee) {
+            this.listener.clear();
+            for (String s : world) {
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+            }
+        }
+        return this;
+    }
+
+    public Hologram changeWorld(String... world) {
+        this.world.clear();
+        this.world.addAll(Sets.hashSet(world));
+        if (everyoneCanSee) {
+            despawn();
+            this.listener.clear();
+            for (String s : world) {
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+            }
+            spawn();
+        }
         return this;
     }
 
@@ -126,12 +145,14 @@ public class Hologram {
     }
 
     public Hologram spawn() {
+        System.out.println("spawn " + listener);
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving(armorStand);
         listener.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
     public Hologram despawn() {
+        System.out.println("despawn " + listener);
         PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(armorStand.getId());
         listener.forEach(a -> a.sendPacket(packet));
         return this;
