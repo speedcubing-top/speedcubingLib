@@ -107,6 +107,6 @@ public class MojangAPI {
         ProfileSkin skin = getSkinByUUID(uuid);
         if (skin == null)
             return null;
-        return skin.getTexture();
+        return skin.getSkin().getTexture();
     }
 }

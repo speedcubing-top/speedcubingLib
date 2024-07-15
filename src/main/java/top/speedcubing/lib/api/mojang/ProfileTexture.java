@@ -5,8 +5,8 @@ import com.google.gson.JsonParser;
 import java.util.Base64;
 
 public class ProfileTexture {
-    final long timeStamp;
-    final String url;
+    private final long timeStamp;
+    private final String url;
 
     public ProfileTexture(String value) {
         String decoded = new String(Base64.getDecoder().decode(value));
