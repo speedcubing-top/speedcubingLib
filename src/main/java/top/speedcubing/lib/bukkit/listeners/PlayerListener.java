@@ -164,7 +164,6 @@ public class PlayerListener implements Listener {
     }
 
     private void addHologram(Player player, Hologram hologram) {
-        System.out.println("addHologram " + player.getName());
         if (hologram.everyoneCanSee)
             hologram.addListener(player);
         if (hologram.autoSpawn && (hologram.everyoneCanSee || hologram.hasListener(player)))
