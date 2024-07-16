@@ -151,7 +151,6 @@ public class Hologram {
     }
 
     public Hologram despawn() {
-        System.out.println("despawn " + listener);
         PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(armorStand.getId());
         listener.forEach(a -> a.sendPacket(packet));
         return this;
