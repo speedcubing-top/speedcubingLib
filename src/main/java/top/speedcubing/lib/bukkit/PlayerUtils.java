@@ -1,9 +1,12 @@
 package top.speedcubing.lib.bukkit;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.UUID;
+
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
@@ -17,6 +20,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutRespawn;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_8_R3.PlayerInteractManager;
 import net.minecraft.server.v1_8_R3.Vec3D;
 import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
@@ -26,6 +30,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.packetwrapper.OutPlayerListHeaderFooter;
 import top.speedcubing.lib.speedcubingLibBukkit;
 
@@ -57,8 +62,11 @@ public class PlayerUtils {
             for (int i = 0; i < 100000; i++) {
                 try {
                     EntityEnderDragon entityEnderDragon = new EntityEnderDragon(((CraftWorld) loc.getWorld()).getHandle());
+                    EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) loc.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) loc.getWorld()).getHandle(), new GameProfile(UUID.randomUUID(), ""), new PlayerInteractManager(((CraftWorld) loc.getWorld()).getHandle()));
                     PacketPlayOutSpawnEntityLiving living = new PacketPlayOutSpawnEntityLiving(entityEnderDragon);
+                    PacketPlayOutSpawnEntityLiving living1 = new PacketPlayOutSpawnEntityLiving(entityPlayer);
                     c.sendPacket(living);
+                    c.sendPacket(living1);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
