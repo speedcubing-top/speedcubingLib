@@ -20,8 +20,9 @@ public class PacketPlayOutHandler extends MessageToMessageEncoder<Packet<?>> {
         if (packet == null)
             return;
         try {
-            if (!((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled())
-                arg.add(packet);
+            if (((PlayOutEvent) new PlayOutEvent(player, packet).call()).isCancelled())
+                return;
+            arg.add(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }

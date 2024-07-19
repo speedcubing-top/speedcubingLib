@@ -21,12 +21,7 @@ public class DataConversion {
     public static String byteArrayToHexString(byte[] data) {
         StringBuilder s = new StringBuilder(data.length * 2);
         for (byte b : data) {
-            String s2 = NumberConversion.toHex(b);
-            int r = 2 - s2.length();
-            while (r-- > 0) {
-                s.append("0");
-            }
-            s.append(s2);
+            s.append(NumberConversion.toSizedHex(b,2));
         }
         return s.toString();
     }
