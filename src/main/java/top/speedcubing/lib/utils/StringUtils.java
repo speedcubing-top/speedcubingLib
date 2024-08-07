@@ -52,4 +52,7 @@ public class StringUtils {
             return false;
         }
     }
+    public static String setChar(String s, int index, char value) {
+        return s.substring(0,index) + value + s.substring(index+1);
+    }
 }

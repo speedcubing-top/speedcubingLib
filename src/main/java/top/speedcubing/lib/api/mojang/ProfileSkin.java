@@ -1,24 +1,15 @@
 package top.speedcubing.lib.api.mojang;
 
 public class ProfileSkin extends Profile {
-    final String value;
-    final String signature;
+    private final Skin skin;
 
     public ProfileSkin(String name, String uuidString, String value, String signature) {
         super(name, uuidString);
-        this.value = value;
-        this.signature = signature;
+        this.skin = new Skin(value, signature);
     }
 
-    public String getValue() {
-        return value;
+    public Skin getSkin() {
+        return this.skin;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public ProfileTexture getTexture() {
-        return new ProfileTexture(value);
-    }
 }

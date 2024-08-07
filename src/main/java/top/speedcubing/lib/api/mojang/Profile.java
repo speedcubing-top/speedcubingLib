@@ -1,11 +1,11 @@
 package top.speedcubing.lib.api.mojang;
 
 public class Profile {
-    final long time;
-    final String name;
-    final String uuid;
+    private final long time;
+    private final String name;
+    private final String uuid;
 
-    public  Profile(String name, String uuid) {
+    public Profile(String name, String uuid) {
         this.time = System.currentTimeMillis();
         this.name = name;
         this.uuid = uuid;

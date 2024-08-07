@@ -268,8 +268,8 @@ public class NPC {
 
     public NPC setSkin(UUID uuid) {
         try {
-            ProfileSkin skin = MojangAPI.getSkinByUUID(uuid);
-            return setSkin(skin.getValue(), skin.getSignature());
+            ProfileSkin profileSkin = MojangAPI.getSkinByUUID(uuid);
+            return setSkin(profileSkin.getSkin().getValue(), profileSkin.getSkin().getSignature());
         } catch (Exception e) {
             return this;
         }
@@ -277,8 +277,8 @@ public class NPC {
 
     public NPC setSkin(String name) {
         try {
-            ProfileSkin skin = MojangAPI.getSkinByName(name);
-            return setSkin(skin.getValue(), skin.getSignature());
+            ProfileSkin profileSkin = MojangAPI.getSkinByName(name);
+            return setSkin(profileSkin.getSkin().getValue(), profileSkin.getSkin().getSignature());
         } catch (Exception e) {
             return this;
         }

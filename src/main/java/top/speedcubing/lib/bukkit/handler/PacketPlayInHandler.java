@@ -31,10 +31,9 @@ public class PacketPlayInHandler extends ChannelDuplexHandler {
         if (packet == null)
             return;
 
-        if (((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled())
-            return;
-
         try {
+            if (((PlayInEvent) new PlayInEvent(player, (Packet<?>) packet).call()).isCancelled())
+                return;
             super.channelRead(channel, packet);
         } catch (Exception e) {
             e.printStackTrace();
