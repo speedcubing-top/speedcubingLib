@@ -21,7 +21,7 @@ import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
 import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
 
 public class PlayerListener implements Listener {
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void InventoryClickEvent(InventoryClickEvent e) {
         int slot = e.getRawSlot();
         if (slot != -999) {
@@ -61,7 +61,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerChangedWorldEvent(PlayerChangedWorldEvent e) {
-        System.out.println("change");
         Player player = e.getPlayer();
         String from = e.getFrom().getName();
         String to = player.getWorld().getName();
@@ -107,7 +106,7 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerMoveEvent(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Location to = e.getTo();
@@ -164,7 +163,6 @@ public class PlayerListener implements Listener {
     }
 
     private void addHologram(Player player, Hologram hologram) {
-        System.out.println("addHologram " + player.getName());
         if (hologram.everyoneCanSee)
             hologram.addListener(player);
         if (hologram.autoSpawn && (hologram.everyoneCanSee || hologram.hasListener(player)))
