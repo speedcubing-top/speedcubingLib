@@ -341,6 +341,18 @@ public class SQLConnection {
             return null;
         }
 
+        public byte[] getBytes() {
+            try {
+                ResultSet resultSet = executeQuery();
+                byte[] b = resultSet.next() ? resultSet.getBytes(1) : null;
+                resultSet.getStatement().close();
+                return b;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         public String getString() {
             try {
                 ResultSet resultSet = executeQuery();
