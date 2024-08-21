@@ -44,18 +44,18 @@ import top.speedcubing.lib.utils.collection.Sets;
 
 public class NPC {
     public static final Set<NPC> all = new java.util.HashSet<>();
-    Set<PlayerConnection> listener = new java.util.HashSet<>();
+    private Set<PlayerConnection> tracker = new java.util.HashSet<>();
     public final Set<String> world = new java.util.HashSet<>();
-    Consumer<ClickEvent> event;
+    private Consumer<ClickEvent> event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityPlayer entityPlayer;
 
-    boolean nameTagHidden;
-    boolean gravity;
-    float spawnBodyYaw;
-    ItemStack itemInHand;
-    ItemStack[] armor = new ItemStack[4];
+    private boolean nameTagHidden;
+    private boolean gravity;
+    private float spawnBodyYaw;
+    private ItemStack itemInHand;
+    private final ItemStack[] armor = new ItemStack[4];
     public int ms = 4000;
 
     public NPC(String name, UUID uuid, boolean enableOuterLayerSkin, boolean everyoneCanSee, boolean autoSpawn) {
@@ -85,49 +85,49 @@ public class NPC {
 
     public NPC addListener(Player... players) {
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public NPC addListener(Collection<Player> players) {
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public NPC setListener(Player... players) {
-        temp = listener;
-        listener = new java.util.HashSet<>();
+        temp = tracker;
+        tracker = new java.util.HashSet<>();
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public NPC setListener(Collection<Player> players) {
-        temp = listener;
-        listener = new java.util.HashSet<>();
+        temp = tracker;
+        tracker = new java.util.HashSet<>();
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public boolean hasListener(Player player) {
-        return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
+        return tracker.contains(((CraftPlayer) player).getHandle().playerConnection);
     }
 
     public NPC removeListener(Player... players) {
         for (Player p : players) {
-            listener.remove(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.remove(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public NPC undoSetListener() {
-        listener = temp;
+        tracker = temp;
         temp = null;
         return this;
     }
@@ -137,9 +137,9 @@ public class NPC {
         this.world.clear();
         this.world.addAll(Sets.hashSet(world));
         if (everyoneCanSee) {
-            this.listener.clear();
+            this.tracker.clear();
             for (String s : world) {
-                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.tracker.add(((CraftPlayer) a).getHandle().playerConnection));
             }
         }
         return this;
@@ -150,9 +150,9 @@ public class NPC {
         this.world.addAll(Sets.hashSet(world));
         if (everyoneCanSee) {
             despawn();
-            this.listener.clear();
+            this.tracker.clear();
             for (String s : world) {
-                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.tracker.add(((CraftPlayer) a).getHandle().playerConnection));
             }
             spawn();
         }
@@ -166,7 +166,7 @@ public class NPC {
         PacketPlayOutNamedEntitySpawn p2 = new PacketPlayOutNamedEntitySpawn(entityPlayer);
         entityPlayer.yaw = yaw;
         PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256 / 360)));
-        listener.forEach(a -> {
+        tracker.forEach(a -> {
                     a.sendPacket(p1);
                     a.sendPacket(p2);
                     a.sendPacket(p3);
@@ -191,7 +191,7 @@ public class NPC {
         PacketPlayOutAnimation packet = new PacketPlayOutAnimation();
         ReflectionUtils.setField(packet, "a", entityPlayer.getId());
         ReflectionUtils.setField(packet, "b", (byte) animation);
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
@@ -200,7 +200,7 @@ public class NPC {
         PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus();
         ReflectionUtils.setField(packet, "a", entityPlayer.getId());
         ReflectionUtils.setField(packet, "b", (byte) status);
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
@@ -217,21 +217,21 @@ public class NPC {
     public NPC setSneaking(boolean sneaking) {
         entityPlayer.setSneaking(sneaking);
         PacketPlayOutEntityMetadata metadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(), entityPlayer.getDataWatcher(), true);
-        listener.forEach(a -> a.sendPacket(metadata));
+        tracker.forEach(a -> a.sendPacket(metadata));
         return this;
     }
 
     public NPC setItemInHand(ItemStack itemInHand) {
         this.itemInHand = itemInHand == null || itemInHand.getType().equals(Material.AIR) ? null : itemInHand;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), 0, CraftItemStack.asNMSCopy(itemInHand));
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
     public NPC setArmor(int i, ItemStack armor) {
         this.armor[i - 1] = armor;
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityPlayer.getId(), i, CraftItemStack.asNMSCopy(armor));
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
@@ -240,7 +240,7 @@ public class NPC {
         PacketPlayOutScoreboardTeam p1 = new OutScoreboardTeam().a("~").e("never").h(1).packet;
         PacketPlayOutScoreboardTeam p2 = new OutScoreboardTeam().a("~").e("never").packet;
         PacketPlayOutScoreboardTeam p3 = new OutScoreboardTeam().a("~").g(Collections.singletonList(entityPlayer.getName())).h(3).packet;
-        listener.forEach(a -> {
+        tracker.forEach(a -> {
             a.sendPacket(p1);
             a.sendPacket(p2);
             a.sendPacket(p3);
@@ -254,7 +254,7 @@ public class NPC {
         if (ms == -1)
             return this;
         PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
-        Set<PlayerConnection> copy = new java.util.HashSet<>(listener);
+        Set<PlayerConnection> copy = new java.util.HashSet<>(tracker);
         speedcubingLibBukkit.scheduledThreadPool.schedule(() ->
                         copy.forEach(a -> a.sendPacket(packet))
                 , ms, TimeUnit.MILLISECONDS);
@@ -296,7 +296,7 @@ public class NPC {
 
     public NPC despawn() {
         PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(entityPlayer.getId());
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
@@ -304,7 +304,7 @@ public class NPC {
         PacketPlayOutEntityTeleport p1 = new PacketPlayOutEntityTeleport(entityPlayer.getId(), MathHelper.floor(entityPlayer.locX * 32), MathHelper.floor(entityPlayer.locY * 32), MathHelper.floor(entityPlayer.locZ * 32), (byte) ((int) (entityPlayer.yaw * 256 / 360)), (byte) ((int) (entityPlayer.pitch * 256 / 360)), true);
         PacketPlayOutEntity.PacketPlayOutEntityLook p2 = new PacketPlayOutEntity.PacketPlayOutEntityLook(entityPlayer.getId(), (byte) ((int) (entityPlayer.yaw * 256F / 360F)), (byte) ((int) (entityPlayer.pitch * 256F / 360F)), true);
         PacketPlayOutEntityHeadRotation p3 = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((int) (entityPlayer.yaw * 256F / 360F)));
-        listener.forEach(a -> {
+        tracker.forEach(a -> {
                     a.sendPacket(p1);
                     a.sendPacket(p2);
                     a.sendPacket(p3);

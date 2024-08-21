@@ -22,9 +22,9 @@ import top.speedcubing.lib.utils.collection.Sets;
 public class Hologram {
 
     public static final Set<Hologram> all = new HashSet<>();
-    public Set<PlayerConnection> listener = new HashSet<>();
+    public Set<PlayerConnection> tracker = new HashSet<>();
     public final Set<String> world = new HashSet<>();
-    Consumer<ClickEvent> event;
+    private Consumer<ClickEvent> event;
     public final boolean autoSpawn;
     public final boolean everyoneCanSee;
     public final EntityArmorStand armorStand;
@@ -61,49 +61,49 @@ public class Hologram {
 
     public Hologram addListener(Player... players) {
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public Hologram addListener(Collection<Player> players) {
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public Hologram setListener(Player... players) {
-        temp = listener;
-        listener = new HashSet<>();
+        temp = tracker;
+        tracker = new HashSet<>();
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public Hologram setListener(Collection<Player> players) {
-        temp = listener;
-        listener = new HashSet<>();
+        temp = tracker;
+        tracker = new HashSet<>();
         for (Player p : players) {
-            listener.add(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.add(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public boolean hasListener(Player player) {
-        return listener.contains(((CraftPlayer) player).getHandle().playerConnection);
+        return tracker.contains(((CraftPlayer) player).getHandle().playerConnection);
     }
 
     public Hologram removeListener(Player... players) {
         for (Player p : players) {
-            listener.remove(((CraftPlayer) p).getHandle().playerConnection);
+            tracker.remove(((CraftPlayer) p).getHandle().playerConnection);
         }
         return this;
     }
 
     public Hologram undoSetListener() {
-        listener = temp;
+        tracker = temp;
         temp = null;
         return this;
     }
@@ -112,9 +112,9 @@ public class Hologram {
         this.world.clear();
         this.world.addAll(Sets.hashSet(world));
         if (everyoneCanSee) {
-            this.listener.clear();
+            this.tracker.clear();
             for (String s : world) {
-                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.tracker.add(((CraftPlayer) a).getHandle().playerConnection));
             }
         }
         return this;
@@ -125,9 +125,9 @@ public class Hologram {
         this.world.addAll(Sets.hashSet(world));
         if (everyoneCanSee) {
             despawn();
-            this.listener.clear();
+            this.tracker.clear();
             for (String s : world) {
-                Bukkit.getWorld(s).getPlayers().forEach(a -> this.listener.add(((CraftPlayer) a).getHandle().playerConnection));
+                Bukkit.getWorld(s).getPlayers().forEach(a -> this.tracker.add(((CraftPlayer) a).getHandle().playerConnection));
             }
             spawn();
         }
@@ -146,20 +146,20 @@ public class Hologram {
 
     public Hologram spawn() {
         PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving(armorStand);
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
     public Hologram despawn() {
         PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(armorStand.getId());
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 
     public Hologram setName(String name) {
         armorStand.setCustomName(name);
         PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
-        listener.forEach(a -> a.sendPacket(packet));
+        tracker.forEach(a -> a.sendPacket(packet));
         return this;
     }
 

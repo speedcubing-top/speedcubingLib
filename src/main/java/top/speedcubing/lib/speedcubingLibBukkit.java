@@ -45,7 +45,7 @@ public class speedcubingLibBukkit extends JavaPlugin {
                     for (Hologram h : Hologram.all) {
                         if (h.followEntity != null) {
                             h.setLocation(h.followEntity.getLocation().add(h.followOffset));
-                            h.listener.forEach(p -> p.sendPacket(new PacketPlayOutEntityTeleport(h.armorStand)));
+                            h.tracker.forEach(p -> p.sendPacket(new PacketPlayOutEntityTeleport(h.armorStand)));
                         }
                     }
 
