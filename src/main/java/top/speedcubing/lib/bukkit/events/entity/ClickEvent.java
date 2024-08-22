@@ -21,4 +21,10 @@ public class ClickEvent {
         this.player = player;
         this.action = action;
     }
+    public boolean isLeftClick() {
+        return action == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK;
+    }
+    public boolean isRightClick() {
+        return action == PacketPlayInUseEntity.EnumEntityUseAction.INTERACT;
+    }
 }
