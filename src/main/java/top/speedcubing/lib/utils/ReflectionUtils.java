@@ -1,6 +1,8 @@
 package top.speedcubing.lib.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ReflectionUtils {
 
@@ -43,6 +45,26 @@ public class ReflectionUtils {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void invoke(Object obj, String method, Object... args) {
+        try {
+            Method m = obj.getClass().getDeclaredMethod(method);
+            m.setAccessible(true);
+            m.invoke(obj, args);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void invokeStatic(Class<?> clazz, String method, Object... args) {
+        try {
+            Method m = clazz.getDeclaredMethod(method);
+            m.setAccessible(true);
+            m.invoke(null, args);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 }
