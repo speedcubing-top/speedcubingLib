@@ -81,6 +81,19 @@ public class SQLConnection {
         return null;
     }
 
+    public SQLResult executeResult(String sql) {
+        return new SQLResult(executeQuery(sql));
+    }
+
+    public void execute(String sql) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void execute(String... sqls) {
         try (Statement statement = connection.createStatement()) {
             for (String sql : sqls)
@@ -245,6 +258,18 @@ public class SQLConnection {
                 e.printStackTrace();
             }
             return this;
+        }
+
+        public SQLResult executeResult() {
+            try {
+                if (!prepared) {
+                    prepare();
+                }
+                return new SQLResult(statement.executeQuery());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         public ResultSet executeQuery() {
