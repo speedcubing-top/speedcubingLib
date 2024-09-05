@@ -7,7 +7,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class TextBuilder {
+public class ComponentText {
     private final StringBuilder serial = new StringBuilder();
     private final StringBuilder plainText = new StringBuilder();
     private final StringBuilder colorText = new StringBuilder();
@@ -32,27 +32,27 @@ public class TextBuilder {
         return new VeloBuilder(serialize()).get();
     }
 
-    public TextBuilder str(String s) {
+    public ComponentText str(String s) {
         append(s);
         serial.append((char) 0);
         return this;
     }
 
-    public TextBuilder click(String s, TextClickEvent c) {
+    public ComponentText click(String s, TextClickEvent c) {
         append(s);
         serial.append(c.b).append(c.getString());
         serial.append((char) 1);
         return this;
     }
 
-    public TextBuilder hover(String s, TextHoverEvent h) {
+    public ComponentText hover(String s, TextHoverEvent h) {
         append(s);
         serial.append(h.b).append(h.getString());
         serial.append((char) 2);
         return this;
     }
 
-    public TextBuilder both(String s, TextClickEvent c, TextHoverEvent h) {
+    public ComponentText both(String s, TextClickEvent c, TextHoverEvent h) {
         append(s);
         serial.append(c.b).append(c.getString()).append(h.b).append(h.getString());
         serial.append((char) 3);
@@ -65,8 +65,8 @@ public class TextBuilder {
         plainText.append(MinecraftTextUtils.removeColorCode(s));
     }
 
-    public static TextBuilder unSerialize(String serial) {
-        TextBuilder builder = new TextBuilder();
+    public static ComponentText unSerialize(String serial) {
+        ComponentText builder = new ComponentText();
 
         char lastclick = (char) -1;
         char lasthover = (char) -1;
@@ -135,7 +135,7 @@ class BungeeText {
     private net.md_5.bungee.api.chat.HoverEvent a(TextHoverEvent h) {
         switch (h.b) {
             case 7:
-                return new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextBuilder().str(h.getString()).toBungee()});
+                return new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new ComponentText().str(h.getString()).toBungee()});
         }
         return null;
     }
@@ -242,7 +242,7 @@ class VeloBuilder {
     private net.kyori.adventure.text.event.HoverEvent<?> a(TextHoverEvent h) {
         switch (h.b) {
             case 7:
-                return net.kyori.adventure.text.event.HoverEvent.showText(new TextBuilder().str(h.getString()).toVelo());
+                return net.kyori.adventure.text.event.HoverEvent.showText(new ComponentText().str(h.getString()).toVelo());
         }
         return null;
     }

@@ -1,5 +1,7 @@
 package top.speedcubing.lib.bukkit.listeners;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
@@ -24,23 +26,25 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void InventoryClickEvent(InventoryClickEvent e) {
         int slot = e.getRawSlot();
-        if (slot != -999) {
-            Consumer<ClickInventoryEvent> inventoryEvent;
-            for (InventoryBuilder b : InventoryBuilder.builderSet) {
-                if (b.holder == e.getInventory().getHolder()) {
-                    inventoryEvent = b.allClickEvent;
-                    if (inventoryEvent != null)
-                        inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
+        if (slot == -999) {
+            return;
+        }
 
-                    inventoryEvent = b.clickInventoryEventMap.get(slot);
+        Consumer<ClickInventoryEvent> inventoryEvent;
+        for (InventoryBuilder b : InventoryBuilder.inventoryMap.keySet()) {
+            if (b.holder == e.getInventory().getHolder()) {
+                inventoryEvent = b.allClickEvent;
+                if (inventoryEvent != null)
+                    inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
 
-                    if (inventoryEvent != null)
-                        inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
+                inventoryEvent = b.clickInventoryEventMap.get(slot);
 
-                    if (!b.clickable[slot])
-                        e.setCancelled(true);
-                    break;
-                }
+                if (inventoryEvent != null)
+                    inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
+
+                if (!b.clickable[slot])
+                    e.setCancelled(true);
+                break;
             }
         }
     }
@@ -48,7 +52,7 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void InventoryCloseEvent(InventoryCloseEvent e) {
         InventoryBuilder close = null;
-        for (InventoryBuilder b : InventoryBuilder.builderSet) {
+        for (InventoryBuilder b : InventoryBuilder.inventoryMap.keySet()) {
             if (b.holder == e.getInventory().getHolder()) {
                 if (b.deleteOnClose)
                     close = b;
@@ -64,12 +68,14 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         String from = e.getFrom().getName();
         String to = player.getWorld().getName();
+
         for (NPC npc : NPC.all) {
             if (npc.world.contains(from))
                 npc.removeListener(player);
             else if (npc.world.contains(to))
                 addNPC(player, npc);
         }
+
         for (Hologram hologram : Hologram.all) {
             if (hologram.world.contains(from))
                 hologram.removeListener(player);
@@ -84,6 +90,7 @@ public class PlayerListener implements Listener {
         CubingLibPlayer.user.remove(player);
         NPC.all.forEach(a -> a.removeListener(player));
         Hologram.all.forEach(a -> a.removeListener(player));
+        InventoryBuilder.inventoryMap.entrySet().removeIf(entry -> entry.getValue() == player);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
