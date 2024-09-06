@@ -1,6 +1,5 @@
 package top.speedcubing.lib.bukkit.listeners;
 
-import java.util.function.Consumer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -17,8 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
-import top.speedcubing.lib.bukkit.events.inventory.ClickInventoryEvent;
-import top.speedcubing.lib.bukkit.inventory.InventoryBuilder;
+import top.speedcubing.lib.bukkit.inventory.InventoryListener;
 
 public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
@@ -28,36 +26,12 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        Consumer<ClickInventoryEvent> inventoryEvent;
-        for (InventoryBuilder b : InventoryBuilder.inventoryMap.keySet()) {
-            if (b.holder == e.getInventory().getHolder()) {
-                inventoryEvent = b.allClickEvent;
-                if (inventoryEvent != null)
-                    inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
-
-                inventoryEvent = b.clickInventoryEventMap.get(slot);
-
-                if (inventoryEvent != null)
-                    inventoryEvent.accept(new ClickInventoryEvent((Player) e.getWhoClicked(), e));
-
-                if (!b.clickable[slot])
-                    e.setCancelled(true);
-                break;
-            }
-        }
+        InventoryListener.inventoryClickEvent(e);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void InventoryCloseEvent(InventoryCloseEvent e) {
-        InventoryBuilder close = null;
-        for (InventoryBuilder b : InventoryBuilder.inventoryMap.keySet()) {
-            if (b.holder == e.getInventory().getHolder()) {
-                if (b.getPlayer() != null) {
-                    b.delete();
-                    break;
-                }
-            }
-        }
+        InventoryListener.inventoryCloseEvent(e);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -87,7 +61,7 @@ public class PlayerListener implements Listener {
         CubingLibPlayer.user.remove(player);
         NPC.all.forEach(a -> a.removeListener(player));
         Hologram.all.forEach(a -> a.removeListener(player));
-        InventoryBuilder.inventoryMap.entrySet().removeIf(entry -> entry.getValue() == player);
+        InventoryListener.playerQuitEvent(e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
