@@ -24,7 +24,9 @@ public class SideBar implements Listener {
     public static Collection<SideBar> getSidebars() {
         Set<SideBar> s = new HashSet<>();
         for (CubingLibPlayer p : CubingLibPlayer.user.values()) {
-            s.add(p.getSideBar());
+            if (p.getSideBar() != null) {
+                s.add(p.getSideBar());
+            }
         }
         return s;
     }
