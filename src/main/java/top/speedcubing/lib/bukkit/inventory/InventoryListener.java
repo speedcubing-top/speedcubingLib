@@ -21,7 +21,7 @@ public class InventoryListener {
 
         Consumer<ClickInventoryEvent> clickEvent;
         for (InventoryBuilder b : InventoryListener.inventoryMap.keySet()) {
-            if (b.getInventory() == e.getClickedInventory()) {
+            if (b.getInventory().hashCode() != e.getClickedInventory().hashCode()) {
                 continue;
             }
 
@@ -44,11 +44,13 @@ public class InventoryListener {
 
     public static void inventoryCloseEvent(InventoryCloseEvent e) {
         for (InventoryBuilder b : InventoryListener.inventoryMap.keySet()) {
-            if (b.getInventory() == e.getInventory()) {
+            if (b.getInventory().hashCode() != e.getInventory().hashCode()) {
+                continue;
+            }
+            if (b.closeInventoryEvent != null)
                 b.closeInventoryEvent.accept(new CloseInventoryEvent((Player) e.getPlayer(), e, b));
-                if (b.isTempInventory()) {
-                    b.delete();
-                }
+            if (b.isTempInventory()) {
+                b.delete();
             }
         }
     }
