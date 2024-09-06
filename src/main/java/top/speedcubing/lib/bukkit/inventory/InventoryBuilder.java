@@ -18,7 +18,6 @@ public class InventoryBuilder {
 
     public final Map<Integer, Consumer<ClickInventoryEvent>> clickInventoryEventMap = new HashMap<>();
     public final boolean[] clickable;
-    public boolean deleteOnClose;
     public Consumer<ClickInventoryEvent> allClickEvent;
     public Consumer<CloseInventoryEvent> closeInventoryEvent;
     public final InventoryHolder holder = new InventoryHolder() {
@@ -49,16 +48,16 @@ public class InventoryBuilder {
         return inventory;
     }
 
+    //delete if player != null on close
+    public Player getPlayer() {
+        return player;
+    }
+
     public void open() {
         if (player == null) {
             throw new IllegalStateException();
         }
         player.openInventory(inventory);
-    }
-
-    public InventoryBuilder deleteOnClose(boolean flag) {
-        deleteOnClose = flag;
-        return this;
     }
 
     public InventoryBuilder setCloseInventory(Consumer<CloseInventoryEvent> e) {

@@ -1,7 +1,5 @@
 package top.speedcubing.lib.bukkit.listeners;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
@@ -54,13 +52,12 @@ public class PlayerListener implements Listener {
         InventoryBuilder close = null;
         for (InventoryBuilder b : InventoryBuilder.inventoryMap.keySet()) {
             if (b.holder == e.getInventory().getHolder()) {
-                if (b.deleteOnClose)
-                    close = b;
-                break;
+                if (b.getPlayer() != null) {
+                    b.delete();
+                    break;
+                }
             }
         }
-        if (close != null)
-            close.delete();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
