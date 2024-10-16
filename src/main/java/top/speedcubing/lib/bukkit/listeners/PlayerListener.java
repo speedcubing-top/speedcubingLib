@@ -22,10 +22,9 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void InventoryClickEvent(InventoryClickEvent e) {
         int slot = e.getRawSlot();
-        if (slot == -999) {
+        if (slot == -999 || e.getClickedInventory() == null) {
             return;
         }
-
         InventoryListener.inventoryClickEvent(e);
     }
 
