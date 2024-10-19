@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -51,6 +53,25 @@ public class ItemBuilder {
     public ItemBuilder name(String displayName) {
         meta.setDisplayName(displayName);
         return this;
+    }
+
+    public ItemBuilder leatherColor(int rgb) {
+        return leatherColor(Color.fromRGB(rgb));
+    }
+
+    public ItemBuilder leatherColor(int r, int g, int b) {
+        return leatherColor(Color.fromRGB(r, g, b));
+    }
+
+    public ItemBuilder leatherColor(Color color) {
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) meta;
+        leatherArmorMeta.setColor(color);
+        return this;
+    }
+
+    public Color getLeatherColor(Color color) {
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) meta;
+        return leatherArmorMeta.getColor();
     }
 
     public ItemBuilder owner(String name) {
