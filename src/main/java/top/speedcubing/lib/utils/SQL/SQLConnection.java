@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,12 +24,24 @@ public class SQLConnection {
         }
     }
 
-    public SQLPrepare select(String field) {
-        return new SQLPrepare(new SQLBuilder().select(field));
+    public void startTransaction() {
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public SQLPrepare delete(String table) {
-        return new SQLPrepare(new SQLBuilder().delete(table));
+    public void commit() {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public SQLPrepare select(String field) {
+        return new SQLPrepare(new SQLBuilder().select(field));
     }
 
     public SQLPrepare insert(String table, String field) {
@@ -39,25 +52,28 @@ public class SQLConnection {
         return new SQLPrepare(new SQLBuilder().update(table));
     }
 
-
-    public SQLPrepare prepare(String sql) {
-        return new SQLPrepare(new SQLBuilder().append(sql));
+    public SQLPrepare delete(String table) {
+        return new SQLPrepare(new SQLBuilder().delete(table));
     }
 
     public ResultSet select(String table, String field, String where) {
         return executeQuery("SELECT " + field + " FROM " + table + " WHERE " + where);
     }
 
-    public void delete(String table, String where) {
-        execute("DELETE FROM `" + table + "` WHERE " + where);
+    public int insert(String table, String field, String value) {
+        return executeUpdate("INSERT INTO `" + table + "` (" + field + ") VALUES (" + value + ")");
     }
 
-    public void update(String table, String field, String where) {
-        execute("UPDATE `" + table + "` SET " + field + " WHERE " + where);
+    public int update(String table, String field, String where) {
+        return executeUpdate("UPDATE `" + table + "` SET " + field + " WHERE " + where);
     }
 
-    public void insert(String table, String field, String value) {
-        execute("INSERT INTO `" + table + "` (" + field + ") VALUES (" + value + ")");
+    public int delete(String table, String where) {
+        return executeUpdate("DELETE FROM `" + table + "` WHERE " + where);
+    }
+
+    public SQLPrepare prepare(String sql) {
+        return new SQLPrepare(new SQLBuilder().append(sql));
     }
 
     public Boolean exist(String table, String where) {
@@ -68,21 +84,8 @@ public class SQLConnection {
             return exist;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
-    }
-
-    public ResultSet executeQuery(String sql) {
-        try {
-            return connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public SQLResult executeResult(String sql) {
-        return new SQLResult(executeQuery(sql));
     }
 
     public void execute(String sql) {
@@ -93,15 +96,32 @@ public class SQLConnection {
         }
     }
 
-
-    public void execute(String... sqls) {
-        try (Statement statement = connection.createStatement()) {
-            for (String sql : sqls)
-                statement.addBatch(sql);
-            statement.executeBatch();
+    public ResultSet executeQuery(String sql) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            return statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
+    }
+
+    public int executeUpdate(String sql) {
+        try (PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public SQLResult executeResult(String sql) {
+        return new SQLResult(executeQuery(sql));
+    }
+
+
+    public void execute(String... sqls) {
+        execute(Arrays.asList(sqls));
     }
 
     public void execute(Collection<String> sqls) {
@@ -122,7 +142,6 @@ public class SQLConnection {
         public SQLPrepare(SQLBuilder builder) {
             this.builder = builder;
         }
-
 
         public SQLPrepare append(String s) {
             builder.append(s);
@@ -182,11 +201,6 @@ public class SQLConnection {
         public SQLPrepare values(String values) {
             builder.values(values);
             return this;
-        }
-
-        void prepare() throws SQLException {
-            statement = connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            prepared = true;
         }
 
         public SQLPrepare setString(int index, String data) {
@@ -260,23 +274,26 @@ public class SQLConnection {
             return this;
         }
 
-        public SQLResult executeResult() {
+        void prepare() throws SQLException {
+            if (prepared)
+                return;
+            statement = connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            prepared = true;
+        }
+
+        public int executeUpdate() {
             try {
-                if (!prepared) {
-                    prepare();
-                }
-                return new SQLResult(statement.executeQuery());
+                prepare();
+                return statement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
-                return null;
+                return -1;
             }
         }
 
         public ResultSet executeQuery() {
             try {
-                if (!prepared) {
-                    prepare();
-                }
+                prepare();
                 return statement.executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -286,9 +303,7 @@ public class SQLConnection {
 
         public void execute() {
             try {
-                if (!prepared) {
-                    prepare();
-                }
+                prepare();
                 statement.execute();
                 statement.close();
             } catch (SQLException e) {
@@ -296,13 +311,12 @@ public class SQLConnection {
             }
         }
 
-        public SQLResult result() {
+        public SQLResult executeResult() {
             return new SQLResult(executeQuery());
         }
 
         public String[] getStringArray() {
-            try {
-                ResultSet resultSet = executeQuery();
+            try (ResultSet resultSet = executeQuery()) {
                 List<String> a = new ArrayList<>();
                 while (resultSet.next()) {
                     int size = resultSet.getMetaData().getColumnCount();
@@ -310,17 +324,15 @@ public class SQLConnection {
                         a.add(resultSet.getString(i + 1));
                     }
                 }
-                resultSet.getStatement().close();
                 return a.toArray(new String[]{});
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public Integer[] getIntArray() {
-            try {
-                ResultSet resultSet = executeQuery();
+            try (ResultSet resultSet = executeQuery()) {
                 List<Integer> list = new ArrayList<>();
                 while (resultSet.next()) {
                     int size = resultSet.getMetaData().getColumnCount();
@@ -328,17 +340,15 @@ public class SQLConnection {
                         list.add(resultSet.getInt(i + 1));
                     }
                 }
-                resultSet.getStatement().close();
                 return list.toArray(new Integer[]{});
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public Boolean[] getBooleanArray() {
-            try {
-                ResultSet resultSet = executeQuery();
+            try (ResultSet resultSet = executeQuery()) {
                 List<Boolean> list = new ArrayList<>();
                 while (resultSet.next()) {
                     int size = resultSet.getMetaData().getColumnCount();
@@ -346,85 +356,66 @@ public class SQLConnection {
                         list.add(resultSet.getBoolean(i + 1));
                     }
                 }
-                resultSet.getStatement().close();
                 return list.toArray(new Boolean[]{});
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public Blob getBlob() {
-            try {
-                ResultSet resultSet = executeQuery();
-                Blob b = resultSet.next() ? resultSet.getBlob(1) : null;
-                resultSet.getStatement().close();
-                return b;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getBlob(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public byte[] getBytes() {
-            try {
-                ResultSet resultSet = executeQuery();
-                byte[] b = resultSet.next() ? resultSet.getBytes(1) : null;
-                resultSet.getStatement().close();
-                return b;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getBytes(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public String getString() {
-            try {
-                ResultSet resultSet = executeQuery();
-                String s = resultSet.next() ? resultSet.getString(1) : null;
-                resultSet.getStatement().close();
-                return s;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getString(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public Integer getInt() {
-            try {
-                ResultSet resultSet = executeQuery();
-                Integer i = resultSet.next() ? resultSet.getInt(1) : null;
-                resultSet.getStatement().close();
-                return i;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getInt(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         public Long getLong() {
-            try {
-                ResultSet resultSet = executeQuery();
-                Long i = resultSet.next() ? resultSet.getLong(1) : null;
-                resultSet.getStatement().close();
-                return i;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getLong(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
 
         public Boolean getBoolean() {
-            try {
-                ResultSet resultSet = executeQuery();
-                Boolean b = resultSet.next() ? resultSet.getBoolean(1) : null;
-                resultSet.getStatement().close();
-                return b;
+            try (ResultSet resultSet = executeQuery()) {
+                return resultSet.next() ? resultSet.getBoolean(1) : null;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return null;
             }
-            return null;
         }
     }
 }
