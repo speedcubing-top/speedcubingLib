@@ -40,7 +40,7 @@ public class InventoryBuilder {
     }
 
     public void setTitle(String title) {
-        ReflectionUtils.setField(ReflectionUtils.getSuperField(inventory, "inventory"), "title", title);
+        ReflectionUtils.setField(ReflectionUtils.getField(inventory, inventory.getClass().getSuperclass(), "inventory"), "title", title);
     }
 
     public InventoryBuilder setCloseEvent(Consumer<CloseInventoryEvent> e) {

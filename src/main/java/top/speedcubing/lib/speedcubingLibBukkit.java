@@ -25,7 +25,7 @@ public class speedcubingLibBukkit extends JavaPlugin {
         if (is1_8_8) {
             CubingLibPlayer.init();
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-            ReflectionUtils.setClassField(Enchantment.class, "acceptingNew", true);
+            ReflectionUtils.setStaticField(Enchantment.class, "acceptingNew", true);
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Glow.glow = new Glow(100);

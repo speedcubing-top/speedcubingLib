@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 
 public class ReflectionUtils {
 
-    public static void setClassField(Class<?> c, String name, Object value) {
+    public static void setStaticField(Class<?> c, String name, Object value) {
         try {
             Field field = c.getDeclaredField(name);
             field.setAccessible(true);
-            field.set(field, value);
+            field.set(null, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -26,9 +26,9 @@ public class ReflectionUtils {
         }
     }
 
-    public static Object getField(Object obj, String name) {
+    public static Object getField(Object obj, Class<?> clazz, String name) {
         try {
-            Field field = obj.getClass().getDeclaredField(name);
+            Field field = clazz.getDeclaredField(name);
             field.setAccessible(true);
             return field.get(obj);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -37,15 +37,12 @@ public class ReflectionUtils {
         }
     }
 
-    public static Object getSuperField(Object obj, String name) {
-        try {
-            Field field = obj.getClass().getSuperclass().getDeclaredField(name);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static Object getField(Object obj, String name) {
+        return getField(obj, obj.getClass(), name);
+    }
+
+    public static Object getStaticField(Class<?> clazz, String name) {
+        return getField(null, clazz, name);
     }
 
     public static void invoke(Object obj, String method, Object... args) {
