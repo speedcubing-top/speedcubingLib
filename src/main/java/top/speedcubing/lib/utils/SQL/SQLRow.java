@@ -37,6 +37,10 @@ public class SQLRow {
         return (Double) get(s);
     }
 
+    public Long getLong(String s) {
+        return (Long) get(s);
+    }
+
     public Float getFloat(String s) {
         return (Float) get(s);
     }

@@ -19,7 +19,7 @@ public class TCPClient {
             client.getOutputStream().write(data);
             IOUtils.closeQuietly(client);
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
     }
 
@@ -36,7 +36,7 @@ public class TCPClient {
             IOUtils.closeQuietly(client);
             return b;
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
         return null;
     }
