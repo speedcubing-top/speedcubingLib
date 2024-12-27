@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class SQLConnection {
+public class SQLConnection implements AutoCloseable {
 
     private final Connection connection;
 
@@ -21,8 +21,20 @@ public class SQLConnection {
         }
     }
 
+    public SQLConnection(Connection connection) {
+        this.connection = connection;
+    }
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        }catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
     }
 
     //start the CRUD string to prepare
