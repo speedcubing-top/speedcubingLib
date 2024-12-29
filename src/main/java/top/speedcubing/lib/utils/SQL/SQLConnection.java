@@ -24,6 +24,7 @@ public class SQLConnection implements AutoCloseable {
     public SQLConnection(Connection connection) {
         this.connection = connection;
     }
+
     public Connection getConnection() {
         return connection;
     }
@@ -32,26 +33,26 @@ public class SQLConnection implements AutoCloseable {
     public void close() {
         try {
             connection.close();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new SQLRuntimeException(e);
         }
     }
 
     //start the CRUD string to prepare
     public SQLPrepare select(String field) {
-        return new SQLPrepare(connection, new SQLBuilder().select(field));
+        return new SQLPrepare(this, new SQLBuilder().select(field));
     }
 
     public SQLPrepare insert(String table, String field) {
-        return new SQLPrepare(connection, new SQLBuilder().insert(table, field));
+        return new SQLPrepare(this, new SQLBuilder().insert(table, field));
     }
 
     public SQLPrepare update(String table) {
-        return new SQLPrepare(connection, new SQLBuilder().update(table));
+        return new SQLPrepare(this, new SQLBuilder().update(table));
     }
 
     public SQLPrepare delete(String table) {
-        return new SQLPrepare(connection, new SQLBuilder().delete(table));
+        return new SQLPrepare(this, new SQLBuilder().delete(table));
     }
 
     //direct execute CRUD
@@ -73,7 +74,7 @@ public class SQLConnection implements AutoCloseable {
 
     //create prepare-statement from SQL
     public SQLPrepare prepare(String sql) {
-        return new SQLPrepare(connection, new SQLBuilder().append(sql));
+        return new SQLPrepare(this, new SQLBuilder().append(sql));
     }
 
     //exists
@@ -132,6 +133,7 @@ public class SQLConnection implements AutoCloseable {
         }
     }
 
+    //transaction
     public void startTransaction() {
         try {
             connection.setAutoCommit(false);

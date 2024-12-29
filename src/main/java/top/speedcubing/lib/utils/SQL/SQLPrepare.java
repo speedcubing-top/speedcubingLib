@@ -1,29 +1,27 @@
 package top.speedcubing.lib.utils.SQL;
 
 
-import java.sql.Blob;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SQLPrepare {
-    private final Connection connection;
+    private final SQLConnection connection;
     private PreparedStatement statement;
-    private boolean prepared;
+    private boolean prepared = false;
     private final SQLBuilder builder;
+    private int easyParamIndex = 1;
 
     String toSQL() {
         return builder.toSQL();
     }
 
-    SQLPrepare(Connection connection, SQLBuilder builder) {
+    SQLPrepare(SQLConnection connection, SQLBuilder builder) {
         this.connection = connection;
         this.builder = builder;
     }
 
+    // sql
     public SQLPrepare append(String s) {
         builder.append(s);
         return this;
@@ -84,6 +82,12 @@ public class SQLPrepare {
         return this;
     }
 
+    //parameters by simple
+    public SQLPrepare setString(String data) {
+        return setString(easyParamIndex++, data);
+    }
+
+    //parameters
     public SQLPrepare setString(int index, String data) {
         try {
             prepare();
@@ -92,6 +96,11 @@ public class SQLPrepare {
             throw new SQLRuntimeException(builder.toSQL(), e);
         }
         return this;
+    }
+
+    //parameters by simple
+    public SQLPrepare setInt(int data) {
+        return setInt(easyParamIndex++, data);
     }
 
     public SQLPrepare setInt(int index, int data) {
@@ -104,6 +113,10 @@ public class SQLPrepare {
         return this;
     }
 
+    public SQLPrepare setDouble(double data) {
+        return setDouble(easyParamIndex++, data);
+    }
+
     public SQLPrepare setDouble(int index, double data) {
         try {
             prepare();
@@ -112,6 +125,10 @@ public class SQLPrepare {
             throw new SQLRuntimeException(toSQL(), e);
         }
         return this;
+    }
+
+    public SQLPrepare setFloat(float data) {
+        return setFloat(easyParamIndex++, data);
     }
 
     public SQLPrepare setFloat(int index, float data) {
@@ -124,6 +141,10 @@ public class SQLPrepare {
         return this;
     }
 
+    public SQLPrepare setLong(long data) {
+        return setLong(easyParamIndex++, data);
+    }
+
     public SQLPrepare setLong(int index, long data) {
         try {
             prepare();
@@ -134,6 +155,9 @@ public class SQLPrepare {
         return this;
     }
 
+    public SQLPrepare setByte(byte data) {
+        return setByte(easyParamIndex++, data);
+    }
 
     public SQLPrepare setByte(int index, byte data) {
         try {
@@ -143,6 +167,10 @@ public class SQLPrepare {
             throw new SQLRuntimeException(toSQL(), e);
         }
         return this;
+    }
+
+    public SQLPrepare setBoolean(boolean data) {
+        return setBoolean(easyParamIndex++, data);
     }
 
     public SQLPrepare setBoolean(int index, boolean data) {
@@ -156,9 +184,13 @@ public class SQLPrepare {
     }
 
     void prepare() throws SQLException {
+        prepare(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    }
+
+    void prepare(int type,int concur) throws SQLException {
         if (prepared)
             return;
-        statement = connection.prepareStatement(builder.toSQL(), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        statement = connection.getConnection().prepareStatement(builder.toSQL(), type, concur);
         prepared = true;
     }
 
@@ -194,99 +226,5 @@ public class SQLPrepare {
 
     public SQLResult executeResult() {
         return new SQLResult(executeQuery());
-    }
-
-    public String[] getStringArray() {
-        try (ResultSet resultSet = executeQuery()) {
-            List<String> a = new ArrayList<>();
-            while (resultSet.next()) {
-                int size = resultSet.getMetaData().getColumnCount();
-                for (int i = 0; i < size; i++) {
-                    a.add(resultSet.getString(i + 1));
-                }
-            }
-            return a.toArray(new String[]{});
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public Integer[] getIntArray() {
-        try (ResultSet resultSet = executeQuery()) {
-            List<Integer> list = new ArrayList<>();
-            while (resultSet.next()) {
-                int size = resultSet.getMetaData().getColumnCount();
-                for (int i = 0; i < size; i++) {
-                    list.add(resultSet.getInt(i + 1));
-                }
-            }
-            return list.toArray(new Integer[]{});
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public Boolean[] getBooleanArray() {
-        try (ResultSet resultSet = executeQuery()) {
-            List<Boolean> list = new ArrayList<>();
-            while (resultSet.next()) {
-                int size = resultSet.getMetaData().getColumnCount();
-                for (int i = 0; i < size; i++) {
-                    list.add(resultSet.getBoolean(i + 1));
-                }
-            }
-            return list.toArray(new Boolean[]{});
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public Blob getBlob() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getBlob(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public byte[] getBytes() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getBytes(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public String getString() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getString(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public Integer getInt() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getInt(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-    public Long getLong() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getLong(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
-    }
-
-
-    public Boolean getBoolean() {
-        try (ResultSet resultSet = executeQuery()) {
-            return resultSet.next() ? resultSet.getBoolean(1) : null;
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(toSQL(), e);
-        }
     }
 }
