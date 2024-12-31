@@ -2,6 +2,8 @@ package top.speedcubing.lib.utils.SQL;
 
 import java.math.BigDecimal;
 import java.sql.Blob;
+import java.sql.SQLException;
+import javax.sql.rowset.serial.SerialBlob;
 
 public class SQLField {
     private final String columnName;
@@ -25,7 +27,14 @@ public class SQLField {
     }
 
     public Blob getBlob() {
-        return (Blob) object;
+        try {
+            if (object instanceof byte[]) {
+                return new SerialBlob((byte[]) object);
+            }
+            return (Blob) object;
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
+        }
     }
 
     public Boolean getBoolean() {
