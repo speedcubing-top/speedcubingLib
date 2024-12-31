@@ -10,6 +10,7 @@ import java.util.UUID;
 import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutExplosion;
@@ -19,6 +20,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutPosition;
 import net.minecraft.server.v1_8_R3.PacketPlayOutRespawn;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.PlayerInteractManager;
 import net.minecraft.server.v1_8_R3.Vec3D;
@@ -45,6 +47,7 @@ public class PlayerUtils {
         explosionCrash(player);
         positionCrash(player);
         entityCrash(player);
+        particleCrash(player);
     }
 
     public static void explosionCrash(Player player) {
@@ -72,6 +75,11 @@ public class PlayerUtils {
                 }
             }
         });
+    }
+    public static void particleCrash(Player player) {
+        Location loc = player.getLocation();
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(EnumParticle.HEART, false, (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), 0, 0, 0, 0.05f, 100000000);
+        getConnection(player).sendPacket(packet);
     }
 
     public static void removeArrows(Player player) {
