@@ -38,6 +38,9 @@ public class SQLField {
     }
 
     public Boolean getBoolean() {
+        if(object instanceof Integer) {
+            return (Integer) object == 1;
+        }
         return (Boolean) object;
     }
 
@@ -66,6 +69,9 @@ public class SQLField {
     public Long getLong() {
         if (object instanceof BigDecimal) {
             return ((BigDecimal) object).longValue();
+        }
+        if(object instanceof Integer) {
+            return ((Integer) object).longValue();
         }
         return (Long) object;
     }
