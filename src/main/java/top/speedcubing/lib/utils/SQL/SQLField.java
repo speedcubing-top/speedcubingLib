@@ -63,6 +63,9 @@ public class SQLField {
         if (object instanceof Long) {
             return ((Long) object).intValue();
         }
+        if (object instanceof Boolean) {
+            return ((Boolean) object) ? 1 : 0;
+        }
         return (Integer) object;
     }
 
