@@ -8,7 +8,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
-import top.speedcubing.lib.bukkit.CubingLibPlayer;
 import top.speedcubing.lib.bukkit.entity.Hologram;
 import top.speedcubing.lib.bukkit.entity.NPC;
 import top.speedcubing.lib.bukkit.inventory.Glow;
@@ -23,7 +22,6 @@ public class speedcubingLibBukkit extends JavaPlugin {
     public void onEnable() {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         if (is1_8_8) {
-            CubingLibPlayer.init();
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
             ReflectionUtils.setStaticField(Enchantment.class, "acceptingNew", true);
             try {

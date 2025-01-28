@@ -15,12 +15,14 @@ import top.speedcubing.lib.bukkit.handler.PacketPlayInHandler;
 import top.speedcubing.lib.bukkit.handler.PacketPlayOutHandler;
 
 public class CubingLibPlayer {
-    public static void init() {
-        wither = new EntityWither(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
+
+    static {
+        EntityWither wither = new EntityWither(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle());
         wither.setInvisible(true);
+        sharedWither = wither;
     }
 
-    public static EntityWither wither;
+    public static EntityWither sharedWither;
 
     public static Map<Player, CubingLibPlayer> user = new HashMap<>();
 
@@ -66,8 +68,8 @@ public class CubingLibPlayer {
         this.bossbar = bossbar;
         Location location = player.getLocation();
         Location newLocation = location.clone().add(location.getDirection().multiply(100));
-        wither.setCustomName(bossbar);
-        wither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(wither));
+        sharedWither.setCustomName(bossbar);
+        sharedWither.setLocation(newLocation.getX(), newLocation.getY(), newLocation.getZ(), 0, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(sharedWither));
     }
 }
