@@ -14,6 +14,6 @@ public class SQLRuntimeException extends RuntimeException {
     }
 
     public SQLRuntimeException(String sql, SQLException cause) {
-        super("Failed to exaecute query: " + sql, cause);
+        super("Failed to execute query: " + sql, cause);
     }
 }
