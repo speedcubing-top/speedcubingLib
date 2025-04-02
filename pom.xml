@@ -20,6 +20,10 @@
             <id>velocity</id>
             <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>speedcubing-top</id>
+            <url>https://repo.speedcubing.top/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
