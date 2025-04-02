@@ -48,4 +48,15 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>speedcubing-top</id>
+            <url>https://repo.speedcubing.top/repository/maven-public-projects/</url>
+        </repository>
+        <snapshotRepository>
+            <id>speedcubing-top</id>
+            <url>https://repo.speedcubing.top/repository/maven-public-projects/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
