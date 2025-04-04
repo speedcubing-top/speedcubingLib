@@ -17,8 +17,8 @@
 
     <repositories>
         <repository>
-            <id>velocitypowered-public</id>
-            <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
+            <id>papermc-public</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>speedcubing-public</id>
