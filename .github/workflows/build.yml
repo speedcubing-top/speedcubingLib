@@ -1,43 +1,61 @@
-name: Build and create release
+name: Build
+
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-
     steps:
-      - name: Install JDK 8
-        uses: actions/setup-java@v4
-        with:
-          java-version: 8
-          distribution: 'adopt'
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Checkout speedcubingLib
-        uses: actions/checkout@v4
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
 
-      - name: Build speedcubingLib
-        run: |
-          mvn -B package --file pom.xml
+    - name: Setup Maven Settings
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml <<EOF
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <servers>
+            <server>
+              <id>speedcubing-public-projects-release</id>
+              <username>${{ secrets.NEXUS_USERNAME }}</username>
+              <password>${{ secrets.NEXUS_PASSWORD }}</password>
+            </server>
+            <server>
+              <id>speedcubing-public-projects-snapshot</id>
+              <username>${{ secrets.NEXUS_USERNAME }}</username>
+              <password>${{ secrets.NEXUS_PASSWORD }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
 
-      - name: Upload jar
-        uses: actions/upload-artifact@v2
-        with:
-          name: speedcubingLib-1.0-SNAPSHOT.jar
-          path: target/speedcubingLib-1.0-SNAPSHOT.jar
+    - name: Run build.sh
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
 
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          artifacts: target/speedcubingLib-1.0-SNAPSHOT.jar
-          draft: false
-          prerelease: true
-          releaseName: ${{ github.ref }}
-          releaseNotes: |
-            This is an automated release.
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: ./target/speedcubingLib-1.0-SNAPSHOT.jar
 
+
+    - name: Deploy to Nexus
+      run: |
+        mvn deploy -DskipTests
