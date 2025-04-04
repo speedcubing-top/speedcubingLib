@@ -26,6 +26,17 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>speedcubing-public-projects-release</id>
+            <url>https://repo.speedcubing.top/repository/maven-public-projects-release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>speedcubing-public-projects-snapshot</id>
+            <url>https://repo.speedcubing.top/repository/maven-public-projects-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -52,15 +63,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>speedcubing-top</id>
-            <url>https://repo.speedcubing.top/repository/maven-public-projects/</url>
-        </repository>
-        <snapshotRepository>
-            <id>speedcubing-top</id>
-            <url>https://repo.speedcubing.top/repository/maven-public-projects/</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
