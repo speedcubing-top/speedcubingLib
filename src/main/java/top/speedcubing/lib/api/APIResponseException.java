@@ -1,10 +1,21 @@
 package top.speedcubing.lib.api;
 
-import java.sql.SQLException;
-
 public class APIResponseException extends RuntimeException {
 
-    public APIResponseException(String url, int code) {
-        super("Failed to call API, URL: " + url + ", Response Code: " + code);
+    private final String url;
+    private final int responseCode;
+
+    public APIResponseException(String url, int responseCode) {
+        super("Failed to call API, URL: " + url + ", ResponseCode: " + responseCode);
+        this.url = url;
+        this.responseCode = responseCode;
+    }
+
+    public String getURL() {
+        return url;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
     }
 }
