@@ -104,7 +104,7 @@ public class MojangAPI {
 
         JsonObject object = JsonParser.parseString(response.getData()).getAsJsonObject();
         JsonObject object2 = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
-        ProfileSkin profile = new ProfileSkin(object.get("name").getAsString(), uuid, object2.get("value").getAsString(), object2.get("signature").getAsString());
+        ProfileSkin profile = new ProfileSkin(object.get("name").getAsString(), UUIDUtils.dash(object.get("id").getAsString()), object2.get("value").getAsString(), object2.get("signature").getAsString());
         new ProfileRespondEvent(profile).call();
         return profile;
     }
