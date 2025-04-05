@@ -6,7 +6,9 @@ import top.speedcubing.lib.utils.bytes.DataConversion;
 public class UUIDUtils {
 
     public static String dash(String uuid) {
-        Preconditions.checkArgument(uuid.length() == 32, "UUID length must be 32 characters");
+        if (uuid.length() == 36) {
+            return uuid;
+        }
         return uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20);
     }
 
@@ -15,7 +17,9 @@ public class UUIDUtils {
     }
 
     public static String undash(String uuid) {
-        Preconditions.checkArgument(uuid.length() == 36, "UUID length must be 36 characters");
+        if (uuid.length() == 32) {
+            return uuid;
+        }
 
         StringBuilder result = new StringBuilder();
         for (char c : uuid.toCharArray()) {
