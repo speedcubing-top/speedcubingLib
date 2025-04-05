@@ -12,24 +12,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import top.speedcubing.lib.bukkit.events.packet.ProfileRespondEvent;
 import top.speedcubing.lib.api.mojang.Profile;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.api.mojang.ProfileTexture;
+import top.speedcubing.lib.bukkit.events.packet.ProfileRespondEvent;
 import top.speedcubing.lib.utils.Preconditions;
-import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.UUIDUtils;
+import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.http.HTTPResponse;
 import top.speedcubing.lib.utils.http.HTTPUtils;
 
 public class MojangAPI {
 
     private static Profile t(String name, boolean call) throws IOException {
-        HTTPResponse http = HTTPUtils.get("https://api.mojang.com/users/profiles/minecraft/" + name);
-        if (http.getResponseCode() != 200) {
-            return null;
-        }
-        JsonObject object = JsonParser.parseString(http.getData()).getAsJsonObject();
+        HTTPResponse response = HTTPUtils.get("https://api.mojang.com/users/profiles/minecraft/" + name);
+
+        if (response.getResponseCode() != 200)
+            throw new APIResponseException(response.getUrl(), response.getResponseCode());
+
+        JsonObject object = JsonParser.parseString(response.getData()).getAsJsonObject();
         String fixedName = object.get("name").getAsString();
         String uuid = UUIDUtils.dash(object.get("id").getAsString());
         if (call)
@@ -49,7 +50,9 @@ public class MojangAPI {
         for (int i = 0; i < names.length; i++)
             payload.append("\"").append(names[i]).append(i == names.length - 1 ? "\"" : "\",");
         payload.append("]");
-        HttpURLConnection connection = (HttpURLConnection) new URL("https://api.mojang.com/profiles/minecraft").openConnection();
+
+        String url = "https://api.mojang.com/profiles/minecraft";
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
@@ -57,23 +60,24 @@ public class MojangAPI {
         out.writeBytes(payload.toString());
         out.flush();
         IOUtils.closeQuietly(out);
-        if (connection.getResponseCode() == 200) {
-            StringBuilder textBuilder = new StringBuilder();
-            InputStream in = connection.getInputStream();
-            int b;
-            while ((b = in.read()) != -1)
-                textBuilder.append((char) b);
-            List<Profile> result = new ArrayList<>();
-            for (JsonElement e : JsonParser.parseString(textBuilder.toString()).getAsJsonArray()) {
-                String fixedName = e.getAsJsonObject().get("name").getAsString();
-                String uuid = UUIDUtils.dash(e.getAsJsonObject().get("id").getAsString());
-                result.add(new Profile(fixedName, uuid));
 
-                new ProfileRespondEvent(new ProfileSkin(fixedName, uuid, null, null)).call();
-            }
-            return result;
+        if (connection.getResponseCode() != 200)
+            throw new APIResponseException(url, connection.getResponseCode());
+
+        StringBuilder textBuilder = new StringBuilder();
+        InputStream in = connection.getInputStream();
+        int b;
+        while ((b = in.read()) != -1)
+            textBuilder.append((char) b);
+        List<Profile> result = new ArrayList<>();
+        for (JsonElement e : JsonParser.parseString(textBuilder.toString()).getAsJsonArray()) {
+            String fixedName = e.getAsJsonObject().get("name").getAsString();
+            String uuid = UUIDUtils.dash(e.getAsJsonObject().get("id").getAsString());
+            result.add(new Profile(fixedName, uuid));
+
+            new ProfileRespondEvent(new ProfileSkin(fixedName, uuid, null, null)).call();
         }
-        return null;
+        return result;
     }
 
     public static Profile getByName(String name) throws IOException {
@@ -93,10 +97,12 @@ public class MojangAPI {
     }
 
     public static ProfileSkin getSkinByUUID(String uuid) throws IOException {
-        HTTPResponse http = HTTPUtils.get("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
-        if (http.getResponseCode() != 200)
-            return null;
-        JsonObject object = JsonParser.parseString(http.getData()).getAsJsonObject();
+        HTTPResponse response = HTTPUtils.get("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+
+        if (response.getResponseCode() != 200)
+            throw new APIResponseException(response.getUrl(), response.getResponseCode());
+
+        JsonObject object = JsonParser.parseString(response.getData()).getAsJsonObject();
         JsonObject object2 = object.get("properties").getAsJsonArray().get(0).getAsJsonObject();
         ProfileSkin profile = new ProfileSkin(object.get("name").getAsString(), uuid, object2.get("value").getAsString(), object2.get("signature").getAsString());
         new ProfileRespondEvent(profile).call();
@@ -104,9 +110,6 @@ public class MojangAPI {
     }
 
     public static ProfileTexture getTextureByUUID(String uuid) throws IOException {
-        ProfileSkin skin = getSkinByUUID(uuid);
-        if (skin == null)
-            return null;
-        return skin.getSkin().getTexture();
+        return getSkinByUUID(uuid).getSkin().getTexture();
     }
 }
