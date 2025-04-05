@@ -1,12 +1,18 @@
 package top.speedcubing.lib.utils.http;
 
 public class HTTPResponse {
-    String data;
-    int responseCode;
+    private final String url;
+    private final String data;
+    private final int responseCode;
 
-    public HTTPResponse(String data, int responseCode) {
+    public HTTPResponse(String url, String data, int responseCode) {
+        this.url = url;
         this.data = data;
         this.responseCode = responseCode;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public int getResponseCode() {
