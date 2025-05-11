@@ -2,7 +2,6 @@ package top.speedcubing.lib.utils.bytes;
 
 import java.util.ArrayList;
 import java.util.List;
-import top.speedcubing.lib.utils.ArrayUtils;
 
 public class NumberConversion {
 
@@ -160,7 +159,13 @@ public class NumberConversion {
                 part |= 0x80;
             b.add((byte) part);
         } while (i != 0);
-        return ArrayUtils.toPrimitiveArray(b);
+
+        // to primitive array
+        byte[] bytes = new byte[b.size()];
+        for (int j = 0; j < b.size(); j++) {
+            bytes[j] = b.get(j);
+        }
+        return bytes;
     }
 
     public static long toDecimal(String s, int radix) {

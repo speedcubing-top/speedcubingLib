@@ -1,5 +1,6 @@
 package top.speedcubing.lib.api;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,7 +17,6 @@ import top.speedcubing.lib.api.mojang.Profile;
 import top.speedcubing.lib.api.mojang.ProfileSkin;
 import top.speedcubing.lib.api.mojang.ProfileTexture;
 import top.speedcubing.lib.bukkit.events.packet.ProfileRespondEvent;
-import top.speedcubing.lib.utils.Preconditions;
 import top.speedcubing.lib.utils.UUIDUtils;
 import top.speedcubing.lib.utils.bytes.IOUtils;
 import top.speedcubing.lib.utils.http.HTTPResponse;

@@ -3,7 +3,7 @@ package top.speedcubing.lib.utils.image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
-import top.speedcubing.lib.utils.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 //rgb >> 24 != 0x00
 public class ImageRotator {
@@ -18,7 +18,7 @@ public class ImageRotator {
 
     public static void rotate(File input, File output, RotateType type) {
         try {
-            ImageIO.write(rotate(ImageIO.read(input), type), FileUtils.getExtension(input.getName()), output);
+            ImageIO.write(rotate(ImageIO.read(input), type), FilenameUtils.getExtension(input.getName()), output);
         } catch (Exception e) {
             e.printStackTrace();
         }

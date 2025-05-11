@@ -1,6 +1,8 @@
 package top.speedcubing.lib.bukkit;
 
+import com.google.common.base.Preconditions;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,8 +14,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import top.speedcubing.lib.utils.Preconditions;
-import top.speedcubing.lib.utils.collection.Sets;
 
 public class SideBar implements Listener {
 
@@ -74,7 +74,10 @@ public class SideBar implements Listener {
             Set<String> s = scores.get(score);
             if (s != null)
                 s.add(str);
-            else scores.put(score, Sets.hashSet(str));
+            else {
+                Set<String> set = new HashSet<>(Collections.singletonList(str));
+                scores.put(score, set);
+            }
         }
         line += 1;
         return this;

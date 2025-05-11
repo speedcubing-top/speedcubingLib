@@ -3,6 +3,7 @@ package top.speedcubing.lib.bukkit.entity;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -40,7 +41,6 @@ import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
 import top.speedcubing.lib.bukkit.packetwrapper.OutScoreboardTeam;
 import top.speedcubing.lib.speedcubingLibBukkit;
 import top.speedcubing.lib.utils.ReflectionUtils;
-import top.speedcubing.lib.utils.collection.Sets;
 
 public class NPC {
     public static final Set<NPC> all = new java.util.HashSet<>();
@@ -135,7 +135,7 @@ public class NPC {
 
     public NPC world(String... world) {
         this.world.clear();
-        this.world.addAll(Sets.hashSet(world));
+        this.world.addAll(Arrays.asList(world));
         if (everyoneCanSee) {
             this.tracker.clear();
             for (String s : world) {
@@ -147,7 +147,7 @@ public class NPC {
 
     public NPC changeWorld(String... world) {
         this.world.clear();
-        this.world.addAll(Sets.hashSet(world));
+        this.world.addAll(Arrays.asList(world));
         if (everyoneCanSee) {
             despawn();
             this.tracker.clear();

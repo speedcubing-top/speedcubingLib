@@ -1,5 +1,6 @@
 package top.speedcubing.lib.bukkit.entity;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import top.speedcubing.lib.bukkit.events.entity.ClickEvent;
-import top.speedcubing.lib.utils.collection.Sets;
 
 public class Hologram {
 
@@ -110,7 +110,7 @@ public class Hologram {
 
     public Hologram world(String... world) {
         this.world.clear();
-        this.world.addAll(Sets.hashSet(world));
+        this.world.addAll(Arrays.asList(world));
         if (everyoneCanSee) {
             this.tracker.clear();
             for (String s : world) {
@@ -122,7 +122,7 @@ public class Hologram {
 
     public Hologram changeWorld(String... world) {
         this.world.clear();
-        this.world.addAll(Sets.hashSet(world));
+        this.world.addAll(Arrays.asList(world));
         if (everyoneCanSee) {
             despawn();
             this.tracker.clear();

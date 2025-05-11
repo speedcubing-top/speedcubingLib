@@ -1,6 +1,6 @@
 package top.speedcubing.lib.math.item;
 
-import top.speedcubing.lib.utils.Preconditions;
+import com.google.common.base.Preconditions;
 
 public class Plane3D {
     // ax + by + cz = d
