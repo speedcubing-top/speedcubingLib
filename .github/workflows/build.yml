@@ -59,3 +59,8 @@ jobs:
     - name: Deploy to Nexus
       run: |
         mvn deploy -DskipTests
+        
+    - name: Trigger Webhook Runner
+      run: |
+        curl -X POST https://webhook.speedcubing.top/github/speedcubing-top/speedcubingcommon/build \
+        -H "Authorization: Bearer ${{ secrets.WEBHOOK_RUNNER_SECRET }}"
