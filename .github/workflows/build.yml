@@ -62,5 +62,5 @@ jobs:
         
     - name: Trigger Webhook Runner
       run: |
-        curl -X POST https://webhook.speedcubing.top/github/speedcubing-top/speedcubingcommon/build \
+        curl -X POST https://webhook.speedcubing.top/github/speedcubing-top/speedcubinglib/build \
         -H "Authorization: Bearer ${{ secrets.WEBHOOK_RUNNER_SECRET }}"
