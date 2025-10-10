@@ -24,13 +24,15 @@ public class speedcubingLibBukkit extends JavaPlugin {
         if (is1_8_8) {
             Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
             ReflectionUtils.setStaticField(Enchantment.class, "acceptingNew", true);
+
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Glow.glow = new Glow(100);
-                Enchantment.registerEnchantment(Glow.glow);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException ignored) {
             }
+
+            Glow.glow = new Glow(100);
+            Enchantment.registerEnchantment(Glow.glow);
+
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
                 try {
                     for (NPC n : NPC.all) {
