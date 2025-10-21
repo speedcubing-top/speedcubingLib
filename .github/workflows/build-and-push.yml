@@ -1,0 +1,16 @@
+name: Build and Push
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    uses: ./.github/workflows/build-template.yml
+    secrets:
+      NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+      NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      WEBHOOK_RUNNER_SECRET: ${{ secrets.WEBHOOK_RUNNER_SECRET }} 

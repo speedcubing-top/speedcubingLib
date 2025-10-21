@@ -1,29 +1,47 @@
-name: Build
+name: Build Template
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      build_only:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      NEXUS_USERNAME:
+        required: false
+      NEXUS_PASSWORD:
+        required: false
+      WEBHOOK_RUNNER_SECRET:
+        required: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: checkout
       uses: actions/checkout@v4
 
-    - name: Set up JDK 11
+    - name: setup-java 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'temurin'
 
+    - name: Run build.sh
+      run: |
+        chmod +x ./build.sh
+        ./build.sh
+
+    - name: upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: ./target/speedcubingLib-1.0-SNAPSHOT.jar
+
     - name: Setup Maven Settings
+      if: ${{ !inputs.build_only }}
       run: |
         mkdir -p ~/.m2
         cat > ~/.m2/settings.xml <<EOF
@@ -44,23 +62,13 @@ jobs:
         </settings>
         EOF
 
-    - name: Run build.sh
-      run: |
-        chmod +x ./build.sh
-        ./build.sh
-
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-output
-        path: ./target/speedcubingLib-1.0-SNAPSHOT.jar
-
-
     - name: Deploy to Nexus
+      if: ${{ !inputs.build_only }}
       run: |
-        mvn deploy -DskipTests
+        mvn deploy -B --no-transfer-progress -DskipTests
         
     - name: Trigger Webhook Runner
+      if: ${{ !inputs.build_only }}
       run: |
         curl -X POST https://webhook.speedcubing.top/github/speedcubing-top/speedcubinglib/build \
         -H "Authorization: Bearer ${{ secrets.WEBHOOK_RUNNER_SECRET }}"

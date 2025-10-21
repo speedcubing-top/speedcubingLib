@@ -1,1 +1,1 @@
-mvn clean package install
+mvn clean package -B --no-transfer-progress
